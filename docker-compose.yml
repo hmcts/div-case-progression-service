@@ -1,0 +1,375 @@
+---
+version: '3'
+
+services:
+  ccd-user-profile-api:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-user-profile-api:latest
+    environment:
+      - USER_PROFILE_DB_HOST=ccd-user-profile-database
+      - USER_PROFILE_DB_PORT=5432
+      - USER_PROFILE_DB_USERNAME=ccd
+      - USER_PROFILE_DB_PASSWORD=ccd
+      - USER_PROFILE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_definition
+      - IDAM_S2S_URL=http://service-auth-provider-api:8080
+      - REFORM_SERVICE_NAME=ccd-user-profile-api
+      - REFORM_TEAM=ccd
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4453:4453
+    depends_on:
+      - ccd-user-profile-database
+    links:
+      - ccd-user-profile-database
+      - service-auth-provider-api
+    healthcheck:
+      disable: true
+
+
+  ccd-user-profile-database:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-user-profile-database:latest
+    healthcheck:
+      disable: true
+    environment:
+      - USER_PROFILE_DB_USERNAME=ccd
+      - USER_PROFILE_DB_PASSWORD=ccd
+    ports:
+      - 5453:5432
+    volumes:
+      - ccd-user-profile-database-data:/var/lib/postgresql/data
+
+  ccd-definition-store-api:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-api:latest
+    environment:
+      - DEFINITION_STORE_DB_HOST=ccd-definition-store-database
+      - DEFINITION_STORE_DB_PORT=5432
+      - DEFINITION_STORE_DB_USERNAME=ccd
+      - DEFINITION_STORE_DB_PASSWORD=ccd
+      - DEFINITION_STORE_IDAM_KEY=AAAAAAAAAAAAAAAA
+      - DEFINITION_STORE_S2S_AUTHORISED_SERVICES=ccd_data,ccd_gw
+      - USER_PROFILE_HOST=http://ccd-user-profile-api:4453
+      - IDAM_USER_URL=http://idam-api:8080
+      - IDAM_S2S_URL=http://service-auth-provider-api:8080
+      - REFORM_SERVICE_NAME=ccd-definition-store-api
+      - REFORM_TEAM=ccd
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4451:4451
+    depends_on:
+      - ccd-definition-store-database
+      - ccd-user-profile-api
+    links:
+      - ccd-definition-store-database
+      - ccd-user-profile-api
+      - idam-api
+      - service-auth-provider-api
+    healthcheck:
+      disable: true
+
+  ccd-definition-store-database:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-definition-store-database:latest
+    healthcheck:
+      disable: true
+    environment:
+      - DEFINITION_STORE_DB_USERNAME=ccd
+      - DEFINITION_STORE_DB_PASSWORD=ccd
+    ports:
+      - 5451:5432
+    volumes:
+      - ccd-definition-store-database-data:/var/lib/postgresql/data
+
+  ccd-data-store-api:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-data-store-api:latest
+    environment:
+      - DATA_STORE_DB_HOST=ccd-data-store-database
+      - DATA_STORE_DB_PORT=5432
+      - DATA_STORE_DB_USERNAME=ccd
+      - DATA_STORE_DB_PASSWORD=ccd
+      - DATA_STORE_IDAM_KEY=AAAAAAAAAAAAAAAA
+      - DATA_STORE_TOKEN_SECRET=iuasbcuasdcbasdgcasdgcuysachjsacyasdgjcgasdj
+      - DATA_STORE_S2S_AUTHORISED_SERVICES=ccd_gw,divorce_ccd_submission
+      - DEFINITION_STORE_HOST=http://ccd-definition-store-api:4451
+      - USER_PROFILE_HOST=http://ccd-user-profile-api:4453
+      - IDAM_USER_URL=http://idam-api:8080
+      - IDAM_S2S_URL=http://service-auth-provider-api:8080
+      - REFORM_SERVICE_NAME=ccd-data-store-api
+      - REFORM_TEAM=ccd
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4452:4452
+    depends_on:
+      - ccd-data-store-database
+      - ccd-user-profile-api
+      - ccd-definition-store-api
+    links:
+      - ccd-data-store-database
+      - ccd-user-profile-api
+      - ccd-definition-store-api
+      - idam-api
+      - service-auth-provider-api
+    healthcheck:
+      disable: true
+
+  ccd-data-store-database:
+    image: docker.artifactory.reform.hmcts.net/ccd/ccd-data-store-database:latest
+    healthcheck:
+      disable: true
+    environment:
+      - DATA_STORE_DB_USERNAME=ccd
+      - DATA_STORE_DB_PASSWORD=ccd
+    ports:
+      - 5452:5432
+    volumes:
+      - ccd-data-store-database-data:/var/lib/postgresql/data
+
+  idam-api:
+    image: docker.artifactory.reform.hmcts.net/auth/idam-api:latest
+    healthcheck:
+      disable: true
+    environment:
+      - IDAM_SUPERUSER_EMAIL=ccd@hmcts.net
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://idam-database:5432/idam
+      - SPRING_MAIL_HOST=smtp-server
+      - IDAM_TESTING_SUPPORT_ENABLED=true
+      - NOTIFY_API_KEY=AAAAAAAAAAAAAAAA
+      - NOTIFY_CMC_ACTIVATE_USER_TEMPLATE=76aa8695-64e8-4afd-ae13-bc8385302b1f
+      - IDAM_SECRET=idam_test_secret
+      - NOTIFY=false
+      - NOTIFY_CMC_WELCOME_USER_TEMPLATE=fake
+      - NOTIFY_DIVORCE_WELCOME_USER_TEMPLATE=fake
+      - NOTIFY_SSCS_WELCOME_USER_TEMPLATE=fake
+      - NOTIFY_RESET_PASSWORD_TEMPLATE=fake
+      - NOTIFY_PROBATE_ACTIVATE_USER_TEMPLATE=fake
+      - NOTIFY_DIVORCE_ACTIVATE_USER_TEMPLATE=fake
+      - NOTIFY_SSCS_ACTIVATE_USER_TEMPLATE=fake
+      - NOTIFY_CCD_ACTIVATE_USER_TEMPLATE=fake
+      - IDAM_AUTHENTICATION_WEB_HOST=https://authentication-web:8000
+      - IDAM_REGISTRATION_WEB_HOST=https://www-local.registration.reform.hmcts.net:9000
+      - IDAM_DIVORCE_URL=https://www-local.registration.reform.hmcts.net:9000/poc/divorce
+      - REFORM_ENVIRONMENT=local
+      - http_proxy
+      - https_proxy
+      - no_proxy
+    ports:
+      - 4501:8080
+    links:
+      - smtp-server
+      - idam-database
+    depends_on:
+      - idam-database
+      - smtp-server
+
+  idam-database:
+    image: docker.artifactory.reform.hmcts.net/auth/idam-database:latest
+    ports:
+      - 5501:5432
+    volumes:
+      - idam-database:/var/lib/postgresql/data
+
+  service-auth-provider-api:
+    image: docker.artifactory.reform.hmcts.net/auth/service-auth-provider-api:latest
+    healthcheck:
+      disable: true
+    ports:
+      - 4502:8080
+    environment:
+      - 'SPRING_APPLICATION_JSON={
+          "auth.provider.service.testing-support.enabled" : true,
+          "auth.provider.service.server.jwtKey" : "wThK0f0/lh3FlxFcL4xUWDMI5C1J9KyQBgXV4wseh1e5J1uYJIjvTvArHxQDrYoHJ23xFxjHkOnvNbR5dXRoxA==",
+          "auth.provider.service.server.microserviceKeys.ccd_data" : "AAAAAAAAAAAAAAAA",
+          "auth.provider.service.server.microserviceKeys.ccd_gw" : "AAAAAAAAAAAAAAAA",
+          "auth.provider.service.server.microserviceKeys.ccd_definition" : "AAAAAAAAAAAAAAAA",
+          "auth.provider.service.server.microserviceKeys.divorce_ccd_submission" : "AZBYCXDWEVFUGTHS"
+      }'
+
+  smtp-server:
+    image: mailhog/mailhog
+
+  draft-store-api:
+    image: docker.artifactory.reform.hmcts.net/reform/draft-store-api:latest
+    environment:
+      - DRAFT_STORE_DB_HOST=draft-store-database
+      - DRAFT_STORE_DB_PASSWORD=draftstore
+      - IDAM_URL=http://idam-api:8080
+      - S2S_URL=http://service-auth-provider-api:8080
+    ports:
+      - 4601:8800
+    depends_on:
+      - idam-api
+      - service-auth-provider-api
+      - draft-store-database
+
+  draft-store-database:
+    image: docker.artifactory.reform.hmcts.net/reform/draft-store-database:latest
+    environment:
+      - DRAFT_STORE_DB_PASSWORD=draftstore
+    ports:
+      - 5601:5432
+    volumes:
+      - draft-store-database-data:/var/lib/postgresql/data
+
+  div-document-generator:
+    image: docker.artifactory.reform.hmcts.net/divorce/div-document-generator:latest
+    healthcheck:
+        disable: true
+    ports:
+      - 4007:4007
+    environment:
+      - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080
+      - PDF_SERVICE_BASEURL=http://pdf-service-api:5500
+      - EVIDENCE_MANAGEMENT_CLIENT_API_BASEURL=http://evidence-management-client-api:4006
+    links:
+     - pdf-service-api
+     - service-auth-provider-api
+     - evidence-management-client-api
+    depends_on:
+     - pdf-service-api
+     - service-auth-provider-api
+     - evidence-management-client-api
+
+  pdf-service-api:
+    image: docker.artifactory.reform.hmcts.net/cmc/pdf-service-api
+    ports:
+      - 5500:5500
+    environment:
+      - S2S_URL=http://service-auth-provider-api:8080
+      - ROOT_APPENDER
+      - JSON_CONSOLE_PRETTY_PRINT
+      - ROOT_LOGGING_LEVEL
+      - REFORM_SERVICE_NAME
+      - REFORM_TEAM
+      - REFORM_ENVIRONMENT
+    links:
+      - service-auth-provider-api
+    depends_on:
+      - service-auth-provider-api
+
+  evidence-management-client-api:
+    image: docker.artifactory.reform.hmcts.net/divorce/evidence-management-client-api:latest
+    ports:
+      - "4006:4006"
+    expose:
+      - "4006"
+    environment:
+      - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080
+      - EVIDENCE_MANAGEMENT_UPLOAD_FILE_URL=http://em-api-gateway-web:3404/documents
+      - EVIDENCE_MANAGEMENT_HEALTH_URL=http://em-api-gateway-web:3404/health
+      - DOCUMENT_MANAGEMENT_STORE_URL=http://document-management-store:8080
+    links:
+     - em-api-gateway-web
+     - idam-api
+     - service-auth-provider-api
+     - document-management-store
+    depends_on:
+     - em-api-gateway-web
+     - idam-api
+     - service-auth-provider-api
+     - document-management-store
+
+  em-api-gateway-web:
+    image: docker.artifactory.reform.hmcts.net/evidence/document-management-store-api-gateway-web:latest
+    environment:
+     - NODE_ENV=development
+     - PORT=3404
+     - EM_API_URL=http://document-management-store:8080
+     - IDAM_BASE_URL=http://idam-api:8080
+     - IDAM_S2S_URL=http://service-auth-provider-api:8080
+     - IDAM_SERVICE_KEY=AAAAAAAAAAAAAAAA
+     - IDAM_SERVICE_NAME=sscs
+     - CORS_ORIGIN_METHODS=GET,POST,PUT,DELETE,OPTIONS
+     - CORS_ORIGIN_WHITELIST=http://document-management-store:8080
+     #      logging env vars
+     - ROOT_APPENDER=JSON_CONSOLE
+     - JSON_CONSOLE_PRETTY_PRINT=false
+     - REFORM_SERVICE_TYPE=node
+     - REFORM_SERVICE_NAME=em-api-gateway-web
+     - REFORM_TEAM=cc
+     - REFORM_ENVIRONMENT=docker
+     - XFWD=true
+    healthcheck:
+      disable: true
+    ports:
+     - 3404:3404
+    links:
+     - document-management-store
+     - idam-api
+     - service-auth-provider-api
+    depends_on:
+     - document-management-store
+     - idam-api
+     - service-auth-provider-api
+
+  document-management-store:
+    image: docker.artifactory.reform.hmcts.net/evidence/document-management-store:latest
+    command: --wait-for-database 30
+    healthcheck:
+      disable: true
+    environment:
+      - SERVER_PORT=8080
+      - IDAM_SUPERUSER_EMAIL
+      - IDAM_SECRET_KEY=AAAAAAAAAAAAAAAA
+      - GOV_NOTIFY_API_KEY
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://document-management-store-database:5432/evidence
+      - SPRING_DATASOURCE_USERNAME=evidence
+      - SPRING_DATASOURCE_PASSWORD=evidence
+      - SPRING_PROFILES_ACTIVE=dev
+      - IDAM_TESTING_SUPPORT_ENABLED=true
+      - LOGGING_LEVEL_UK_GOV_HMCTS_IDAM=DEBUG
+      - IDAM_CLIENT_URL=http://idam-api:8080
+      - PROVIDER_SERVICE_CLIENT_URL=http://service-auth-provider-api:8080
+      - http_proxy=
+      - https_proxy=
+      - no_proxy=
+  #      logging env vars
+      - ROOT_APPENDER=JSON_CONSOLE
+      - JSON_CONSOLE_PRETTY_PRINT=false
+      - REFORM_SERVICE_TYPE=java
+      - REFORM_SERVICE_NAME=document-management-store
+      - REFORM_TEAM=cc
+      - REFORM_ENVIRONMENT=docker
+  #      healthcheck env vars
+      - PACKAGES_ENVIRONMENT=docker
+      - PACKAGES_PROJECT=evidence
+      - PACKAGES_NAME=document-management-store
+      - PACKAGES_VERSION=unknown
+  #      debug mode
+      - JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+    links:
+      - document-management-store-database
+      - idam-api
+      - service-auth-provider-api
+    depends_on:
+      - document-management-store-database
+      - idam-api
+      - service-auth-provider-api
+
+  document-management-store-database:
+    image: docker.artifactory.reform.hmcts.net/evidence/document-management-store-database:latest
+    volumes:
+      - document-management-store-database:/var/lib/postgresql/data
+
+  div-case-progression-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - CASE_DATA_STORE_BASEURL=http://ccd-data-store-api:4452
+      - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080
+      - DRAFT_STORE_API_BASEURL=http://draft-store-api:8800
+      - PDF_GENERATOR_BASE_URL=http://div-document-generator:4015
+    ports:
+      - 4003:4003
+    depends_on:
+      - service-auth-provider-api
+      - ccd-data-store-api
+      - draft-store-api
+    links:
+      - service-auth-provider-api
+      - ccd-data-store-api
+
+volumes:
+  ccd-user-profile-database-data:
+  ccd-definition-store-database-data:
+  ccd-data-store-database-data:
+  draft-store-database-data:
+  document-management-store-database:
+  idam-database:

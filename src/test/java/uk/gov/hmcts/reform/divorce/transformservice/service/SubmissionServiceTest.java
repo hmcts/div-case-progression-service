@@ -1,0 +1,91 @@
+package uk.gov.hmcts.reform.divorce.transformservice.service;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.class)
+public class SubmissionServiceTest {
+
+    @Mock
+    private CcdClient ccdClient;
+
+    @Mock
+    private TransformationService transformationService;
+
+    @Mock
+    private DraftsService draftsService;
+
+    @InjectMocks
+    private SubmissionService submissionService;
+
+    @Test
+    public void submitReturnsCaseId() throws Exception {
+        DivorceSession divorceSession = new DivorceSession();
+        CaseDataContent caseDataContent = mock(CaseDataContent.class);
+        String jwt = "_jwt";
+        String token = "_token";
+        String eventSummary = "Create case";
+        int caseId = 2893;
+        CreateEvent createEvent = new CreateEvent();
+        createEvent.setToken(token);
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(caseId);
+
+        when(ccdClient.createCase(jwt)).thenReturn(createEvent);
+        when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
+        when(ccdClient.submitCase(jwt, caseDataContent)).thenReturn(submitEvent);
+
+        assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
+
+        verify(ccdClient).createCase(jwt);
+        verify(transformationService).transform(divorceSession, createEvent, eventSummary);
+        verify(ccdClient).submitCase(jwt, caseDataContent);
+        verifyNoMoreInteractions(ccdClient, transformationService);
+    }
+
+    @Test
+    public void submitShouldDeleteTheDivorceDraftAfterSubmissionToCCD() {
+        DivorceSession divorceSession = new DivorceSession();
+        String jwt = "_jwt";
+
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(1);
+
+        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+
+        submissionService.submit(divorceSession, jwt);
+
+        verify(draftsService).deleteDraft(jwt);
+    }
+
+    @Test
+    public void submitShouldNotFailWhenDeletingTheDraftFails() {
+        DivorceSession divorceSession = new DivorceSession();
+        String jwt = "_jwt";
+
+        SubmitEvent submitEvent = new SubmitEvent();
+        submitEvent.setCaseId(1);
+
+        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+        doThrow(Exception.class).when(draftsService).deleteDraft(jwt);
+
+        try {
+            submissionService.submit(divorceSession, jwt);
+        } catch (Exception e) {
+            fail("Submitting to CCD should not fail if the draft cannot be deleted");
+        }
+    }
+}

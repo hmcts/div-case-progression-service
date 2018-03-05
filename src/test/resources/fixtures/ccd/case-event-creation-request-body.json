@@ -1,0 +1,15 @@
+{
+    "event" : {
+      "id" : "paymentMade",
+      "summary" : "Update case",
+      "description" : null
+    },
+    "data" : {
+      "D8PetitionerFirstName" : "Dan",
+      "D8DerivedPetitionerCurrentFullName" : "Dan ",
+      "D8Cohort" : "onlineSubmissionPrivateBeta"
+    },
+    "security_classification" : null,
+    "event_token" : "abcde",
+    "ignore_warning" : null
+  }

@@ -1,0 +1,117 @@
+package uk.gov.hmcts.reform.divorce.transformservice.functional;
+
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+import org.apache.commons.io.FileUtils;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
+
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = CaseProgressionApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+public class CaseAddPdfFunctionalTest {
+
+    private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
+    private static final String REQUEST_ID_HEADER_KEY = "requestId";
+    private static final String REQUEST_ID_HEADER_VALUE = "1234567";
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @ClassRule
+    public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(new WireMockConfiguration().port(4007)
+            .bindAddress("localhost"));
+
+    @Test
+    public void shouldReturnCaseDataWhenAddPdf() throws Exception {
+        String requestBody = loadResourceAsString("/divorce-payload-json/add-pdf.json");
+        pdfGeneratorStub();
+
+        CCDCallbackResponse expectedResponse =
+                ObjectMapperTestUtil.convertJsonToObject(
+                        loadResourceAsByteArray("/divorce-payload-json/add-pdf-response.json"),
+                        CCDCallbackResponse.class);
+
+        HttpHeaders headers = setHttpHeaders();
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<CCDCallbackResponse> response =
+                restTemplate.postForEntity(
+                        "/caseprogression/petition-issued",
+                        entity,
+                        CCDCallbackResponse.class,
+                        new HashMap<>());
+
+        assertEquals(expectedResponse, response.getBody());
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        pdfGeneratorVerify();
+    }
+
+    private String loadResourceAsString(final String filePath) throws Exception {
+        return FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
+    }
+
+    private byte[] loadResourceAsByteArray(final String filePath) throws Exception {
+        return FileUtils.readFileToByteArray(new File(getClass().getResource(filePath).toURI()));
+    }
+
+    private HttpHeaders setHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.add(REQUEST_ID_HEADER_KEY, REQUEST_ID_HEADER_VALUE);
+
+        return headers;
+    }
+
+    private void pdfGeneratorVerify() throws Exception {
+        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
+
+        pdfGeneratorServer.verify(postRequestedFor(urlEqualTo(PDF_GENERATOR_ENDPOINT))
+                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+                .withRequestBody(equalToJson(generateTemplateRequestBody)));
+    }
+
+    private void pdfGeneratorStub() throws Exception {
+        String pdfGeneratedResponseBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-200-response.json");
+
+        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
+
+        pdfGeneratorServer.stubFor(post(PDF_GENERATOR_ENDPOINT).withRequestBody(equalToJson(generateTemplateRequestBody))
+                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+                .willReturn(aResponse()
+                        .withHeader("Content-type", "application/json;charset=UTF-8")
+                        .withBody(pdfGeneratedResponseBody)));
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "DocumentType" : "marriageCert",
+  "DocumentLink" : {
+    "document_url" : "http://localhost/document",
+    "document_binary_url" : null,
+    "document_filename" : null
+  },
+  "DocumentDateAdded" : "2017-01-01",
+  "DocumentComment" : "test-comment",
+  "DocumentFileName" : "test-file-name",
+  "DocumentEmailContent" : "test-email-content"
+}
