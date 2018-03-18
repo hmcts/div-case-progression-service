@@ -15,7 +15,7 @@ def notificationChannel = '#div-dev'
 buildNode {
   try {
     def version
-    String transformationServiceRPMVersion
+    String divCaseProgressionRPMVersion
 
     stage('Checkout') {
       deleteDir()
@@ -85,29 +85,29 @@ buildNode {
 
     stage('Package (RPM)') {
       onDevelop {
-        transformationServiceRPMVersion = packager.javaRPM(
+        divCaseProgressionRPMVersion = packager.javaRPM(
           'div-case-progression-service',
           '$(ls target/div-case-progression-service*.jar)',
           'springboot',
           'src/main/resources/application.properties'
         )
 
-        version = "{transformation_service_buildnumber: ${transformationServiceRPMVersion} }"
+        version = "{div-case-progression-service_buildnumber: ${divCaseProgressionRPMVersion} }"
         packager.publishJavaRPM('div-case-progression-service')
-        deploy app: 'div-case-progression-service', version: transformationServiceRPMVersion, sha: env.CURRENT_SHA, env:'dev'
+        deploy app: 'div-case-progression-service', version: divCaseProgressionRPMVersion, sha: env.CURRENT_SHA, env:'dev'
       }
 
       onMaster {
-        transformationServiceRPMVersion = packager.javaRPM(
+          divCaseProgressionRPMVersion = packager.javaRPM(
           'div-case-progression-service',
           '$(ls target/div-case-progression-service*.jar)',
           'springboot',
           'src/main/resources/application.properties'
         )
-        
-        version = "{transformation_service_buildnumber: ${transformationServiceRPMVersion} }"
+
+        version = "{div-case-progression-service_buildnumber: ${divCaseProgressionRPMVersion} }"
         packager.publishJavaRPM('div-case-progression-service')
-        deploy app: 'div-case-progression-service', version: transformationServiceRPMVersion, sha: env.CURRENT_SHA
+        deploy app: 'div-case-progression-service', version: divCaseProgressionRPMVersion, sha: env.CURRENT_SHA
       }
     }
 
