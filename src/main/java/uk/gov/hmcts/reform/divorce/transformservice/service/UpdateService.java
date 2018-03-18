@@ -32,6 +32,9 @@ public class UpdateService {
     @Autowired
     private DraftsService draftsService;
 
+    @Autowired
+    private PetitionValidatorService petitionValidatorService;
+
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
 
         CreateEvent createEvent = updateCcdEventClient.startEvent(jwt, caseId,
@@ -52,6 +55,9 @@ public class UpdateService {
     }
 
     public CoreCaseData addPdf(final CreateEvent caseDetailsRequest) {
+
+        petitionValidatorService.validateFieldsForIssued(caseDetailsRequest);
+
         PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest);
 
         return pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, caseDetailsRequest.getCaseDetails().getCaseData());

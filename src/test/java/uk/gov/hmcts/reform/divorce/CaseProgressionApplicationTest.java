@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.transformservice.mapping.DocumentCollectionMapper;
-import uk.gov.hmcts.reform.divorce.transformservice.mapping.DocumentTypeMapper;
 
 import static org.junit.Assert.*;
 
@@ -21,9 +20,6 @@ public class CaseProgressionApplicationTest {
     private RestTemplate restTemplate;
 
     @Autowired
-    private DocumentTypeMapper documentTypeMapper;
-
-    @Autowired
     private DocumentCollectionMapper documentCollectionMapper;
 
     @Test
@@ -32,7 +28,6 @@ public class CaseProgressionApplicationTest {
         assertEquals(1, restTemplate.getMessageConverters().size());
         assertTrue(restTemplate.getMessageConverters().get(0) instanceof MappingJackson2HttpMessageConverter);
 
-        assertNotNull(documentTypeMapper);
         assertNotNull(documentCollectionMapper);
     }
 }

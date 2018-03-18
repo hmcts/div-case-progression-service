@@ -29,8 +29,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -48,8 +46,8 @@ public class CaseAddPdfFunctionalTest {
     private TestRestTemplate restTemplate;
 
     @ClassRule
-    public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(new WireMockConfiguration().port(4007)
-            .bindAddress("localhost"));
+    public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
+            new WireMockConfiguration().port(4007).bindAddress("localhost"));
 
     @Test
     public void shouldReturnCaseDataWhenAddPdf() throws Exception {
@@ -75,8 +73,27 @@ public class CaseAddPdfFunctionalTest {
         assertEquals(expectedResponse, response.getBody());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
-        pdfGeneratorVerify();
+    @Test
+    public void shouldReturnErrorWhenUploadedDocumentTypeIsNotSet() throws Exception {
+        String requestBody = loadResourceAsString("/divorce-payload-json/add-pdf-no-documenttype.json");
+
+        String expectedErrorMessage = "The Document Type has not been set for one of the uploaded documents. This must be set before a new PDF can be created";
+
+        HttpHeaders headers = setHttpHeaders();
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<CCDCallbackResponse> response =
+                restTemplate.postForEntity(
+                        "/caseprogression/petition-issued",
+                        entity,
+                        CCDCallbackResponse.class,
+                        new HashMap<>());
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertEquals(expectedErrorMessage, response.getBody().getErrors().get(0));
     }
 
     private String loadResourceAsString(final String filePath) throws Exception {
@@ -95,20 +112,13 @@ public class CaseAddPdfFunctionalTest {
         return headers;
     }
 
-    private void pdfGeneratorVerify() throws Exception {
-        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
-
-        pdfGeneratorServer.verify(postRequestedFor(urlEqualTo(PDF_GENERATOR_ENDPOINT))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .withRequestBody(equalToJson(generateTemplateRequestBody)));
-    }
-
     private void pdfGeneratorStub() throws Exception {
         String pdfGeneratedResponseBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-200-response.json");
 
         String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
 
-        pdfGeneratorServer.stubFor(post(PDF_GENERATOR_ENDPOINT).withRequestBody(equalToJson(generateTemplateRequestBody))
+        pdfGeneratorServer.stubFor(post(PDF_GENERATOR_ENDPOINT)
+                .withRequestBody(equalToJson(generateTemplateRequestBody))
                 .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
                 .willReturn(aResponse()
                         .withHeader("Content-type", "application/json;charset=UTF-8")

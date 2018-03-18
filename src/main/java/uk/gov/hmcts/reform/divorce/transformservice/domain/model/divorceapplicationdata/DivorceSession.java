@@ -273,9 +273,9 @@ public class DivorceSession {
     @JsonProperty("d8")
     @Setter(AccessLevel.NONE)
     private List<UploadedFile> d8Documents;
-    
+
     public void setD8Documents(List<UploadedFile> d8Documents) {
-        d8Documents.forEach(doc->doc.setFileType(UploadedFileType.PETITION));
+        d8Documents.forEach(doc->doc.setFileType("petition"));
         this.d8Documents = d8Documents;
     }
 }
