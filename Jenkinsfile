@@ -92,7 +92,7 @@ buildNode {
           'src/main/resources/application.properties'
         )
 
-        version = "{div-case-progression-service_buildnumber: ${divCaseProgressionRPMVersion} }"
+        version = "{div_case_progression_service_buildnumber: ${divCaseProgressionRPMVersion} }"
         packager.publishJavaRPM('div-case-progression-service')
         deploy app: 'div-case-progression-service', version: divCaseProgressionRPMVersion, sha: env.CURRENT_SHA, env:'dev'
       }
@@ -105,7 +105,7 @@ buildNode {
           'src/main/resources/application.properties'
         )
 
-        version = "{div-case-progression-service_buildnumber: ${divCaseProgressionRPMVersion} }"
+        version = "{div_case_progression_service_buildnumber: ${divCaseProgressionRPMVersion} }"
         packager.publishJavaRPM('div-case-progression-service')
         deploy app: 'div-case-progression-service', version: divCaseProgressionRPMVersion, sha: env.CURRENT_SHA
       }
