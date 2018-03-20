@@ -1,0 +1,185 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.9.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'application'
+    id 'org.springframework.boot' version'1.5.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+    id 'org.owasp.dependencycheck' version '2.1.0'
+    id 'org.sonarqube' version '2.6.2'
+    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'jacoco'
+    id 'pmd'
+}
+
+group = 'uk.gov.hmcts.divorce'
+version = '0.0.3'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+    }
+}
+
+mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
+
+compileJava {
+    options.compilerArgs << '-parameters' << '-Xlint:deprecation'
+}
+
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+
+    maven {
+        url 'https://artifactory.reform.hmcts.net/artifactory/libs-release'
+    }
+}
+
+
+// https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
+dependencyCheck {
+    // Specifies if the build should be failed if a CVSS score above a specified level is identified.
+    // range of 0-10 fails the build, anything greater and it doesn't fail the build
+    failBuildOnCVSS = System.getProperty('dependencyCheck.failBuild') == 'true' ? 0 : 11
+    suppressionFile = 'dependency-check-suppressions.xml'
+}
+
+def versions = [
+
+        commonsCollections4: '4.1',
+        commonsIO: '2.5',
+        commonsLang3: '3.0',
+        hmctsHttpProxy: '1.1.0',
+        hmctsJavaLogging: '1.2.0',
+        hmctsNotify: '3.8.0-RELEASE',
+        hmctsServiceTokenGenerator: '1.0.5',
+        jackson: '2.9.4',
+        jaxRS: '2.0.1',
+        lombok: '1.16.18',
+        mapstruct: '1.2.0.CR2',
+        nimbusJWT: '5.1',
+        restAssured: '3.0.3',
+        springfoxSwagger: '2.6.1',
+        uniRest: '1.4.9',
+        wiremock: '2.8.0'
+]
+/*
+		org.mapstruct
+		     mapstruct
+
+
+		org.springframework.boot
+		     spring-boot-starter-test
+		     javax.ws.rs-api
+
+			     maven-surefire-plugin
+
+			     maven-failsafe-plugin
+			org.springframework.boot
+
+			     spring-boot-maven-plugin
+				org.apache.maven.plugins
+			     maven-checkstyle-plugin
+
+			org.apache.maven.plugins org.sonarsource.scanner.maven sonar-maven-plugin
+ */
+
+dependencies {
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    compile group: 'com.mashape.unirest', name: 'unirest-java', version: versions.uniRest
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: versions.nimbusJWT
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger) {
+        exclude(module: 'mapstruct')
+    }
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versions.jaxRS
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: versions.commonsCollections4
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: versions.commonsLang3
+    compile group: 'org.mapstruct', name: 'mapstruct-jdk8', version: versions.mapstruct
+    compile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: versions.hmctsServiceTokenGenerator
+    compile group: 'uk.gov.hmcts.reform', name: 'http-proxy-spring-boot-autoconfigure', version: versions.hmctsHttpProxy
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.hmctsJavaLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version:"0.4.2"
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.hmctsJavaLogging
+    compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: versions.hmctsNotify
+
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
+        exclude(module: 'commons-logging')
+    }
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: versions.wiremock
+    testCompile group: 'commons-io', name: 'commons-io', version: versions.commonsIO
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
+    compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
+}
+
+task printVersion {
+    doLast {
+        print project.version
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "DivorceTransformationService"
+        property "sonar.projectName", "Divorce :: transformation-service"
+        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
+        property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*"
+    }
+}
+
+task developAddRelaseSuffix() {
+    version = "${version}-SNAPSHOT"
+}
+
+jacocoTestReport {
+    executionData(test)
+
+    reports {
+        xml {
+            enabled true
+        }
+
+        html {
+            enabled true
+        }
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.8
+            }
+        }
+    }
+}
+
+def debug = System.getProperty("debug")
+run {
+    if (debug == 'true') {
+        jvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005']
+    }
+}
