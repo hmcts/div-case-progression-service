@@ -3,7 +3,7 @@
 properties([
     [
         $class: 'GithubProjectProperty',
-        displayName: 'Divorce Case Progression',
+        displayName: 'Divorce Case Progression Service',
         projectUrlStr: 'https://github.com/hmcts/div-case-progression-service'
     ],
     pipelineTriggers([
@@ -14,8 +14,8 @@ properties([
 @Library("Infrastructure")
 
 def type = "java"
-def product = "divorce"
-def component = "div-case-progression-service"
+def product = "div"
+def component = "case-progression"
 
 def channel = '#div-dev'
 

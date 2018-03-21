@@ -1,17 +1,17 @@
 variable "reform_service_name" {
-  default = "evidence-management-client-api"
+  default = "case-progression"
 }
 
 variable "reform_team" {
-  default = "divorce"
+  default = "div"
 }
 
 variable "env" {
   type = "string"
 }
 
-variable "evidence_management_client_api_port" {
-  default = "4006"
+variable "case_progression_service_port" {
+  default = "4003"
 }
 
 variable "auth_provider_service_client_baseurl" {
@@ -19,7 +19,7 @@ variable "auth_provider_service_client_baseurl" {
 }
 
 variable "auth_provider_service_client_microservice" {
-  default = "divorce_document_upload"
+  default = "divorce_ccd_submission"
 }
 
 variable "auth_provider_service_client_key" {
@@ -28,6 +28,26 @@ variable "auth_provider_service_client_key" {
 
 variable "auth_provider_service_client_tokentimetoliveinseconds" {
   default = "900"
+}
+
+variable ccd_casedatastore_baseurl {
+  default = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}"
+}
+
+variable ccd_casedatastore_health_uri {
+  default = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}/status/health"
+}
+
+variable ccd_jurisdictionid {
+  default = "{{ ccd_definition.data_store_definition.jurisdictionid }}"
+}
+
+variable ccd_casetypeid {
+  default = "{{ ccd_definition.data_store_definition.casetypeid }}"
+}
+
+variable ccd_eventid_create {
+  default = "{{ ccd_definition.data_store_definition.eventid.create }}"
 }
 
 variable "evidence_management_upload_file_url" {

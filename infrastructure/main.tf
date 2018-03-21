@@ -2,9 +2,9 @@ locals {
   ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
 }
 
-module "app" {
-  source       = "git@github.com:hmcts/div-caseprogression-service?ref=develop"
-  product      = "${reform_team}-${reform_service_name}"
+module "div-case-progression" {
+  source       = "git@github.com:contino/moj-module-webapp.git?ref=master"
+  product      = "${var.reform_team}-${var.reform_service_name}"
   location     = "${var.location}"
   env          = "${var.env}"
   ilbIp        = "${var.ilbIp}"
@@ -12,34 +12,28 @@ module "app" {
   is_frontend  = false
 
   app_settings = {
-    REFORM_SERVICE_NAME = "${var.reform_service_name }"
-    REFORM_TEAM         = "${var.reform_team }"
-    REFORM_ENVIRONMENT  = "${var.env}"
-    SERVER_PORT         = "${var.evidence_management_client_api_port}"
-
-    #NEW STUFF
-    REFORM_SERVICE_NAME                                   = "transformation-service"
-    REFORM_TEAM                                           = "divorce"
-    REFORM_ENVIRONMENT                                    = "{{ deployment_env }}"
-    SERVER_PORT                                           = "{{ transformation_service.port }}"
-    AUTH_PROVIDER_SERVICE_CLIENT_BASEURL                  = "{{ service_auth_provider.protocol }}://{{ service_auth_provider.host }}:{{ service_auth_provider.port }}"
-    AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE             = "{{ transformation_service.microservice_name }}"
-    AUTH_PROVIDER_SERVICE_CLIENT_KEY                      = "{{ transformation_service.secret }}"
-    AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "{{ transformation_service.tokentimetoliveinseconds }}"
-    AUTH_PROVIDER_HEALTH_URI                              = "{{ service_auth_provider.protocol }}://{{ service_auth_provider.host }}:{{ service_auth_provider.port }}/health"
-    CCD_CASEDATASTORE_BASEURL                             = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}"
-    CCD_CASEDATASTORE_HEALTH_URI                          = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}/status/health"
-    CCD_JURISDICTIONID                                    = "{{ ccd_definition.data_store_definition.jurisdictionid }}"
-    CCD_CASETYPEID                                        = "{{ ccd_definition.data_store_definition.casetypeid }}"
-    CCD_EVENTID_CREATE                                    = "{{ ccd_definition.data_store_definition.eventid.create }}"
-    LOGGING_LEVEL_ORG_SRPINGFRAMEWORK_WEB                 = "{{ transformation_service.spring_loglevel }}"
-    LOGGING_LEVEL_UK_GOV_HMCTS_CCD                        = "{{ transformation_service.ccd_loglevel }}"
-    DRAFT_STORE_API_ENCRYPTION_KEY                        = "{{ transformation_service.draft_encryption_key }}"
-    DRAFT_STORE_API_BASEURL                               = "{{ draft_store_api.protocol }}://{{ draft_store_api.host }}:{{ draft_store_api.port }}"
-    DRAFT_STORE_API_HEALTH_URI                            = "{{ draft_store_api.protocol }}://{{ draft_store_api.host }}:{{ draft_store_api.port }}/health"
-    PDF_GENERATOR_BASE_URL                                = "{{ div_document_generator.protocol }}://{{ div_document_generator.host }}:{{ div_document_generator.port }}"
-    UK_GOV_NOTIFY_API_KEY                                 = "{{ transformation_service.uk_gov_notify_api_key }}"
-    UK_GOV_NOTIFY_EMAIL_TEMPLATES                         = "{SAVE_DRAFT:'{{ transformation_service.save_draft_notify_template_id }}'}"
+    REFORM_SERVICE_NAME                                   = "${var.reform_service_name }"
+    REFORM_TEAM                                           = "${var.reform_team }"
+    REFORM_ENVIRONMENT                                    = "${var.env}"
+    SERVER_PORT                                           = "${var.evidence_management_client_api_port}"
+    AUTH_PROVIDER_SERVICE_CLIENT_BASEURL                  = "${var.auth_provider_service_client_baseurl}"
+    AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE             = "${var.auth_provider_service_client_microservice}"
+    AUTH_PROVIDER_SERVICE_CLIENT_KEY                      = "${data.vault_generic_secret.auth_provider_service_client_key.data["value"]}"
+    AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
+    AUTH_PROVIDER_HEALTH_URI                              = "${var.auth_provider_service_client_baseurl}/health"
+    CCD_CASEDATASTORE_BASEURL                             = "${var.ccd_casedatastore_baseurl}"
+    CCD_CASEDATASTORE_HEALTH_URI                          = "${var.ccd_casedatastore_baseurl}/status/health"
+    CCD_JURISDICTIONID                                    = "${var.ccd_jurisdictionid}"
+    CCD_CASETYPEID                                        = "${var.ccd_casetypeid}"
+    CCD_EVENTID_CREATE                                    = "${var.ccd_eventid_create}"
+    LOGGING_LEVEL_ORG_SRPINGFRAMEWORK_WEB                 = "${var.logging_level_org_springframework_web}"
+    LOGGING_LEVEL_UK_GOV_HMCTS_CCD                        = "${var.logging_level_uk_gov_hmcts_ccd}"
+    DRAFT_STORE_API_ENCRYPTION_KEY                        = "${data.vault_generic_secret.draft_store_api_encryption_key.data["value"]}"
+    DRAFT_STORE_API_BASEURL                               = "${var.draft_store_api_baseurl}"
+    DRAFT_STORE_API_HEALTH_URI                            = "${var.draft_store_api_baseurl}/health"
+    PDF_GENERATOR_BASE_URL                                = "${var.pdf_generator_base_url}"
+    UK_GOV_NOTIFY_API_KEY                                 = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
+    UK_GOV_NOTIFY_EMAIL_TEMPLATES                         = "${var.uk_gov_notify_email_templates}"
   }
 }
 
@@ -48,5 +42,13 @@ provider "vault" {
 }
 
 data "vault_generic_secret" "auth_provider_service_client_key" {
-  path = "secret/test/ccidam/service-auth-provider/api/microservice-keys/divorceDocumentUpload"
+  path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
+}
+
+data "vault_generic_secret" "draft_store_api_encryption_key" {
+  path = "secret/${var.vault_env}/divorce/draft/encryption_key"
+}
+
+data "vault_generic_secret" "uk_gov_notify_api_key" {
+  path = "secret/${var.vault_env}/divorce/notify/api_key"
 }
