@@ -30,46 +30,49 @@ variable "auth_provider_service_client_tokentimetoliveinseconds" {
   default = "900"
 }
 
-variable ccd_casedatastore_baseurl {
-  default = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}"
+variable "ccd_casedatastore_baseurl" {
+  default = "https://case-data-app.test.ccd.reform.hmcts.net:4481"
 }
 
-variable ccd_casedatastore_health_uri {
-  default = "{{ ccd.data_store.protocol }}://{{ ccd.data_store.host }}:{{ ccd.data_store.port }}/status/health"
+variable "ccd_jurisdictionid" {
+  default = "DIVORCE"
 }
 
-variable ccd_jurisdictionid {
-  default = "{{ ccd_definition.data_store_definition.jurisdictionid }}"
+variable "ccd_casetypeid" {
+  default = "DIVORCE"
 }
 
-variable ccd_casetypeid {
-  default = "{{ ccd_definition.data_store_definition.casetypeid }}"
+variable "ccd_eventid_create" {
+  default = "create"
 }
 
-variable ccd_eventid_create {
-  default = "{{ ccd_definition.data_store_definition.eventid.create }}"
+variable "logging_level_org_springframework_web" {
+  type = "string"
 }
 
-variable "evidence_management_upload_file_url" {
-  default = "https://api-gateway.test.dm.reform.hmcts.net/documents"
+variable "logging_level_uk_gov_hmcts_ccd" {
+  type = "string"
 }
 
-variable "document_management_store_url" {
-  default = "https://api.test.dm.reform.hmcts.net:4604"
+variable "draft_store_api_baseurl" {
+  type = "string"
 }
 
-variable "evidence_management_health_url" {
-  default = "https://api-gateway.test.dm.reform.hmcts.net/health"
+variable "pdf_generator_base_url" {
+  type = "string"
 }
 
-variable "http_connect_timeout" {
-  default = "60000"
+variable "uk_gov_notify_email_templates" {
+  type = "string"
 }
 
-variable "http_connect_request_timeout" {
-  default = "60000"
+variable "subscription" {}
+
+variable "location" {
+  type    = "string"
+  default = "UK South"
 }
 
-variable "http_connect_socket_timeout" {
-  default = "1000"
-}
+variable "ilbIp" {}
+
+variable "vault_env" {}
