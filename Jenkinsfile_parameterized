@@ -3,8 +3,8 @@
 
 properties([
         parameters([
-                string(name: 'PRODUCT_NAME', defaultValue: 'divorce', description: 'Divorce'),
-                string(name: 'APP', defaultValue: 'div-evidence-management-client-api', description: 'Divorce Evidence Management Client API'),
+                string(name: 'PRODUCT_NAME', defaultValue: 'div', description: 'Divorce'),
+                string(name: 'APP', defaultValue: 'case-progression', description: 'Divorce Case Progression Service'),
                 string(name: 'TYPE', defaultValue: 'java', description: ''),
                 string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be built and deployed'),
                 choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
