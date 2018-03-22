@@ -15,7 +15,7 @@ module "div-case-progression" {
     REFORM_SERVICE_NAME                                   = "${var.reform_service_name }"
     REFORM_TEAM                                           = "${var.reform_team }"
     REFORM_ENVIRONMENT                                    = "${var.env}"
-    SERVER_PORT                                           = "${var.evidence_management_client_api_port}"
+    SERVER_PORT                                           = "${var.case_progression_service_port}"
     AUTH_PROVIDER_SERVICE_CLIENT_BASEURL                  = "${var.auth_provider_service_client_baseurl}"
     AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE             = "${var.auth_provider_service_client_microservice}"
     AUTH_PROVIDER_SERVICE_CLIENT_KEY                      = "${data.vault_generic_secret.auth_provider_service_client_key.data["value"]}"
