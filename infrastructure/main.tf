@@ -32,7 +32,6 @@ module "div-case-progression" {
     DRAFT_STORE_API_ENCRYPTION_KEY                        = "${data.vault_generic_secret.draft_store_api_encryption_key.data["value"]}"
     DRAFT_STORE_API_BASEURL                               = "${var.draft_store_api_baseurl}"
     DRAFT_STORE_API_HEALTH_URI                            = "${var.draft_store_api_baseurl}/health"
-    PDF_GENERATOR_BASE_URL                                = "${var.pdf_generator_base_url}"
     UK_GOV_NOTIFY_API_KEY                                 = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
     UK_GOV_NOTIFY_EMAIL_TEMPLATES                         = "${var.uk_gov_notify_email_templates}"
   }

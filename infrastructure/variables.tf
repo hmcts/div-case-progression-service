@@ -59,7 +59,7 @@ variable "draft_store_api_baseurl" {
 }
 
 variable "pdf_generator_base_url" {
-  type = "string"
+  default = "string"
 }
 
 variable "uk_gov_notify_email_templates" {
