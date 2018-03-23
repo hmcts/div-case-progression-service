@@ -27,11 +27,13 @@ version = '0.0.3'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
 jar {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
+    archiveName 'div-case-progression-service.jar'
 }
 
 mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
