@@ -36,6 +36,19 @@ jar {
     archiveName 'div-case-progression-service.jar'
 }
 
+
+task smoke(type:Test) {
+    group = 'Delivery pipeline'
+    description = 'Executes non-destructive smoke tests against a running Claim Store instance'
+    exclude "uk/gov/**"
+}
+
+task functional(type:Test) {
+    group = 'Delivery pipeline'
+    //we need to separate out functional test.
+    exclude "uk/gov/**"
+}
+
 mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
 
 compileJava {
@@ -153,6 +166,10 @@ sonarqube {
 
 task developAddRelaseSuffix() {
     version = "${version}-SNAPSHOT"
+}
+
+test {
+        exclude 'uk/gov/**'
 }
 
 jacocoTestReport {
