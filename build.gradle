@@ -169,7 +169,7 @@ task developAddRelaseSuffix() {
 }
 
 test {
-        exclude 'uk/gov/**'
+        exclude 'uk/gov/hmcts/reform/divorce/transformservice/functional/**'
 }
 
 jacocoTestReport {
