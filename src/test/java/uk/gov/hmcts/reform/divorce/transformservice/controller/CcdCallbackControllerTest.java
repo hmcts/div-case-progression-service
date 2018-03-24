@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.service.SanitiseService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
 import java.io.File;
@@ -46,12 +47,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CcdCallbackControllerTest {
 
     private static final String ADD_PDF_URL = "/caseprogression/petition-issued";
+    private static final String SANITISE_URL = "/caseprogression/sanitise";
 
     @Autowired
     private WebApplicationContext applicationContext;
 
     @MockBean
     private UpdateService updateService;
+
+    @MockBean
+    private SanitiseService sanitiseService;
 
     private MockMvc mvc;
 
@@ -94,6 +99,31 @@ public class CcdCallbackControllerTest {
 
         verify(updateService).addPdf(submittedCase);
         verifyNoMoreInteractions(updateService);
+    }
+
+    @Test
+    public void shouldReturnSanitisedCase() throws Exception {
+        final CoreCaseData sanitisedCaseData = new CoreCaseData();
+        final CaseDetails rawCase = new CaseDetails();
+        final CreateEvent callbackEvent = new CreateEvent();
+        callbackEvent.setCaseDetails(rawCase);
+
+        when(sanitiseService.sanitiseCase(rawCase)).thenReturn(sanitisedCaseData);
+
+        MvcResult result = mvc.perform(post(SANITISE_URL)
+                                               .content(ObjectMapperTestUtil.convertObjectToJsonString(callbackEvent))
+                                               .contentType(MediaType.APPLICATION_JSON_UTF8))
+                              .andExpect(status().isOk()).andReturn();
+
+        CCDCallbackResponse response =
+                ObjectMapperTestUtil.convertJsonToObject(
+                        result.getResponse().getContentAsByteArray(),
+                        CCDCallbackResponse.class);
+
+        assertEquals(sanitisedCaseData, response.getData());
+
+        verify(sanitiseService).sanitiseCase(rawCase);
+        verifyNoMoreInteractions(sanitiseService);
     }
 
     @Test
