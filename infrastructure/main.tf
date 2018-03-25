@@ -1,6 +1,6 @@
 locals {
   ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
-  tactical_div_document_generator = "htpp://betaDevBdivorceAppLB.reform.hmcts.net:4017"
+  tactical_div_document_generator = "http://betaDevBdivorceAppLB.reform.hmcts.net:4017"
 }
 
 module "div-case-progression" {
