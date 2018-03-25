@@ -40,7 +40,7 @@ jar {
 task smoke(type:Test) {
     group = 'Delivery pipeline'
     description = 'Executes non-destructive smoke tests against a running Claim Store instance'
-    exclude "uk/gov/**"
+    include "uk/gov/hmcts/reform/divorce/smoketest/**"
 }
 
 task functional(type:Test) {
