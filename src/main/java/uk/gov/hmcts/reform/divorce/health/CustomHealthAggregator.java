@@ -25,6 +25,7 @@ public class CustomHealthAggregator implements HealthAggregator {
 
     @Override
     public final Health aggregate(Map<String, Health> healths) {
+
         List<Status> statusCandidates = new ArrayList<>();
         for (Map.Entry<String, Health> entry : healths.entrySet()) {
             if (!"draftStoreApi".equalsIgnoreCase(entry.getKey())) {
