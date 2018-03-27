@@ -12,6 +12,7 @@ public class PdfToCoreCaseDataMapper {
 
     private static final String HAL_BINARY_RESPONSE_CONTEXT_PATH = "/binary";
     private static final String PDF_FILE_EXTENSION = ".pdf";
+    private static final String DOCUMENT_TYPE_PETITION = "petition";
 
     public CoreCaseData toCoreCaseData(PdfFile pdfFile, CoreCaseData coreCaseData) {
         Document document = toPdfDocument(pdfFile);
@@ -32,7 +33,7 @@ public class PdfToCoreCaseDataMapper {
                 .build();
         pdfDocument.setDocumentLink(documentLink);
         pdfDocument.setDocumentFileName(pdfFile.getFileName());
-        pdfDocument.setDocumentType(DocumentType.PETITION);
+        pdfDocument.setDocumentType(DOCUMENT_TYPE_PETITION);
         return pdfDocument;
     }
 }

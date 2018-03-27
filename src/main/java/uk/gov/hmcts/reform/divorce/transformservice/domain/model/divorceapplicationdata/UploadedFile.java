@@ -20,5 +20,5 @@ class UploadedFile {
     private String mimeType;
     private String status;
     @JsonIgnore
-    private UploadedFileType fileType;
+    private String fileType;
 }
