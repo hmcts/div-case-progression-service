@@ -420,5 +420,11 @@ class CoreCaseData {
 
     @JsonProperty("D8InferredRespondentGender")
     private Gender d8InferredRespondentGender;
+
+    @JsonProperty("SolSOCBehaviourExample2")
+    private String solSOCBehaviourExample2;
+
+    @JsonProperty("SolSOCBehaviourExample3")
+    private String solSOCBehaviourExample3;
 }
 
