@@ -29,6 +29,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -47,7 +49,7 @@ public class CaseAddPdfFunctionalTest {
 
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
-            new WireMockConfiguration().port(4007).bindAddress("localhost"));
+        new WireMockConfiguration().port(4007).bindAddress("localhost"));
 
     @Test
     public void shouldReturnCaseDataWhenAddPdf() throws Exception {
@@ -55,24 +57,26 @@ public class CaseAddPdfFunctionalTest {
         pdfGeneratorStub();
 
         CCDCallbackResponse expectedResponse =
-                ObjectMapperTestUtil.convertJsonToObject(
-                        loadResourceAsByteArray("/divorce-payload-json/add-pdf-response.json"),
-                        CCDCallbackResponse.class);
+            ObjectMapperTestUtil.convertJsonToObject(
+                loadResourceAsByteArray("/divorce-payload-json/add-pdf-response.json"),
+                CCDCallbackResponse.class);
 
         HttpHeaders headers = setHttpHeaders();
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<CCDCallbackResponse> response =
-                restTemplate.postForEntity(
-                        "/caseprogression/petition-issued",
-                        entity,
-                        CCDCallbackResponse.class,
-                        new HashMap<>());
+            restTemplate.postForEntity(
+                "/caseprogression/petition-issued",
+                entity,
+                CCDCallbackResponse.class,
+                new HashMap<>());
 
         assertEquals(expectedResponse, response.getBody());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        pdfGeneratorVerify();
     }
 
     @Test
@@ -86,11 +90,11 @@ public class CaseAddPdfFunctionalTest {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<CCDCallbackResponse> response =
-                restTemplate.postForEntity(
-                        "/caseprogression/petition-issued",
-                        entity,
-                        CCDCallbackResponse.class,
-                        new HashMap<>());
+            restTemplate.postForEntity(
+                "/caseprogression/petition-issued",
+                entity,
+                CCDCallbackResponse.class,
+                new HashMap<>());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertEquals(expectedErrorMessage, response.getBody().getErrors().get(0));
@@ -118,10 +122,18 @@ public class CaseAddPdfFunctionalTest {
         String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
 
         pdfGeneratorServer.stubFor(post(PDF_GENERATOR_ENDPOINT)
-                .withRequestBody(equalToJson(generateTemplateRequestBody))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .willReturn(aResponse()
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withBody(pdfGeneratedResponseBody)));
+            .withRequestBody(equalToJson(generateTemplateRequestBody))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .willReturn(aResponse()
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withBody(pdfGeneratedResponseBody)));
+    }
+
+    private void pdfGeneratorVerify() throws Exception {
+        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
+
+        pdfGeneratorServer.verify(postRequestedFor(urlEqualTo(PDF_GENERATOR_ENDPOINT))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .withRequestBody(equalToJson(generateTemplateRequestBody)));
     }
 }
