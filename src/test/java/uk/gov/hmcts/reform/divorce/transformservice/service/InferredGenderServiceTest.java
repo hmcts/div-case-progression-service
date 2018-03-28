@@ -3,9 +3,9 @@ package uk.gov.hmcts.reform.divorce.transformservice.service;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Gender;
-import uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class InferredGenderServiceTest {
 

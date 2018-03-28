@@ -16,8 +16,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(path = "/caseprogression")
@@ -27,14 +27,16 @@ public class CcdCallBackController {
     @Autowired
     private UpdateService updateService;
 
-    @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON,
+        produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Generate and add a pdf of the petition to the case")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "A pdf of the petition has been generated and added to the case", response = CCDCallbackResponse.class),
-            @ApiResponse(code = 400, message = "Bad Request")
-    })
+        @ApiResponse(code = 200, message = "A pdf of the petition has been generated and added to the case",
+            response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request")
+        })
     public ResponseEntity<CCDCallbackResponse> addPdf(
-            @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+        @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
         CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest);
         return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));

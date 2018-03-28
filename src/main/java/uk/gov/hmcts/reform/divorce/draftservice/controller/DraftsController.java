@@ -41,20 +41,17 @@ public class DraftsController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Saves a divorce case draft")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Draft saved")
-    })
+        @ApiResponse(code = 204, message = "Draft saved")
+        })
     public ResponseEntity<Void> saveDraft(
-            @RequestHeader("Authorization")
-            @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
-            final String jwt,
-            @RequestBody
-            @ApiParam(value = "The divorce case draft", required = true)
-            @NotNull
-            final JsonNode data,
-            @RequestParam(value = "notificationEmail", required = false)
-            @ApiParam(value = "The email address that will receive the notification that the draft has been saved", required = false)
-            @Email
-            final String notificationEmail) {
+        @RequestHeader("Authorization")
+        @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt,
+        @RequestBody
+        @ApiParam(value = "The divorce case draft", required = true)
+        @NotNull final JsonNode data,
+        @RequestParam(value = "notificationEmail", required = false)
+        @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
+        @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
         service.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
@@ -66,11 +63,12 @@ public class DraftsController {
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieves a divorce case draft")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "A draft exists. The draft content is in the response body"),
-            @ApiResponse(code = 404, message = "Draft does not exist")
-    })
+        @ApiResponse(code = 200, message = "A draft exists. The draft content is in the response body"),
+        @ApiResponse(code = 404, message = "Draft does not exist")
+        })
     public ResponseEntity<JsonNode> retrieveDraft(
-            @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
+        @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
+        final String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
         JsonNode draft = service.getDraft(jwt);
         if (draft != null) {
@@ -82,9 +80,11 @@ public class DraftsController {
     @DeleteMapping
     @ApiOperation(value = "Deletes a divorce case draft")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "The divorce case draft has been deleted successfully")
-    })
-    public ResponseEntity<Void> deleteDraft(@RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
+        @ApiResponse(code = 204, message = "The divorce case draft has been deleted successfully")
+        })
+    public ResponseEntity<Void> deleteDraft(@RequestHeader("Authorization")
+                                                @ApiParam(value = "JWT authorisation token issued by IDAM",
+                                                    required = true) final String jwt) {
         log.debug("Received request to delete a divorce session draft");
         service.deleteDraft(jwt);
         return ResponseEntity.noContent().build();

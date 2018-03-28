@@ -22,9 +22,9 @@ public class EmailService {
 
     @Autowired
     public EmailService(@Value("${uk.gov.notify.api.key}")
-                        String apiKey,
+                            String apiKey,
                         @Value("#{${uk.gov.notify.email.templates}}")
-                        Map<String, String> emailTemplates) {
+                            Map<String, String> emailTemplates) {
         this(new NotificationClient(apiKey), emailTemplates);
     }
 
@@ -37,9 +37,9 @@ public class EmailService {
     public void sendSaveDraftConfirmationEmail(String destinationAddress) {
         String referenceId = UUID.randomUUID().toString();
         EmailToSend emailToSend = new EmailToSend(destinationAddress,
-                emailTemplates.get(EmailTemplateNames.SAVE_DRAFT.name()),
-                null,
-                referenceId);
+            emailTemplates.get(EmailTemplateNames.SAVE_DRAFT.name()),
+            null,
+            referenceId);
         try {
             log.debug("Attempting to send email. Reference ID: {}", referenceId);
             sendEmail(emailToSend);
@@ -51,10 +51,10 @@ public class EmailService {
 
     private void sendEmail(EmailToSend emailToSend) throws NotificationClientException {
         notificationClient.sendEmail(
-                emailToSend.getTemplateId(),
-                emailToSend.getEmailAddress(),
-                emailToSend.getTemplateFields(),
-                emailToSend.getReferenceId()
+            emailToSend.getTemplateId(),
+            emailToSend.getEmailAddress(),
+            emailToSend.getTemplateFields(),
+            emailToSend.getReferenceId()
         );
     }
 }

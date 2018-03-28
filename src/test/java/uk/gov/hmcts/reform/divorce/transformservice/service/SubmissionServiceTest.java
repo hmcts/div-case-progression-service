@@ -14,7 +14,13 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionServiceTest {
@@ -33,15 +39,15 @@ public class SubmissionServiceTest {
 
     @Test
     public void submitReturnsCaseId() throws Exception {
-        DivorceSession divorceSession = new DivorceSession();
-        CaseDataContent caseDataContent = mock(CaseDataContent.class);
-        String jwt = "_jwt";
-        String token = "_token";
-        String eventSummary = "Create case";
-        int caseId = 2893;
-        CreateEvent createEvent = new CreateEvent();
+        final DivorceSession divorceSession = new DivorceSession();
+        final CaseDataContent caseDataContent = mock(CaseDataContent.class);
+        final String jwt = "_jwt";
+        final String token = "_token";
+        final String eventSummary = "Create case";
+        final int caseId = 2893;
+        final CreateEvent createEvent = new CreateEvent();
         createEvent.setToken(token);
-        SubmitEvent submitEvent = new SubmitEvent();
+        final SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(caseId);
 
         when(ccdClient.createCase(jwt)).thenReturn(createEvent);

@@ -29,7 +29,7 @@ public class SubmissionService {
         CreateEvent createEvent = ccdClient.createCase(jwt);
 
         SubmitEvent submitEvent = ccdClient.submitCase(jwt,
-                transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));
+            transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);

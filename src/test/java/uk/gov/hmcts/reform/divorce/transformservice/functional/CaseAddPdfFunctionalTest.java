@@ -43,13 +43,11 @@ public class CaseAddPdfFunctionalTest {
     private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String REQUEST_ID_HEADER_VALUE = "1234567";
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
         new WireMockConfiguration().port(4007).bindAddress("localhost"));
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     @Test
     public void shouldReturnCaseDataWhenAddPdf() throws Exception {
@@ -83,7 +81,8 @@ public class CaseAddPdfFunctionalTest {
     public void shouldReturnErrorWhenUploadedDocumentTypeIsNotSet() throws Exception {
         String requestBody = loadResourceAsString("/divorce-payload-json/add-pdf-no-documenttype.json");
 
-        String expectedErrorMessage = "The Document Type has not been set for one of the uploaded documents. This must be set before a new PDF can be created";
+        String expectedErrorMessage = "The Document Type has not been set for one of the uploaded documents. "
+            + "This must be set before a new PDF can be created";
 
         HttpHeaders headers = setHttpHeaders();
 
@@ -117,9 +116,11 @@ public class CaseAddPdfFunctionalTest {
     }
 
     private void pdfGeneratorStub() throws Exception {
-        String pdfGeneratedResponseBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-200-response.json");
+        String pdfGeneratedResponseBody =
+            loadResourceAsString("/fixtures/pdf-generator/generate-pdf-200-response.json");
 
-        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
+        String generateTemplateRequestBody =
+            loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
 
         pdfGeneratorServer.stubFor(post(PDF_GENERATOR_ENDPOINT)
             .withRequestBody(equalToJson(generateTemplateRequestBody))
@@ -130,7 +131,8 @@ public class CaseAddPdfFunctionalTest {
     }
 
     private void pdfGeneratorVerify() throws Exception {
-        String generateTemplateRequestBody = loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
+        String generateTemplateRequestBody =
+            loadResourceAsString("/fixtures/pdf-generator/generate-pdf-request.json");
 
         pdfGeneratorServer.verify(postRequestedFor(urlEqualTo(PDF_GENERATOR_ENDPOINT))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))

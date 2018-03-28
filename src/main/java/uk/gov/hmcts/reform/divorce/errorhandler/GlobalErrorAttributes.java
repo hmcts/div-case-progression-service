@@ -13,9 +13,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
         Map<String, Object> errorAttributes =
-                super.getErrorAttributes(requestAttributes, includeStackTrace);
+            super.getErrorAttributes(requestAttributes, includeStackTrace);
         String errorCode =
-                (String) requestAttributes.getAttribute("javax.servlet.error.error_code", RequestAttributes.SCOPE_REQUEST);
+            (String) requestAttributes.getAttribute("javax.servlet.error.error_code", RequestAttributes.SCOPE_REQUEST);
         if (StringUtils.isNotBlank(errorCode)) {
             errorAttributes.put("errorCode", errorCode);
         }

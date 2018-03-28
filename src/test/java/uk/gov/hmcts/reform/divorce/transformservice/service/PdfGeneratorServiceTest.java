@@ -34,7 +34,7 @@ public class PdfGeneratorServiceTest {
         Long caseId = 990L;
         CreateEvent submittedCase = new CreateEvent();
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId(caseId+"");
+        caseDetails.setCaseId(caseId + "");
         submittedCase.setCaseDetails(caseDetails);
 
         PdfFile pdfFile = PdfFile.builder().url("oneUrl").build();
@@ -51,7 +51,7 @@ public class PdfGeneratorServiceTest {
     }
 
     @Test(expected = PdfGeneratorException.class)
-    public void pdfGeneratorServiceMapExceptionsToPdfGeneratorException(){
+    public void pdfGeneratorServiceMapExceptionsToPdfGeneratorException() {
 
         CreateEvent submittedCase = new CreateEvent();
 
@@ -63,7 +63,7 @@ public class PdfGeneratorServiceTest {
     }
 
     @Test
-    public void pdfGeneratorReturnsNullReturnNull(){
+    public void pdfGeneratorReturnsNullReturnNull() {
         CreateEvent submittedCase = new CreateEvent();
         when(pdfGeneratorClient.generatePdf(submittedCase)).thenReturn(null);
 

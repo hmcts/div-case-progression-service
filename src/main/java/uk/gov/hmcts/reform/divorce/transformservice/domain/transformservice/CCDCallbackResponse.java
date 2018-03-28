@@ -1,15 +1,14 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor

@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.*;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CollectionMember;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentLink;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfFile;
 
 import java.util.ArrayList;
@@ -27,10 +30,10 @@ public class PdfToCoreCaseDataMapper {
     private Document toPdfDocument(PdfFile pdfFile) {
         Document pdfDocument = new Document();
         DocumentLink documentLink = DocumentLink.builder()
-                .documentUrl(pdfFile.getUrl())
-                .documentBinaryUrl(pdfFile.getUrl() + HAL_BINARY_RESPONSE_CONTEXT_PATH)
-                .documentFilename(pdfFile.getFileName() + PDF_FILE_EXTENSION)
-                .build();
+            .documentUrl(pdfFile.getUrl())
+            .documentBinaryUrl(pdfFile.getUrl() + HAL_BINARY_RESPONSE_CONTEXT_PATH)
+            .documentFilename(pdfFile.getFileName() + PDF_FILE_EXTENSION)
+            .build();
         pdfDocument.setDocumentLink(documentLink);
         pdfDocument.setDocumentFileName(pdfFile.getFileName());
         pdfDocument.setDocumentType(DOCUMENT_TYPE_PETITION);

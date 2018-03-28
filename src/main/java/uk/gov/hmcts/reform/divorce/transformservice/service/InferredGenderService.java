@@ -1,12 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.service;
 
-import java.util.Map;
-
-import org.springframework.stereotype.Component;
-
 import com.google.common.collect.ImmutableMap;
-
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Gender;
+
+import java.util.Map;
 
 @Component
 public class InferredGenderService {

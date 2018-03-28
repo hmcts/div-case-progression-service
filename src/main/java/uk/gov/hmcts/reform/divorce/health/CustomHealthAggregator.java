@@ -17,10 +17,10 @@ public class CustomHealthAggregator implements HealthAggregator {
 
     public CustomHealthAggregator() {
         this.statusOrder = ImmutableList.of(
-                Status.DOWN.getCode(),
-                Status.OUT_OF_SERVICE.getCode(),
-                Status.UP.getCode(),
-                Status.UNKNOWN.getCode());
+            Status.DOWN.getCode(),
+            Status.OUT_OF_SERVICE.getCode(),
+            Status.UP.getCode(),
+            Status.UNKNOWN.getCode());
     }
 
     @Override

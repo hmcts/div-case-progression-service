@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -46,7 +46,7 @@ public class DraftStoreHttpEntityFactoryTest {
     @Test
     public void createRequestEntityForDraftShouldReturnAuthorizationServiceAuthorizationSecretAndTheCreateDraft() {
         HttpEntity<CreateDraft> createDraftHttpEntity =
-                underTest.createRequestEntityForDraft(JWT, SECRET, createDraft);
+            underTest.createRequestEntityForDraft(JWT, SECRET, createDraft);
 
         assertEquals(JWT, createDraftHttpEntity.getHeaders().get(AUTHORIZATION_HEADER_NAME).get(0));
         assertEquals(SERVICE_JWT, createDraftHttpEntity.getHeaders().get(SERVICE_AUTHORIZATION_HEADER_NAME).get(0));
@@ -58,7 +58,7 @@ public class DraftStoreHttpEntityFactoryTest {
     @Test
     public void createRequestEntityForDraftShouldReturnAuthorizationServiceAuthorizationSecretAndTheUpdateDraft() {
         HttpEntity<UpdateDraft> updateDraftHttpEntity =
-                underTest.createRequestEntityForDraft(JWT, SECRET, updateDraft);
+            underTest.createRequestEntityForDraft(JWT, SECRET, updateDraft);
 
         assertEquals(JWT, updateDraftHttpEntity.getHeaders().get(AUTHORIZATION_HEADER_NAME).get(0));
         assertEquals(SERVICE_JWT, updateDraftHttpEntity.getHeaders().get(SERVICE_AUTHORIZATION_HEADER_NAME).get(0));

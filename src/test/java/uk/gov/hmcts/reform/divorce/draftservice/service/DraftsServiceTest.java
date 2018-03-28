@@ -10,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
+import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
+import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,10 @@ import java.util.Collections;
 
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftsServiceTest {
@@ -63,8 +66,8 @@ public class DraftsServiceTest {
     @Before
     public void setUp() throws Exception {
         String requestContentAsString = FileUtils.readFileToString(
-                new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
-                Charset.defaultCharset());
+            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
+            Charset.defaultCharset());
 
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(requestContentAsString);
@@ -90,9 +93,9 @@ public class DraftsServiceTest {
         underTest.saveDraft(JWT, requestContent);
 
         verify(client)
-                .createDraft(JWT, SECRET, createDraft);
+            .createDraft(JWT, SECRET, createDraft);
         verify(client, times(0))
-                .updateDraft(any(), any(), any(), any());
+            .updateDraft(any(), any(), any(), any());
     }
 
     @Test
@@ -103,9 +106,9 @@ public class DraftsServiceTest {
         underTest.saveDraft(JWT, requestContent);
 
         verify(client)
-                .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
+            .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
         verify(client, times(0))
-                .createDraft(any(), any(), any());
+            .createDraft(any(), any(), any());
     }
 
     @Test
@@ -116,9 +119,9 @@ public class DraftsServiceTest {
         underTest.saveDraft(JWT, requestContent);
 
         verify(client)
-                .createDraft(JWT, SECRET, createDraft);
+            .createDraft(JWT, SECRET, createDraft);
         verify(client, times(0))
-                .updateDraft(any(), any(), any(), any());
+            .updateDraft(any(), any(), any(), any());
     }
 
     @Test
@@ -179,7 +182,7 @@ public class DraftsServiceTest {
         underTest.deleteDraft(JWT);
 
         verify(client, times(0))
-                .deleteDraft(any(), any());
+            .deleteDraft(any(), any());
     }
 
     @Test
@@ -190,7 +193,7 @@ public class DraftsServiceTest {
         underTest.deleteDraft(JWT);
 
         verify(client, times(0))
-                .deleteDraft(any(), any());
+            .deleteDraft(any(), any());
     }
 
 }

@@ -19,15 +19,17 @@ public class CcdCallBackExceptionTest {
     private CcdCallbackExceptionHandler underTest = new CcdCallbackExceptionHandler();
 
     @Test
-    public void InvalidPetitionExceptionShouldReturnCorrectErrorMessage() {
+    public void invalidPetitionExceptionShouldReturnCorrectErrorMessage() {
         InvalidPetitionException exception = new InvalidPetitionException("DocumentType Missing");
         HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 
-        ResponseEntity<CCDCallbackResponse> ccdCallbackResponseResponseEntity = underTest.handleInvalidPetitionException(exception, httpServletRequest);
+        ResponseEntity<CCDCallbackResponse> ccdCallbackResponseResponseEntity =
+            underTest.handleInvalidPetitionException(exception, httpServletRequest);
 
         assertThat(
-                ccdCallbackResponseResponseEntity.getBody().getErrors().get(0),
-                equalTo("The Document Type has not been set for one of the uploaded documents. This must be set before a new PDF can be created")
+            ccdCallbackResponseResponseEntity.getBody().getErrors().get(0),
+            equalTo("The Document Type has not been set for one of the uploaded documents. "
+                + "This must be set before a new PDF can be created")
         );
     }
 

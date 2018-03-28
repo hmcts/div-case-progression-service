@@ -5,9 +5,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 @Component
 public class DraftStoreHttpEntityFactory {
@@ -19,12 +19,14 @@ public class DraftStoreHttpEntityFactory {
     private AuthTokenGenerator serviceTokenGenerator;
 
 
-    public HttpEntity<CreateDraft> createRequestEntityForDraft(String userToken, String secret, CreateDraft createDraft) {
+    public HttpEntity<CreateDraft> createRequestEntityForDraft(String userToken, String secret,
+                                                               CreateDraft createDraft) {
         HttpHeaders headers = getHeaders(userToken, secret);
         return new HttpEntity<>(createDraft, headers);
     }
 
-    public HttpEntity<UpdateDraft> createRequestEntityForDraft(String userToken, String secret, UpdateDraft updateDraft) {
+    public HttpEntity<UpdateDraft> createRequestEntityForDraft(String userToken, String secret,
+                                                               UpdateDraft updateDraft) {
         HttpHeaders headers = getHeaders(userToken, secret);
         return new HttpEntity<>(updateDraft, headers);
     }
@@ -33,6 +35,7 @@ public class DraftStoreHttpEntityFactory {
         HttpHeaders headers = getHeaders(userToken, secret);
         return new HttpEntity<>(headers);
     }
+
     public HttpEntity<Void> createRequestEntityFroDraft(String userToken) {
         HttpHeaders headers = getHeaders(userToken);
         return new HttpEntity<>(headers);

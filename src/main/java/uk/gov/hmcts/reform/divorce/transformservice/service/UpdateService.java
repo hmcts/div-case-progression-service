@@ -38,10 +38,10 @@ public class UpdateService {
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
 
         CreateEvent createEvent = updateCcdEventClient.startEvent(jwt, caseId,
-                divorceEventSessionData.getEventId());
+            divorceEventSessionData.getEventId());
 
         CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(jwt, caseId,
-                transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);

@@ -35,23 +35,23 @@ public class EmailServiceTest {
         emailService.sendSaveDraftConfirmationEmail(emailAddress);
 
         verify(client).sendEmail(
-                eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
-                eq(emailAddress),
-                eq(null),
-                anyString());
+            eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
+            eq(emailAddress),
+            eq(null),
+            anyString());
     }
 
     @Test
     public void failToSendEmail() throws NotificationClientException {
-        doThrow(new NotificationClientException(new Exception("Exception inception"))).
-                when(client).sendEmail(anyString(),anyString(), eq(null), anyString());
+        doThrow(new NotificationClientException(new Exception("Exception inception")))
+            .when(client).sendEmail(anyString(), anyString(), eq(null), anyString());
 
         emailService.sendSaveDraftConfirmationEmail(emailAddress);
 
         verify(client).sendEmail(
-                eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
-                eq(emailAddress),
-                eq(null),
-                anyString());
+            eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
+            eq(emailAddress),
+            eq(null),
+            anyString());
     }
 }

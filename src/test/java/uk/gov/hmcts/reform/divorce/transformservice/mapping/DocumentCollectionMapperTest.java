@@ -32,10 +32,10 @@ public class DocumentCollectionMapperTest {
         String fileUrl = "http://em-api-gateway-web:3404/documents/3627acc4-cb3b-4c95-9588-fea94e6c5855";
 
         UploadedFile uploadedFile = UploadedFile.builder()
-                .fileName(fileName)
-                .createdOn(createdOn)
-                .fileUrl(fileUrl)
-                .build();
+            .fileName(fileName)
+            .createdOn(createdOn)
+            .fileUrl(fileUrl)
+            .build();
 
         CollectionMember<Document> collectionMember = mapper.map(uploadedFile);
 
@@ -61,9 +61,9 @@ public class DocumentCollectionMapperTest {
         String fileUrl = "http://em-api-gateway-web:3404/documents/3627acc4-cb3b-4c95-9588-fea94e6c5855";
 
         UploadedFile uploadedFile = UploadedFile.builder()
-                .fileName(fileName)
-                .fileUrl(fileUrl)
-                .build();
+            .fileName(fileName)
+            .fileUrl(fileUrl)
+            .build();
 
         CollectionMember<Document> collectionMember = mapper.map(uploadedFile);
 

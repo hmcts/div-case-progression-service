@@ -10,10 +10,11 @@ import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdCallBackContro
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InvalidPetitionException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+
 
 @ControllerAdvice(basePackageClasses = CcdCallBackController.class)
 public class CcdCallbackExceptionHandler {
@@ -21,27 +22,30 @@ public class CcdCallbackExceptionHandler {
     private static final String GENERIC_EXCEPTION_MESSAGE = "{0} Exception message : {1}";
 
     private static final Logger log = LoggerFactory
-            .getLogger(CcdCallbackExceptionHandler.class);
+        .getLogger(CcdCallbackExceptionHandler.class);
 
     @ExceptionHandler(PdfGeneratorException.class)
     public ResponseEntity<CCDCallbackResponse> handlePdfGeneratorException(
-            PdfGeneratorException exception,
-            HttpServletRequest request) {
+        PdfGeneratorException exception,
+        HttpServletRequest request) {
 
-        String customMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, "Pdf Generator error" , exception.getMessage());
+        String customMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, "Pdf Generator error",
+            exception.getMessage());
         return generateBadRequestResponse(customMessage, request);
     }
 
     @ExceptionHandler(InvalidPetitionException.class)
     public ResponseEntity<CCDCallbackResponse> handleInvalidPetitionException(
-            InvalidPetitionException exception,
-            HttpServletRequest request) {
+        InvalidPetitionException exception,
+        HttpServletRequest request) {
 
-        String customMessage = "The Document Type has not been set for one of the uploaded documents. This must be set before a new PDF can be created";
+        String customMessage = "The Document Type has not been set for one of the uploaded documents. "
+            + "This must be set before a new PDF can be created";
         return generateBadRequestResponse(customMessage, request);
     }
 
-    private ResponseEntity<CCDCallbackResponse> generateBadRequestResponse(String customMessage, HttpServletRequest request) {
+    private ResponseEntity<CCDCallbackResponse> generateBadRequestResponse(String customMessage,
+                                                                           HttpServletRequest request) {
         log.error(customMessage);
         List<String> errors = new ArrayList<>();
         errors.add(customMessage);
