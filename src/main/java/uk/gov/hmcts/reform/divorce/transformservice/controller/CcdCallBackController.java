@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.service.SanitiseService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
 import javax.ws.rs.core.MediaType;
@@ -27,6 +28,9 @@ public class CcdCallBackController {
     @Autowired
     private UpdateService updateService;
 
+    @Autowired
+    private SanitiseService sanitiseService;
+
     @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Generate and add a pdf of the petition to the case")
     @ApiResponses(value = {
@@ -37,6 +41,18 @@ public class CcdCallBackController {
             @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
         CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest);
+        return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));
+    }
+
+    @PostMapping(path = "/sanitise", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Sanitise case data: merge flexible fields together")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Case data has been sanitised", response = CCDCallbackResponse.class)
+    })
+    public ResponseEntity<CCDCallbackResponse> sanitise(
+            @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+
+        CoreCaseData coreCaseData = sanitiseService.sanitiseCase(caseDetailsRequest.getCaseDetails());
         return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));
     }
 }
