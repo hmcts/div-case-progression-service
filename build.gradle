@@ -20,6 +20,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.17.0'
     id 'jacoco'
     id 'pmd'
+    id 'checkstyle'
 }
 
 group = 'uk.gov.hmcts.divorce'
@@ -36,6 +37,20 @@ jar {
     archiveName 'div-case-progression-service.jar'
 }
 
+checkstyle.toolVersion = '7.2'
+checkstyle.configFile = new File(rootDir, "checkstyle.xml")
+
+// make build fail on Checkstyle issues (https://github.com/gradle/gradle/issues/881)
+tasks.withType(Checkstyle).each { checkstyleTask ->
+    checkstyleTask.doLast {
+        reports.all { report ->
+            def outputFile = report.destination
+            if (outputFile.exists() && outputFile.text.contains("<error ")) {
+                throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
+            }
+        }
+    }
+}
 
 task smoke(type:Test) {
     group = 'Delivery pipeline'
@@ -78,7 +93,6 @@ dependencyCheck {
 }
 
 def versions = [
-
         commonsCollections4: '4.1',
         commonsIO: '2.5',
         commonsLang3: '3.0',
@@ -94,39 +108,22 @@ def versions = [
         restAssured: '3.0.3',
         springfoxSwagger: '2.6.1',
         uniRest: '1.4.9',
-        wiremock: '2.8.0'
+        wiremock: '2.8.0',
+        puppyCrawl: '7.6'
 ]
-/*
-		org.mapstruct
-		     mapstruct
-
-
-		org.springframework.boot
-		     spring-boot-starter-test
-		     javax.ws.rs-api
-
-			     maven-surefire-plugin
-
-			     maven-failsafe-plugin
-			org.springframework.boot
-
-			     spring-boot-maven-plugin
-				org.apache.maven.plugins
-			     maven-checkstyle-plugin
-
-			org.apache.maven.plugins org.sonarsource.scanner.maven sonar-maven-plugin
- */
 
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
+
     compile group: 'com.mashape.unirest', name: 'unirest-java', version: versions.uniRest
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: versions.nimbusJWT
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger) {
         exclude(module: 'mapstruct')
     }
-    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: versions.jaxRS
+
     compile group: 'org.apache.commons', name: 'commons-collections4', version: versions.commonsCollections4
     compile group: 'org.apache.commons', name: 'commons-lang3', version: versions.commonsLang3
     compile group: 'org.mapstruct', name: 'mapstruct-jdk8', version: versions.mapstruct
@@ -139,13 +136,14 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version:"0.4.2"
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.hmctsJavaLogging
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: versions.hmctsNotify
+    compile group: 'com.puppycrawl.tools', name: 'checkstyle', version:  versions.puppyCrawl
 
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude(module: 'commons-logging')
     }
+
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: versions.wiremock
     testCompile group: 'commons-io', name: 'commons-io', version: versions.commonsIO
-    testCompile group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
 }
 
@@ -157,8 +155,8 @@ task printVersion {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "DivorceTransformationService"
-        property "sonar.projectName", "Divorce :: transformation-service"
+        property "sonar.projectKey", "DivorceCaseProgressionService"
+        property "sonar.projectName", "Divorce :: case-progression-service"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*"
     }

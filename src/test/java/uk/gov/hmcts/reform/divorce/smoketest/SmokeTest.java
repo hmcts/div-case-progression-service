@@ -17,7 +17,7 @@ public class SmokeTest {
     private CcdSubmissionController controller;
 
     @Test
-    public void contexLoads() throws Exception {
+    public void contextLoads() {
         assertNotNull(controller);
     }
 }
