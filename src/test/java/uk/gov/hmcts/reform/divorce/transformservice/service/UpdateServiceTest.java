@@ -47,6 +47,9 @@ public class UpdateServiceTest {
     @Mock
     private DraftsService draftsService;
 
+    @Mock
+    private PetitionValidatorService petitionValidatorService;
+
     @InjectMocks
     private UpdateService updateService;
 
@@ -96,6 +99,7 @@ public class UpdateServiceTest {
 
         assertEquals(coreCaseData, updateService.addPdf(caseDetailsRequest));
 
+        verify(petitionValidatorService).validateFieldsForIssued(caseDetailsRequest);
         verify(pdfService).generatePdf(caseDetailsRequest);
         verify(pdfToCoreCaseDataMapper).toCoreCaseData(pdfFile, coreCaseData);
     }
@@ -132,4 +136,5 @@ public class UpdateServiceTest {
             fail("Submission to CCD should not fail if the draft cannot be deleted");
         }
     }
+
 }

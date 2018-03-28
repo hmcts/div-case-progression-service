@@ -9,7 +9,6 @@ import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CollectionMember;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentLink;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentType;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.UploadedFile;
 
 import java.text.SimpleDateFormat;
@@ -47,7 +46,7 @@ public class DocumentCollectionMapperTest {
         assertEquals(dateFormat.format(createdOn), document.getDocumentDateAdded());
         assertEquals("", document.getDocumentComment());
         assertEquals("", document.getDocumentEmailContent());
-        assertEquals(DocumentType.OTHER, document.getDocumentType());
+        assertEquals("other", document.getDocumentType());
         assertEquals(DocumentLink.builder().documentUrl(fileUrl).build(), document.getDocumentLink());
     }
 
@@ -73,7 +72,7 @@ public class DocumentCollectionMapperTest {
         assertEquals(fileName, document.getDocumentFileName());
         assertEquals("", document.getDocumentComment());
         assertEquals("", document.getDocumentEmailContent());
-        assertEquals(DocumentType.OTHER, document.getDocumentType());
+        assertEquals("other", document.getDocumentType());
         assertEquals(DocumentLink.builder().documentUrl(fileUrl).build(), document.getDocumentLink());
     }
 }

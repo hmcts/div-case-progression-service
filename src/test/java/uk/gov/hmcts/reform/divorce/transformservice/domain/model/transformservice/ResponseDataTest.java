@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentLink;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentType;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.UploadedFileTest;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.ResponseData;
 

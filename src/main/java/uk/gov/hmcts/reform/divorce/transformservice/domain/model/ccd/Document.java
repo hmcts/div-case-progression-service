@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 public @Data class Document {
-	
+
 	@JsonProperty("DocumentType")
-	private DocumentType documentType;
+	private String documentType;
 
 	@JsonProperty("DocumentLink")
 	private DocumentLink documentLink;
