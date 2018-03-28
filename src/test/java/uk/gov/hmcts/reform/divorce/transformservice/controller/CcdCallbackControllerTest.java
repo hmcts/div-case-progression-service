@@ -62,7 +62,7 @@ public class CcdCallbackControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
 
         requestContent = FileUtils.readFileToString(new File(getClass()
-                .getResource("/fixtures/divorce/add-pdf-request-body.json").toURI()), Charset.defaultCharset());
+            .getResource("/fixtures/divorce/add-pdf-request-body.json").toURI()), Charset.defaultCharset());
     }
 
     @Test
@@ -81,14 +81,14 @@ public class CcdCallbackControllerTest {
         when(updateService.addPdf(submittedCase)).thenReturn(coreCaseData);
 
         MvcResult result = mvc.perform(post(ADD_PDF_URL)
-                .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk()).andReturn();
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk()).andReturn();
 
         CCDCallbackResponse response =
-                ObjectMapperTestUtil.convertJsonToObject(
-                        result.getResponse().getContentAsByteArray(),
-                        CCDCallbackResponse.class);
+            ObjectMapperTestUtil.convertJsonToObject(
+                result.getResponse().getContentAsByteArray(),
+                CCDCallbackResponse.class);
 
         assertEquals(coreCaseData, response.getData());
 
@@ -120,12 +120,12 @@ public class CcdCallbackControllerTest {
         doThrow(exception).when(updateService).addPdf(submittedCase);
 
         ResultActions perform = mvc.perform(post(ADD_PDF_URL)
-                .content(requestContent)
-                .header("requestId", "123")
-                .contentType(MediaType.APPLICATION_JSON_UTF8));
+            .content(requestContent)
+            .header("requestId", "123")
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
         perform
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors[0]", is(exceptionMessage)));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.errors[0]", is(exceptionMessage)));
 
         verify(updateService).addPdf(eq(submittedCase));
         verify(exception).getMessage();

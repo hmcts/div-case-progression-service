@@ -9,8 +9,8 @@ import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public @Data
-class UploadedFile {
+@Data
+public class UploadedFile {
     private int createdBy;
     private Date createdOn;
     private int lastModifiedBy;

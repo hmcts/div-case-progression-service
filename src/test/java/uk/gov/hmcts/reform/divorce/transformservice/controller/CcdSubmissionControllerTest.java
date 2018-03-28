@@ -1,21 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.File;
-import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.time.format.DateTimeParseException;
-
 import feign.FeignException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -33,12 +17,27 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
-
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.errorhandler.JwtParsingException;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
+
+import java.io.File;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.time.format.DateTimeParseException;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CcdSubmissionController.class)
@@ -65,7 +64,7 @@ public class CcdSubmissionControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
 
         requestContent = FileUtils.readFileToString(new File(getClass()
-                .getResource("/fixtures/divorce/submit-request-body.json").toURI()), Charset.defaultCharset());
+            .getResource("/fixtures/divorce/submit-request-body.json").toURI()), Charset.defaultCharset());
     }
 
     @Test
@@ -79,12 +78,12 @@ public class CcdSubmissionControllerTest {
         when(submissionService.submit(eq(divorceSession), eq(jwt))).thenReturn(caseId);
 
         mvc.perform(post(SUBMIT_URL)
-                .content(requestContent)
-                .header("Authorization", jwt)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
-                        .isOk())
-                .andExpect(jsonPath("$.caseId", is(caseId.intValue())))
-                .andExpect(jsonPath("$.status", is("success")));
+            .content(requestContent)
+            .header("Authorization", jwt)
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
+            .isOk())
+            .andExpect(jsonPath("$.caseId", is(caseId.intValue())))
+            .andExpect(jsonPath("$.status", is("success")));
 
         verify(submissionService).submit(eq(divorceSession), eq(jwt));
         verifyNoMoreInteractions(submissionService);
@@ -93,63 +92,66 @@ public class CcdSubmissionControllerTest {
     @Test
     public void shouldReturnErrorInResponseBodyWhenHttpClientErrorExceptionIsThrown() throws Exception {
         final String errorMessage = "error-message HttpClientErrorException";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : 123 and Exception message : error-message HttpClientErrorException, Exception response body: exception body";
+        final String genericExceptionMessage = "Request Id : 123 and Exception message : "
+            + "error-message HttpClientErrorException, Exception response body: exception body";
         HttpClientErrorException exception = mock(HttpClientErrorException.class);
         when(exception.getMessage()).thenReturn(errorMessage);
         when(exception.getResponseBodyAsString()).thenReturn("exception body");
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
 
     @Test
     public void shouldReturnErrorInResponseBodyWhenJwtParsingExceptionIsThrown() throws Exception {
         final String errorMessage = "error-message JwtParsingException";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}";
+        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
         RuntimeException exception = mock(JwtParsingException.class);
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
 
     @Test
     public void shouldReturnErrorInResponseBodyWhenHttpServerErrorExceptionThrown() throws Exception {
         final String errorMessage = "error-message HttpServerErrorException";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : 123 and Exception message : error-message HttpServerErrorException, Exception response body: exception body";
+        final String genericExceptionMessage = "Request Id : 123 and Exception message : "
+            + "error-message HttpServerErrorException, Exception response body: exception body";
         HttpServerErrorException exception = mock(HttpServerErrorException.class);
         when(exception.getMessage()).thenReturn(errorMessage);
         when(exception.getResponseBodyAsString()).thenReturn("exception body");
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
-    
+
     @Test
     public void shouldReturnErrorInResponseBodyWhenResourceAccessExceptionIsThrown() throws Exception {
         final String errorMessage = "error-message caught ResourceAccessException";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : {0} and ResourceAccessException message : {1}";
+        final String genericExceptionMessage = "Request Id : {0} and ResourceAccessException message : {1}";
         RuntimeException exception = mock(ResourceAccessException.class);
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
 
     @Test
     public void shouldReturnErrorInResponseBodyWhenDateTimeParseExceptionIsThrown() throws Exception {
         final String errorMessage = "error-message caught Exception";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}";
+        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
         RuntimeException exception = mock(DateTimeParseException.class);
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
 
     @Test
     public void shouldReturnErrorInResponseBodyWhenFeignExceptionIsThrown() throws Exception {
         final String errorMessage = "error-message caught Exception";
-        final String GENERIC_EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}";
+        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
         RuntimeException exception = mock(FeignException.class);
 
-        testExceptionIsHandledCorrectly(errorMessage, GENERIC_EXCEPTION_MESSAGE, exception);
+        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
 
-    private void testExceptionIsHandledCorrectly(String errorMessage, String GENERIC_EXCEPTION_MESSAGE, RuntimeException exception) throws Exception {
-        final String EXCEPTION_MESSAGE = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, "123", errorMessage);
+    private void testExceptionIsHandledCorrectly(String errorMessage, String genericExceptionMessage,
+                                                 RuntimeException exception) throws Exception {
+        final String exceptionMessage = MessageFormat.format(genericExceptionMessage, "123", errorMessage);
         final String jwt = "Bearer hgsdja87wegqeuf...";
         final String petitionerFirstName = "Danny";
 
@@ -161,13 +163,13 @@ public class CcdSubmissionControllerTest {
         doThrow(exception).when(submissionService).submit(eq(divorceSession), eq(jwt));
 
         mvc.perform(post(SUBMIT_URL)
-                .content(requestContent)
-                .header("requestId", "123")
-                .header("Authorization", jwt)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
-                        .isOk())
-                .andExpect(jsonPath("$.error", is(EXCEPTION_MESSAGE)))
-                .andExpect(jsonPath("$.status", is("error")));
+            .content(requestContent)
+            .header("requestId", "123")
+            .header("Authorization", jwt)
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
+            .isOk())
+            .andExpect(jsonPath("$.error", is(exceptionMessage)))
+            .andExpect(jsonPath("$.status", is("error")));
 
         verify(submissionService).submit(eq(divorceSession), eq(jwt));
         verify(exception).getMessage();

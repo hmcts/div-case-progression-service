@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.HealthAggregator;
@@ -50,11 +49,6 @@ public class CaseProgressionApplication {
         restTemplate.setRequestFactory(requestFactory());
 
         return restTemplate;
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
     }
 
     @Bean

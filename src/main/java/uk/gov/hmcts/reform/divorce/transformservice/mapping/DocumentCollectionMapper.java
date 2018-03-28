@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
-import org.mapstruct.*;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CollectionMember;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentLink;
@@ -20,6 +23,6 @@ public abstract class DocumentCollectionMapper {
                                                       @MappingTarget CollectionMember<Document> result) {
 
         result.getValue().setDocumentLink(DocumentLink.builder()
-                .documentUrl(uploadedFile.getFileUrl()).build());
+            .documentUrl(uploadedFile.getFileUrl()).build());
     }
 }

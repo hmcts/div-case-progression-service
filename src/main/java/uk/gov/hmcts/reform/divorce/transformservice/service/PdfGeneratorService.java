@@ -20,13 +20,13 @@ public class PdfGeneratorService implements PdfService {
         try {
             PdfFile pdfFile = pdfGeneratorClient.generatePdf(caseDetails);
 
-            if(pdfFile != null){
+            if (pdfFile != null) {
                 pdfFile.setFileName(String.format(FILE_NAME_FORMAT, caseDetails.getCaseDetails().getCaseId()));
             }
 
             return pdfFile;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new PdfGeneratorException(e.getMessage(), e);
         }
     }

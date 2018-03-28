@@ -8,7 +8,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.divorce.transformservice.client.TransformationHttpEntityFactory;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -20,7 +19,10 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PdfGeneratorDefaultClientTest {
@@ -41,20 +43,23 @@ public class PdfGeneratorDefaultClientTest {
     private PdfGeneratorDefaultClient pdfGeneratorClient;
 
     @Test
-    public void createCaseReturnsCreateEvent() throws Exception {
+    public void createCaseReturnsCreateEvent() {
         HttpEntity<PdfGenerateDocumentRequest> httpEntity = mock(HttpEntity.class);
         ResponseEntity<PdfFile> responseEntity = mock(ResponseEntity.class);
         PdfFile pdfFile = mock(PdfFile.class);
         CreateEvent submittedCase = new CreateEvent();
         String urlString = "anUrl";
 
-        PdfGenerateDocumentRequest pdfGenerateDocumentRequest = new PdfGenerateDocumentRequest("templateName", new HashMap<>());
-        when(pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(eq(submittedCase))).thenReturn(pdfGenerateDocumentRequest);
-        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest)).thenReturn(httpEntity);
+        PdfGenerateDocumentRequest pdfGenerateDocumentRequest = new PdfGenerateDocumentRequest("templateName",
+            new HashMap<>());
+        when(pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(eq(submittedCase)))
+            .thenReturn(pdfGenerateDocumentRequest);
+        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest))
+            .thenReturn(httpEntity);
         when(clientConfiguration.getPdfGeneratorUrl()).thenReturn(urlString);
 
         when(restTemplate.exchange(eq(urlString), eq(HttpMethod.POST), eq(httpEntity), eq(PdfFile.class)))
-                .thenReturn(responseEntity);
+            .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(pdfFile);
 
         assertEquals(pdfFile, pdfGeneratorClient.generatePdf(submittedCase));

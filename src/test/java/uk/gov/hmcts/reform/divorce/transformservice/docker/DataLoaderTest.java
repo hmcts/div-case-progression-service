@@ -23,7 +23,10 @@ import java.util.Map;
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataLoaderTest {
@@ -109,9 +112,9 @@ public class DataLoaderTest {
         String serviceToken = "abcde12345";
         String userToken = "12345abcde";
 
-        Expectations serviceTokenExpectations = createServiceToken(serviceToken);
-        Expectations userTokenExpectations = createUserToken(userToken);
-        Expectations roleExpectations = createRole(serviceToken, userToken, role, classification);
+        final Expectations serviceTokenExpectations = createServiceToken(serviceToken);
+        final Expectations userTokenExpectations = createUserToken(userToken);
+        final Expectations roleExpectations = createRole(serviceToken, userToken, role, classification);
 
         dataLoader.createRole(role, classification);
 
@@ -129,14 +132,15 @@ public class DataLoaderTest {
 
         HttpPut createRoleRequest = mock(HttpPut.class);
 
-        Expectations serviceTokenExpectations = createServiceToken(serviceToken);
-        Expectations userTokenExpectations = createUserToken(userToken);
+        final Expectations serviceTokenExpectations = createServiceToken(serviceToken);
+        final Expectations userTokenExpectations = createUserToken(userToken);
 
         Map<String, String> roleRequestHeaders = createRoleRequestHeaders(serviceToken, userToken);
         Map<String, String> roleRequestParams = createRoleRequestParams(role, classification);
 
-        when(httpRequestFactory.createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams), eq(roleRequestHeaders)))
-                .thenReturn(createRoleRequest);
+        when(httpRequestFactory.createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams),
+            eq(roleRequestHeaders)))
+            .thenReturn(createRoleRequest);
 
         IOException exception = mock(IOException.class);
 
@@ -162,8 +166,8 @@ public class DataLoaderTest {
         String serviceToken = "abcde12345";
         String userToken = "12345abcde";
 
-        Expectations serviceTokenExpectations = createServiceToken(serviceToken);
-        Expectations userTokenExpectations = createUserToken(userToken);
+        final Expectations serviceTokenExpectations = createServiceToken(serviceToken);
+        final Expectations userTokenExpectations = createUserToken(userToken);
 
         Map<String, String> uploadSpreadsheetHeaders = new HashMap<>();
         uploadSpreadsheetHeaders.put("Authorization", "Bearer " + userToken);
@@ -171,8 +175,9 @@ public class DataLoaderTest {
 
         HttpPost uploadSpreadsheetRequest = mock(HttpPost.class);
 
-        when(httpRequestFactory.createMultipartPostRequest(eq(UPLOAD_SPREADSHEET_URL), eq(uploadSpreadsheetHeaders), eq(fileField), eq(filepath)))
-                .thenReturn(uploadSpreadsheetRequest);
+        when(httpRequestFactory.createMultipartPostRequest(eq(UPLOAD_SPREADSHEET_URL), eq(uploadSpreadsheetHeaders),
+            eq(fileField), eq(filepath)))
+            .thenReturn(uploadSpreadsheetRequest);
 
         dataLoader.importMappings(filepath);
 
@@ -198,18 +203,20 @@ public class DataLoaderTest {
         return params;
     }
 
-    private Expectations createRole(String serviceToken, String userToken, String role, String classification) throws Exception{
+    private Expectations createRole(String serviceToken, String userToken, String role, String classification) {
         HttpPut createRoleRequest = mock(HttpPut.class);
 
         Map<String, String> roleRequestHeaders = createRoleRequestHeaders(serviceToken, userToken);
         Map<String, String> roleRequestParams = createRoleRequestParams(role, classification);
 
-        when(httpRequestFactory.createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams), eq(roleRequestHeaders)))
-                .thenReturn(createRoleRequest);
+        when(httpRequestFactory.createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams),
+            eq(roleRequestHeaders)))
+            .thenReturn(createRoleRequest);
 
         return () -> {
             verify(httpClient).execute(createRoleRequest);
-            verify(httpRequestFactory).createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams), eq(roleRequestHeaders));
+            verify(httpRequestFactory).createJsonPutRequest(eq(ROLE_ENDPOINT_URL), eq(roleRequestParams),
+                eq(roleRequestHeaders));
         };
     }
 
@@ -258,25 +265,29 @@ public class DataLoaderTest {
         return entity;
     }
 
-    private void setServiceTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response, HttpEntity entity) throws Exception {
+    private void setServiceTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response,
+                                             HttpEntity entity) throws Exception {
         when(httpRequestFactory.createPostRequest(eq(SERVICE_TOKEN_ENDPOINT_URL), eq(params))).thenReturn(request);
         when(httpClient.execute(request)).thenReturn(response);
         when(response.getEntity()).thenReturn(entity);
     }
 
-    private void verifyServiceTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response) throws Exception {
+    private void verifyServiceTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response)
+        throws Exception {
         verify(httpRequestFactory).createPostRequest(eq(SERVICE_TOKEN_ENDPOINT_URL), eq(params));
         verify(httpClient).execute(request);
         verify(response).getEntity();
     }
 
-    private void setUserTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response, HttpEntity entity) throws Exception {
+    private void setUserTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response,
+                                          HttpEntity entity) throws Exception {
         when(httpRequestFactory.createPostRequest(eq(USER_TOKEN_ENDPOINT_URL), eq(params))).thenReturn(request);
         when(httpClient.execute(request)).thenReturn(response);
         when(response.getEntity()).thenReturn(entity);
     }
 
-    private void verifyUserTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response) throws Exception {
+    private void verifyUserTokenExpectations(HttpPost request, Map<String, String> params, HttpResponse response)
+        throws Exception {
         verify(httpRequestFactory).createPostRequest(eq(USER_TOKEN_ENDPOINT_URL), eq(params));
         verify(httpClient).execute(request);
         verify(response).getEntity();

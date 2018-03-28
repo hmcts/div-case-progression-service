@@ -32,9 +32,11 @@ public class PdfGeneratorDefaultClient implements PdfGeneratorClient {
 
     @Override
     public PdfFile generatePdf(CreateEvent caseDetailsWrap) {
-        PdfGenerateDocumentRequest pdfGenerateDocumentRequest = pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(caseDetailsWrap);
+        PdfGenerateDocumentRequest pdfGenerateDocumentRequest =
+            pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(caseDetailsWrap);
 
-        HttpEntity<PdfGenerateDocumentRequest> httpEntity = httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest);
+        HttpEntity<PdfGenerateDocumentRequest> httpEntity =
+            httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest);
         String url = pdfGeneratorClientConfiguration.getPdfGeneratorUrl();
 
         PdfFile res = restTemplate.exchange(url, HttpMethod.POST, httpEntity, PdfFile.class).getBody();

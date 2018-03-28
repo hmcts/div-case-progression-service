@@ -8,9 +8,9 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.TransformationHttpEnt
 @Component
 public class DraftStoreApi extends WebServiceHealthCheck {
     public DraftStoreApi(
-            TransformationHttpEntityFactory httpEntityFactory,
-            RestTemplate restTemplate,
-            @Value("${draft.store.api.health.uri}") String uri) {
+        TransformationHttpEntityFactory httpEntityFactory,
+        RestTemplate restTemplate,
+        @Value("${draft.store.api.health.uri}") String uri) {
         super(httpEntityFactory, restTemplate, uri);
     }
 }

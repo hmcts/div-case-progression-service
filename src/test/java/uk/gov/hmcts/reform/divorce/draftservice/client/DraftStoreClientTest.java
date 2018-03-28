@@ -26,8 +26,9 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
@@ -44,13 +45,13 @@ public class DraftStoreClientTest {
 
     @Value("${draft.store.api.document.type}")
     private String draftType;
-    
+
     @Value("${draft.store.api.encryption.key}")
     private String secret;
 
     @Value("${draft.store.api.max.age}")
     private int maxAge;
-    
+
     @Autowired
     private DraftStoreClient underTest;
 
@@ -82,18 +83,19 @@ public class DraftStoreClientTest {
     public void getAllShouldReturnTheDraftListFromTheResponse() throws Exception {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         given(entityFactory.createRequestEntityFroDraft(JWT, secret))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         DraftList expectedDraftList =
-                new DraftList(Collections.emptyList(), null);
+            new DraftList(Collections.emptyList(), null);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts"))
-                .andExpect(method(HttpMethod.GET))
-                .andExpect(header("Authorization", JWT))
-                .andExpect(header("ServiceAuthorization", SERVICE_JWT))
-                .andExpect(header("Secret", secret))
-                .andRespond(withSuccess(objectMapper.writeValueAsBytes(expectedDraftList), MediaType.APPLICATION_JSON_UTF8));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts"))
+            .andExpect(method(HttpMethod.GET))
+            .andExpect(header("Authorization", JWT))
+            .andExpect(header("ServiceAuthorization", SERVICE_JWT))
+            .andExpect(header("Secret", secret))
+            .andRespond(withSuccess(objectMapper.writeValueAsBytes(expectedDraftList),
+                MediaType.APPLICATION_JSON_UTF8));
 
         DraftList actualDraftList = underTest.getAll(JWT, secret);
 
@@ -106,12 +108,12 @@ public class DraftStoreClientTest {
     public void getAllShouldThrowDraftStoreUnavailableExceptionWhenTheDraftStoreIsNotAvailable() {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         given(entityFactory.createRequestEntityFroDraft(JWT, secret))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts"))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts"))
+            .andExpect(method(HttpMethod.GET))
+            .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
         underTest.getAll(JWT, secret);
 
@@ -121,18 +123,19 @@ public class DraftStoreClientTest {
     public void getAllShouldReturnTheSecondPageOfDrafts() throws Exception {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         given(entityFactory.createRequestEntityFroDraft(JWT, secret))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         DraftList expectedDraftList =
-                new DraftList(Collections.emptyList(), null);
+            new DraftList(Collections.emptyList(), null);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts/?after=10"))
-                .andExpect(method(HttpMethod.GET))
-                .andExpect(header("Authorization", JWT))
-                .andExpect(header("ServiceAuthorization", SERVICE_JWT))
-                .andExpect(header("Secret", secret))
-                .andRespond(withSuccess(objectMapper.writeValueAsBytes(expectedDraftList), MediaType.APPLICATION_JSON_UTF8));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts/?after=10"))
+            .andExpect(method(HttpMethod.GET))
+            .andExpect(header("Authorization", JWT))
+            .andExpect(header("ServiceAuthorization", SERVICE_JWT))
+            .andExpect(header("Secret", secret))
+            .andRespond(withSuccess(objectMapper.writeValueAsBytes(expectedDraftList),
+                MediaType.APPLICATION_JSON_UTF8));
 
         DraftList actualDraftList = underTest.getAll(JWT, secret, "10");
 
@@ -145,15 +148,15 @@ public class DraftStoreClientTest {
         CreateDraft createDraft = new CreateDraft(objectMapper.readTree("{}"), draftType, maxAge);
         HttpEntity<CreateDraft> httpEntity = new HttpEntity<>(createDraft, headers);
         given(entityFactory.createRequestEntityForDraft(JWT, secret, createDraft))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(header("Authorization", JWT))
-                .andExpect(header("ServiceAuthorization", SERVICE_JWT))
-                .andExpect(header("Secret", secret))
-                .andRespond(withSuccess());
+            .expect(requestTo(draftsApiBaseUrl + "/drafts"))
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("Authorization", JWT))
+            .andExpect(header("ServiceAuthorization", SERVICE_JWT))
+            .andExpect(header("Secret", secret))
+            .andRespond(withSuccess());
 
         underTest.createDraft(JWT, secret, createDraft);
 
@@ -165,12 +168,12 @@ public class DraftStoreClientTest {
         CreateDraft createDraft = new CreateDraft(objectMapper.readTree("{}"), draftType, maxAge);
         HttpEntity<CreateDraft> httpEntity = new HttpEntity<>(createDraft, headers);
         given(entityFactory.createRequestEntityForDraft(JWT, secret, createDraft))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts"))
-                .andExpect(method(HttpMethod.POST))
-                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts"))
+            .andExpect(method(HttpMethod.POST))
+            .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
         underTest.createDraft(JWT, secret, createDraft);
 
@@ -181,15 +184,15 @@ public class DraftStoreClientTest {
         UpdateDraft updateDraft = new UpdateDraft(objectMapper.readTree("{}"), draftType);
         HttpEntity<UpdateDraft> httpEntity = new HttpEntity<>(updateDraft, headers);
         given(entityFactory.createRequestEntityForDraft(JWT, secret, updateDraft))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
-                .andExpect(method(HttpMethod.PUT))
-                .andExpect(header("Authorization", JWT))
-                .andExpect(header("ServiceAuthorization", SERVICE_JWT))
-                .andExpect(header("Secret", secret))
-                .andRespond(withSuccess());
+            .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
+            .andExpect(method(HttpMethod.PUT))
+            .andExpect(header("Authorization", JWT))
+            .andExpect(header("ServiceAuthorization", SERVICE_JWT))
+            .andExpect(header("Secret", secret))
+            .andRespond(withSuccess());
 
         underTest.updateDraft(JWT, DRAFT_ID, secret, updateDraft);
 
@@ -201,12 +204,12 @@ public class DraftStoreClientTest {
         UpdateDraft updateDraft = new UpdateDraft(objectMapper.readTree("{}"), draftType);
         HttpEntity<UpdateDraft> httpEntity = new HttpEntity<>(updateDraft, headers);
         given(entityFactory.createRequestEntityForDraft(JWT, secret, updateDraft))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
-                .andExpect(method(HttpMethod.PUT))
-                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
+            .andExpect(method(HttpMethod.PUT))
+            .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
 
         underTest.updateDraft(JWT, DRAFT_ID, secret, updateDraft);
@@ -222,14 +225,14 @@ public class DraftStoreClientTest {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         given(entityFactory.createRequestEntityFroDraft(JWT))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
-                .andExpect(method(HttpMethod.DELETE))
-                .andExpect(header("Authorization", JWT))
-                .andExpect(header("ServiceAuthorization", SERVICE_JWT))
-                .andRespond(withSuccess());
+            .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
+            .andExpect(method(HttpMethod.DELETE))
+            .andExpect(header("Authorization", JWT))
+            .andExpect(header("ServiceAuthorization", SERVICE_JWT))
+            .andRespond(withSuccess());
 
         underTest.deleteDraft(JWT, DRAFT_ID);
 
@@ -237,7 +240,7 @@ public class DraftStoreClientTest {
     }
 
     @Test(expected = DraftStoreUnavailableException.class)
-    public void deleteDraftShouldThrowDraftStoreUnavailableExceptionWhenDraftStoreIsNotAvailable() throws IOException {
+    public void deleteDraftShouldThrowDraftStoreUnavailableExceptionWhenDraftStoreIsNotAvailable() {
         headers = new HttpHeaders();
         headers.add("Authorization", JWT);
         headers.add("ServiceAuthorization", SERVICE_JWT);
@@ -245,12 +248,12 @@ public class DraftStoreClientTest {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         given(entityFactory.createRequestEntityFroDraft(JWT))
-                .willReturn(httpEntity);
+            .willReturn(httpEntity);
 
         mockServer
-                .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
-                .andExpect(method(HttpMethod.DELETE))
-                .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
+            .expect(requestTo(draftsApiBaseUrl + "/drafts/" + DRAFT_ID))
+            .andExpect(method(HttpMethod.DELETE))
+            .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
         underTest.deleteDraft(JWT, DRAFT_ID);
     }

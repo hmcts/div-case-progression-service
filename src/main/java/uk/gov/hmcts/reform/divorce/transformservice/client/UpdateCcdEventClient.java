@@ -7,7 +7,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CaseEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
@@ -15,16 +14,13 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataCon
 @Component
 public class UpdateCcdEventClient implements CcdEventClient {
 
+    private static final Logger log = LoggerFactory.getLogger(UpdateCcdEventClient.class);
     @Autowired
     private CcdClientConfiguration ccdClientConfiguration;
-
     @Autowired
     private RestTemplate restTemplate;
-
     @Autowired
     private TransformationHttpEntityFactory httpEntityFactory;
-
-    private static final Logger log = LoggerFactory.getLogger(UpdateCcdEventClient.class);
 
     @Override
     public CreateEvent startEvent(String encodedJwt, Long caseId, String eventId) {
@@ -40,7 +36,7 @@ public class UpdateCcdEventClient implements CcdEventClient {
     public CaseEvent createCaseEvent(String encodedJwt, Long caseId, CaseDataContent caseDataContent) {
 
         HttpEntity<CaseDataContent> httpEntity = httpEntityFactory.createRequestEntityForSubmitCase(encodedJwt,
-                caseDataContent);
+            caseDataContent);
 
         String url = ccdClientConfiguration.getCreateCaseEventUrl(encodedJwt, caseId);
         log.info("Formatted url create case event {} ", url);

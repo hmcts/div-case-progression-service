@@ -1,11 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce;
 
-import static org.apache.commons.lang3.StringUtils.join;
-
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+
+import static org.apache.commons.lang3.StringUtils.join;
 
 @Component
 public class DesertionStrategy implements ReasonForDivorceStrategy {
@@ -17,10 +16,12 @@ public class DesertionStrategy implements ReasonForDivorceStrategy {
     private static final String DESERTION_STRING = "I have been deserted by my %s on the %s.";
 
     @Override
-    public String deriveStatementOfCase(DivorceSession divorceSession) {        
-        String prettyDesertionDate = DateFormatUtils.format(divorceSession.getReasonForDivorceDesertionDate(), "dd MMMM yyyy");
+    public String deriveStatementOfCase(DivorceSession divorceSession) {
+        String prettyDesertionDate = DateFormatUtils.format(divorceSession.getReasonForDivorceDesertionDate(),
+            "dd MMMM yyyy");
 
-        String derivedStatementOfCase = String.format(DESERTION_STRING, divorceSession.getDivorceWho(), prettyDesertionDate);
+        String derivedStatementOfCase = String.format(DESERTION_STRING, divorceSession.getDivorceWho(),
+            prettyDesertionDate);
 
         return join(derivedStatementOfCase, LINE_SEPARATOR, divorceSession.getReasonForDivorceDesertionDetails());
     }

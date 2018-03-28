@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
 import uk.gov.hmcts.reform.divorce.common.JwtFactory;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -51,8 +51,8 @@ public class EncryptionKeyFactoryTest {
     @Test
     public void createEncryptionKeyShouldCreateAnEncryptionKeyUsingTheTemplateACommonSecretAndTheUserId() {
         assertEquals(
-                Base64.encodeBase64String(
-                        String.format(encryptionKeyTemplate, encryptionKeyPrefix, USER_ID).getBytes()),
-                underTest.createEncryptionKey(JWT));
+            Base64.encodeBase64String(
+                String.format(encryptionKeyTemplate, encryptionKeyPrefix, USER_ID).getBytes()),
+            underTest.createEncryptionKey(JWT));
     }
 }

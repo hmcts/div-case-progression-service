@@ -1,14 +1,15 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public @Data class Address {
+@Data
+public class Address {
     @ApiModelProperty("Address type.")
     private String addressType;
     @ApiModelProperty(value = "Address post code.")

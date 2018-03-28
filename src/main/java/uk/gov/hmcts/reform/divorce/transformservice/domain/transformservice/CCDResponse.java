@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 public class CCDResponse {
     @ApiModelProperty(value = "The id of the case as returned from CCD.", example = "1234567890123456")
     private long caseId;
-    @ApiModelProperty(value = "If the status is not \"success\" this field will contain explanation of the problem.", example = "null")
+    @ApiModelProperty(
+        value = "If the status is not \"success\" this field will contain explanation of the problem.",
+        example = "null")
     private String error;
     @ApiModelProperty(value = "The result of the request.", allowableValues = "success, error", example = "success")
     private String status;

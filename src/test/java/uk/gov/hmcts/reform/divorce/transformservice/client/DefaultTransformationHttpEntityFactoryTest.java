@@ -8,12 +8,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.divorce.common.AuthorizationHeaderService;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultTransformationHttpEntityFactoryTest {
@@ -48,7 +51,8 @@ public class DefaultTransformationHttpEntityFactoryTest {
 
         when(authorizationHeaderService.generateAuthorizationHeaders(encodedJwt)).thenReturn(headers);
 
-        HttpEntity<CaseDataContent> entity = httpEntityFactory.createRequestEntityForSubmitCase(encodedJwt, coreCaseData);
+        HttpEntity<CaseDataContent> entity =
+            httpEntityFactory.createRequestEntityForSubmitCase(encodedJwt, coreCaseData);
 
         assertThat(entity.getHeaders()).isEqualTo(headers);
         assertThat(entity.getBody()).isEqualTo(coreCaseData);

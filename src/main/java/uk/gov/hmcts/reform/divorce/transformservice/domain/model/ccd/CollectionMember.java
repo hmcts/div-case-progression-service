@@ -7,7 +7,8 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public @Data class CollectionMember<T> {
+@Data
+public class CollectionMember<T> {
     private String id;
     private T value;
 }

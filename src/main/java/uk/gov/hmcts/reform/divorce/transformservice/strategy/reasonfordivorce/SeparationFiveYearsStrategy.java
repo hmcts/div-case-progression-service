@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 
 @Component
@@ -14,7 +13,8 @@ public class SeparationFiveYearsStrategy implements ReasonForDivorceStrategy {
 
     @Override
     public String deriveStatementOfCase(DivorceSession divorceSession) {
-        String prettySeparationDate = DateFormatUtils.format(divorceSession.getReasonForDivorceSeperationDate(), "dd MMMM yyyy");
+        String prettySeparationDate = DateFormatUtils.format(divorceSession.getReasonForDivorceSeperationDate(),
+            "dd MMMM yyyy");
 
         return String.format(SEPARATION_STRING, divorceSession.getDivorceWho(), prettySeparationDate);
     }

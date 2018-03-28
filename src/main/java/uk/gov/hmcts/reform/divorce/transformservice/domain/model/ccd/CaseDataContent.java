@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import lombok.Builder;
 import lombok.Data;
 

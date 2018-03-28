@@ -33,16 +33,16 @@ public class DraftsService {
         if (divorceDraft.isPresent()) {
             log.debug("Updating the existing divorce session draft");
             client.updateDraft(
-                    jwt,
-                    divorceDraft.get().getId(),
-                    secret,
-                    modelFactory.updateDraft(data));
+                jwt,
+                divorceDraft.get().getId(),
+                secret,
+                modelFactory.updateDraft(data));
         } else {
             log.debug("Creating a new divorce session draft");
             client.createDraft(
-                    jwt,
-                    secret,
-                    modelFactory.createDraft(data));
+                jwt,
+                secret,
+                modelFactory.createDraft(data));
         }
     }
 
@@ -73,11 +73,12 @@ public class DraftsService {
     private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {
         if (draftList != null && !draftList.getData().isEmpty()) {
             Optional<Draft> divorceDraft = draftList.getData().stream()
-                    .filter(draft -> modelFactory.isDivorceDraft(draft))
-                    .findFirst();
+                .filter(draft -> modelFactory.isDivorceDraft(draft))
+                .findFirst();
             if (!divorceDraft.isPresent()) {
                 if (draftList.getPaging().getAfter() != null) {
-                    log.debug("Divorce session draft could not be found on the current page with drafts. Going to next page");
+                    log.debug("Divorce session draft could not be found on the current page with drafts. "
+                        + "Going to next page");
                     draftList = client.getAll(jwt, secret, draftList.getPaging().getAfter());
                     return findDivorceDraft(jwt, secret, draftList);
                 }

@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.strategy.payments;
 
-import java.util.List;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentCollection;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.Payment;
+
+import java.util.List;
 
 public interface PaymentStrategy {
 

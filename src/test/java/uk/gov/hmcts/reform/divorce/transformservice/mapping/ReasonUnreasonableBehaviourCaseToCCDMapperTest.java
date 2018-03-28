@@ -25,13 +25,18 @@ public class ReasonUnreasonableBehaviourCaseToCCDMapperTest extends DivorceCaseT
     private DivorceCaseToCCDMapper mapper;
 
     @Test
-    public void shouldMapAllAndTransformAllFieldsForReasonUnreasonableBehavourScenario() throws URISyntaxException, IOException {
+    public void shouldMapAllAndTransformAllFieldsForReasonUnreasonableBehaviourScenario()
+        throws URISyntaxException, IOException {
 
-        CoreCaseData expectedCoreCaseData = (CoreCaseData)DivorceCaseToCCDMapperTestUtil.jsonToPOJO("fixtures/ccdmapping/reasonunreasonablebehaviour.json", AddressesCaseToCCDMapperTest.class, CoreCaseData.class);
+        CoreCaseData expectedCoreCaseData = (CoreCaseData) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("fixtures/ccdmapping/reasonunreasonablebehaviour.json",
+                AddressesCaseToCCDMapperTest.class, CoreCaseData.class);
+
         expectedCoreCaseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
 
-        DivorceSession divorceSession = (DivorceSession)DivorceCaseToCCDMapperTestUtil.jsonToPOJO(
-                "divorce-payload-json/reason-unreasonable-behaviour.json", ReasonUnreasonableBehaviourCaseToCCDMapperTest.class, DivorceSession.class);
+        DivorceSession divorceSession = (DivorceSession) DivorceCaseToCCDMapperTestUtil.jsonToObject(
+            "divorce-payload-json/reason-unreasonable-behaviour.json",
+            ReasonUnreasonableBehaviourCaseToCCDMapperTest.class, DivorceSession.class);
 
         CoreCaseData actualCoreCaseData = mapper.divorceCaseDataToCourtCaseData(divorceSession);
 

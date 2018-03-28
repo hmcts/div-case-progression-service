@@ -48,7 +48,8 @@ public class CollectionMemberTest {
 
     @Test
     public void shouldMarshalJsonStringToObject() throws Exception {
-        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {});
+        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {
+        });
 
         assertEquals(collectionMember, objectReader.readValue(json));
     }
