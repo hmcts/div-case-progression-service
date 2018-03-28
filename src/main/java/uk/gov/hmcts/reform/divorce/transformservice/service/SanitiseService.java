@@ -22,9 +22,8 @@ public class SanitiseService {
     public CoreCaseData sanitiseCase(final CaseDetails caseDetails) {
         CoreCaseData caseData = caseDetails.getCaseData();
 
-        String petitionerFullName = StringUtils.join(
+        String petitionerFullName = combine(BLANK_SPACE,
                 caseData.getD8PetitionerFirstName(),
-                BLANK_SPACE,
                 caseData.getD8PetitionerLastName());
         caseData.setD8DerivedPetitionerCurrentFullName(isNotBlank(petitionerFullName) ? petitionerFullName : null);
 
@@ -32,9 +31,8 @@ public class SanitiseService {
                 ? deriveAddress(caseData.getD8PetitionerCorrespondenceAddress()) : null;
         caseData.setD8DerivedPetitionerCorrespondenceAddress(petitionerCorrespondenceAddress);
 
-        String respondentName = StringUtils.join(
+        String respondentName = combine(BLANK_SPACE,
                 caseData.getD8RespondentFirstName(),
-                BLANK_SPACE,
                 caseData.getD8RespondentLastName());
         caseData.setD8DerivedRespondentCurrentName(isNotBlank(respondentName) ? respondentName : null);
 
@@ -44,17 +42,14 @@ public class SanitiseService {
 
         String respondentSolicitorAddress = Objects.nonNull(caseData.getD8RespondentSolicitorAddress())
                 ? deriveAddress(caseData.getD8RespondentSolicitorAddress()) : null;
-        String respondentSolicitorDetails = StringUtils.join(
+        String respondentSolicitorDetails = combine(LINE_SEPARATOR,
                 caseData.getD8RespondentSolicitorName(),
-                LINE_SEPARATOR,
                 caseData.getD8RespondentSolicitorCompany(),
-                LINE_SEPARATOR,
                 respondentSolicitorAddress);
         caseData.setD8DerivedRespondentSolicitorDetails(respondentSolicitorDetails);
 
-        String adultery3rdPartyName = StringUtils.join(
+        String adultery3rdPartyName = combine(BLANK_SPACE,
                 caseData.getD8ReasonForDivorceAdultery3rdPartyFName(),
-                BLANK_SPACE,
                 caseData.getD8ReasonForDivorceAdultery3rdPartyLName());
         caseData.setD8DerivedReasonForDivorceAdultery3dPtyNm(isNotBlank(adultery3rdPartyName) ? adultery3rdPartyName : null);
 
@@ -62,19 +57,13 @@ public class SanitiseService {
                 ? deriveAddress(caseData.getD8ReasonForDivorceAdultery3rdAddress()) : null;
         caseData.setD8DerivedReasonForDivorceAdultery3rdAddr(adultery3rdPartyAddress);
 
-        String statementOfCase = StringUtils.join(
+        String statementOfCase = combine(LINE_SEPARATOR,
                 caseData.getD8ReasonForDivorceAdulteryDetails(),
-                LINE_SEPARATOR,
                 caseData.getD8ReasonForDivorceBehaviourDetails(),
-                LINE_SEPARATOR,
                 caseData.getSolSOCBehaviourExample2(),
-                LINE_SEPARATOR,
                 caseData.getSolSOCBehaviourExample3(),
-                LINE_SEPARATOR,
                 caseData.getD8ReasonForDivorceDesertionDetails(),
-                LINE_SEPARATOR,
-                caseData.getD8ReasonForDivorceSeperation()
-        );
+                caseData.getD8ReasonForDivorceSeperation());
         caseData.setD8DerivedStatementOfCase(statementOfCase);
 
         return caseData;
@@ -91,5 +80,9 @@ public class SanitiseService {
                 address.getCountry()
         ).filter(StringUtils::isNotBlank)
                 .collect(Collectors.joining(LINE_SEPARATOR));
+    }
+
+    private String combine(String separator, String... valuesToCombine) {
+        return StringUtils.join(valuesToCombine, separator);
     }
 }
