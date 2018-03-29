@@ -38,6 +38,10 @@ variable "auth_provider_service_client_tokentimetoliveinseconds" {
     default = "900"
 }
 
+variable "no_proxy" {
+    default = "localhost,127.0.0.0/8,127.0.0.1,127.0.0.1*,local.home,reform.hmcts.net,*.reform.hmcts.net,internal,*.internal"
+}
+
 variable "ccd_casedatastore_baseurl" {
     default = "https://case-data-app.test.ccd.reform.hmcts.net:4481"
 }
