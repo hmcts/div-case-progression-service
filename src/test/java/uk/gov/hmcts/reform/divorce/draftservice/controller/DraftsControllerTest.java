@@ -22,18 +22,15 @@ import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 
 import java.io.File;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -88,18 +85,6 @@ public class DraftsControllerTest {
                 .header("Authorization", JWT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
-
-        verify(emailService, never()).sendSaveDraftConfirmationEmail(eq(notificationEmail));
-    }
-
-    @Test
-    public void shouldReturnBadRequestWhenSavingADraftByExplicitCallWithInvalidEmail() throws Exception {
-        String notificationEmail = "InvalidEmailAddress";
-        mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
 
         verify(emailService, never()).sendSaveDraftConfirmationEmail(eq(notificationEmail));
     }
@@ -171,6 +156,32 @@ public class DraftsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isServiceUnavailable());
 
+    }
+
+    @Test
+    public void shouldReturnNoContentWhenSavingADraftByExplicitCallWithEmailWithAmpersAnd() throws Exception {
+        String notificationEmail =  "simulate-deli&vered@notifications.service.gov.uk";
+        String encodedEmail= URLEncoder.encode(notificationEmail, StandardCharsets.UTF_8.toString());
+        mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + encodedEmail)
+                .content(requestContent.toString())
+                .header("Authorization", JWT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNoContent());
+
+        verify(emailService).sendSaveDraftConfirmationEmail(eq(notificationEmail));
+    }
+
+    @Test
+    public void shouldReturnNoContentWhenSavingADraftByExplicitCallWithEmailWithPlus() throws Exception {
+        String notificationEmail =  "simulate-deli+vered@notifications.service.gov.uk";
+        String encodedEmail= URLEncoder.encode(notificationEmail, StandardCharsets.UTF_8.toString());
+        mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + encodedEmail)
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
+
+        verify(emailService).sendSaveDraftConfirmationEmail(eq(notificationEmail));
     }
 
 }

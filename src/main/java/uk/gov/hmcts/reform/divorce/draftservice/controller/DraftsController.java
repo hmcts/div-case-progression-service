@@ -25,6 +25,9 @@ import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping(path = "/draftsapi/version/1")
@@ -53,12 +56,11 @@ public class DraftsController {
             final JsonNode data,
             @RequestParam(value = "notificationEmail", required = false)
             @ApiParam(value = "The email address that will receive the notification that the draft has been saved", required = false)
-            @Email
-            final String notificationEmail) {
+            final String notificationEmail) throws UnsupportedEncodingException {
         log.debug("Received request to save a divorce session draft");
         service.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
-            emailService.sendSaveDraftConfirmationEmail(notificationEmail);
+            emailService.sendSaveDraftConfirmationEmail(URLDecoder.decode(notificationEmail, StandardCharsets.UTF_8.toString()));
         }
         return ResponseEntity.noContent().build();
     }
