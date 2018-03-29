@@ -17,6 +17,8 @@ module "div-case-progression" {
         REFORM_TEAM = "${var.reform_team }"
         REFORM_ENVIRONMENT = "${var.env}"
         SERVER_PORT = "${var.case_progression_service_port}"
+        SERVER_URL = "${var.case_progression_service_url}"
+        EXTERNAL_SERVER_PORT = "${var.case_progression_external_servicer_port}"
         AUTH_IDAM_CLIENT_BASEURL = "${var.auth_idam_client_baseUrl}"
         AUTH_PROVIDER_SERVICE_CLIENT_PORT = "${var.auth_provider_service_client_port}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.auth_provider_service_client_baseurl}"
@@ -30,7 +32,6 @@ module "div-case-progression" {
         CCD_JURISDICTIONID = "${var.ccd_jurisdictionid}"
         CCD_CASETYPEID = "${var.ccd_casetypeid}"
         CCD_EVENTID_CREATE = "${var.ccd_eventid_create}"
-
         LOGGING_LEVEL_ORG_SRPINGFRAMEWORK_WEB = "${var.logging_level_org_springframework_web}"
         LOGGING_LEVEL_UK_GOV_HMCTS_CCD = "${var.logging_level_uk_gov_hmcts_ccd}"
         //    PDF_GENERATOR_BASE_URL                                = "${var.pdf_generator_base_url}"

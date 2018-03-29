@@ -14,6 +14,14 @@ variable "case_progression_service_port" {
     default = "4003"
 }
 
+variable "case_progression_external_servicer_port" {
+    default = "443"
+}
+
+variable "case_progression_service_url" {
+    default = "https://div-case-progression-sandbox-staging.service.core-compute-sandbox.internal"
+}
+
 variable "auth_idam_client_baseUrl" {
     default = "http://betaDevBccidamAppLB.reform.hmcts.net"
 }
@@ -36,10 +44,6 @@ variable "auth_provider_service_client_key" {
 
 variable "auth_provider_service_client_tokentimetoliveinseconds" {
     default = "900"
-}
-
-variable "no_proxy" {
-    default = "localhost,127.0.0.0/8,127.0.0.1,127.0.0.1*,local.home,reform.hmcts.net,*.reform.hmcts.net,internal,*.internal"
 }
 
 variable "ccd_casedatastore_baseurl" {
@@ -80,6 +84,10 @@ variable "pdf_generator_base_url" {
 
 variable "uk_gov_notify_email_templates" {
     type = "string"
+}
+
+variable "no_proxy" {
+    default = "localhost,127.0.0.0/8,127.0.0.1,127.0.0.1*,local.home,reform.hmcts.net,*.reform.hmcts.net,internal,*.internal"
 }
 
 variable "subscription" {}
