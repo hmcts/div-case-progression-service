@@ -28,7 +28,6 @@ version = '0.0.3'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-
 jar {
     manifest {
         attributes 'Implementation-Title': project.name,
@@ -52,16 +51,33 @@ tasks.withType(Checkstyle).each { checkstyleTask ->
     }
 }
 
-task smoke(type:Test) {
+task smoke(type:GradleBuild) {
     group = 'Delivery pipeline'
-    description = 'Executes non-destructive smoke tests against a running Claim Store instance'
-    include "uk/gov/hmcts/reform/divorce/smoketest/**"
+    description = 'Executes non-destructive smoke tests against a running Case Prgression Instance'
+
+    tasks = ['enableSmokeTest','case-progression-automation-test:clean', 'case-progression-automation-test:test', 'case-progression-automation-test:aggregate']
 }
 
-task functional(type:Test) {
+task enableSmokeTest(){
+    doFirst{
+        project.ext.automatedTest = true
+        project.ext.tags = 'test-type:smoke'
+    }
+}
+
+task enableFunctionalTest(){
+    doFirst{
+        project.ext.automatedTest = true
+        project.ext.tags = 'test-type:all'
+    }
+}
+
+task functional(type:GradleBuild) {
+
     group = 'Delivery pipeline'
-    //we need to separate out functional test.
-    exclude "uk/gov/**"
+    description = 'Executes non-destructive smoke tests against a running Case Prgression Instance'
+
+    tasks = ['enableFunctionalTest', 'case-progression-automation-test:clean', 'case-progression-automation-test:test', 'case-progression-automation-test:aggregate']
 }
 
 mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
@@ -174,7 +190,9 @@ task developAddRelaseSuffix() {
 }
 
 test {
-        exclude 'uk/gov/hmcts/reform/divorce/transformservice/functional/**'
+    doFirst {
+        project.ext.automatedTest = false
+    }
 }
 
 jacocoTestReport {
