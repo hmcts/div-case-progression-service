@@ -1,0 +1,6 @@
+{
+    "eventData" : {
+        "divorceWho" : "notAValidValue"
+    },
+    "eventId" : "paymentMade"
+}
