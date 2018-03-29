@@ -31,13 +31,4 @@ public class ServiceContextConfiguration {
     ) {
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }
-
-    @Bean("documentGeneratorAuthTokenGenerator")
-    public AuthTokenGenerator serviceAuthTokenGeneratorForEmClient(
-            @Value("${document.generator.service.auth.secret}") final String secret,
-            @Value("${document.generator.auth.microservice}") final String microService,
-            final ServiceAuthorisationApi serviceAuthorisationApi
-    ) {
-        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
-    }
 }

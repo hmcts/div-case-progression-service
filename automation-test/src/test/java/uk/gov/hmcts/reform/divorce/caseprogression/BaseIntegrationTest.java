@@ -34,8 +34,8 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.url}")
     private String transformationApiUrl;
 
-    @Value("${ccd.retreive.caseurl}")
-    private String ccdRetreiveCaseApiUrl;
+    @Value("${ccd.retrieve.case.url}")
+    private String cadRetrieveCaseAdiUrl;
 
     /**
      * The endpoint route for submitting a case
@@ -57,15 +57,6 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
      */
     @Value("${transformation.api.endpoint.update}")
     private String transformationApiUpdateEndpoint;
-
-    /**
-     * The url for submitting a case
-     */
-    @Value("${evidence.management.client.api.baseUrl}")
-    private String evidenceManagementClientApiBaseUrl;
-
-    @Value("${evidence.management.client.api.endpoint.upload}")
-    private String evidenceManagementClientApiUploadEndpoint;
 
     private JSONArray fileUploadResponse = null;
 

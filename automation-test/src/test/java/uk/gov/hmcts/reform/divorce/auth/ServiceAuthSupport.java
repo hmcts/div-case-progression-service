@@ -19,10 +19,6 @@ public class ServiceAuthSupport {
     @Qualifier("caseProgressionAuthTokenGenerator")
     private AuthTokenGenerator caseProgressionAuthTokenGenerator;
 
-    @Autowired
-    @Qualifier("documentGeneratorAuthTokenGenerator")
-    private AuthTokenGenerator documentGeneratorAuthTokenGenerator;
-
     public synchronized String getServiceAuthTokenFor(ServiceAuthTokenFor serviceAuthTokenFor) {
         if (serviceAuthTokenFor == null) {
             throw new IllegalArgumentException("ServiceAuthTokenFor is null. Cannot generate service token");
@@ -44,8 +40,6 @@ public class ServiceAuthSupport {
         switch (serviceAuthTokenFor) {
             case CASE_PROGRESSION:
                 return caseProgressionAuthTokenGenerator;
-            case DOCUMENT_GENERATOR:
-                return documentGeneratorAuthTokenGenerator;
         }
 
         return null;
