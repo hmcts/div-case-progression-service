@@ -3,7 +3,7 @@ locals {
     tactical_div_document_generator = "http://betaDevBdivorceAppLB.reform.hmcts.net:4017"
 }
 
-module "div-case-progression-service" {
+module "div-case-progression" {
     source = "git@github.com:hmcts/moj-module-webapp.git?ref=master"
     product = "${var.reform_team}-${var.reform_service_name}"
     location = "${var.location}"
