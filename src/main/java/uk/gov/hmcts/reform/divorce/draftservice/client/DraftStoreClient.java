@@ -76,12 +76,6 @@ public class DraftStoreClient {
 
     public void deleteDraft(String jwt, String id) {
         log.debug("Sending a request to the draft store to delete the existing divorce draft");
-
-
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println("jwt = " + jwt);
-        System.out.println("id = " + id);
-
         try {
             restTemplate.exchange(
                 clientConfiguration.getSingleDraftUrl(id),

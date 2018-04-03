@@ -76,11 +76,16 @@ public class DraftStoreClient {
 
 
     private DraftList getAllDrafts(String jwt, String after) {
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println("jwt = " + jwt);
+        System.out.println("url = " + getDraftsUrl(after));
+
         Response response = SerenityRest.given()
                 .headers(getHeaders(jwt))
                 .when()
                 .get(getDraftsUrl(after))
                 .andReturn();
+
         return response.getBody().as(DraftList.class);
     }
 
