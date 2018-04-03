@@ -82,7 +82,7 @@ public class DraftStoreClientTest {
     @Test
     public void getAllShouldReturnTheDraftListFromTheResponse() throws Exception {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
-        given(entityFactory.createRequestEntityFroDraft(JWT, secret))
+        given(entityFactory.createRequestEntityForDraft(JWT, secret))
             .willReturn(httpEntity);
 
         DraftList expectedDraftList =
@@ -107,7 +107,7 @@ public class DraftStoreClientTest {
     @Test(expected = DraftStoreUnavailableException.class)
     public void getAllShouldThrowDraftStoreUnavailableExceptionWhenTheDraftStoreIsNotAvailable() {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
-        given(entityFactory.createRequestEntityFroDraft(JWT, secret))
+        given(entityFactory.createRequestEntityForDraft(JWT, secret))
             .willReturn(httpEntity);
 
         mockServer
@@ -122,7 +122,7 @@ public class DraftStoreClientTest {
     @Test
     public void getAllShouldReturnTheSecondPageOfDrafts() throws Exception {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
-        given(entityFactory.createRequestEntityFroDraft(JWT, secret))
+        given(entityFactory.createRequestEntityForDraft(JWT, secret))
             .willReturn(httpEntity);
 
         DraftList expectedDraftList =
@@ -224,7 +224,7 @@ public class DraftStoreClientTest {
 
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
-        given(entityFactory.createRequestEntityFroDraft(JWT))
+        given(entityFactory.createRequestEntityForDraft(JWT))
             .willReturn(httpEntity);
 
         mockServer
@@ -247,7 +247,7 @@ public class DraftStoreClientTest {
 
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
-        given(entityFactory.createRequestEntityFroDraft(JWT))
+        given(entityFactory.createRequestEntityForDraft(JWT))
             .willReturn(httpEntity);
 
         mockServer

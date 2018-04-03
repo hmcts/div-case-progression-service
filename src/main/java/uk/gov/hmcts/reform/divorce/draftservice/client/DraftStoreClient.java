@@ -37,7 +37,7 @@ public class DraftStoreClient {
             ResponseEntity<DraftList> draftListResponse = restTemplate.exchange(
                 clientConfiguration.getAllDraftsUrl(after),
                 HttpMethod.GET,
-                httpEntityFactory.createRequestEntityFroDraft(jwt, secret),
+                httpEntityFactory.createRequestEntityForDraft(jwt, secret),
                 DraftList.class);
             return draftListResponse.getBody();
         } catch (ResourceAccessException | HttpServerErrorException e) {
@@ -80,7 +80,7 @@ public class DraftStoreClient {
             restTemplate.exchange(
                 clientConfiguration.getSingleDraftUrl(id),
                 HttpMethod.DELETE,
-                httpEntityFactory.createRequestEntityFroDraft(jwt),
+                httpEntityFactory.createRequestEntityForDraft(jwt),
                 Void.class);
         } catch (ResourceAccessException | HttpServerErrorException e) {
             log.warn(DRAFT_STORE_IS_UNAVAILABLE_ERROR_MESSAGE, e.getMessage());

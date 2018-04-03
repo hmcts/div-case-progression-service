@@ -31,12 +31,12 @@ public class DraftStoreHttpEntityFactory {
         return new HttpEntity<>(updateDraft, headers);
     }
 
-    public HttpEntity<Void> createRequestEntityFroDraft(String userToken, String secret) {
+    public HttpEntity<Void> createRequestEntityForDraft(String userToken, String secret) {
         HttpHeaders headers = getHeaders(userToken, secret);
         return new HttpEntity<>(headers);
     }
 
-    public HttpEntity<Void> createRequestEntityFroDraft(String userToken) {
+    public HttpEntity<Void> createRequestEntityForDraft(String userToken) {
         HttpHeaders headers = getHeaders(userToken);
         return new HttpEntity<>(headers);
     }
