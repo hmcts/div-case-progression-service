@@ -123,6 +123,9 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     }
 
     private void assertDraftIsSaved(String draft) {
+
+        System.out.println("idam test user = " + getIdamTestUser());
+
         List<Draft> drafts = draftStoreClient.getDivorceDrafts(getIdamTestUser());
         assertEquals(1, drafts.size());
         JSONAssert.assertEquals(draft, drafts.get(0).getDocument().toString(), false);

@@ -79,8 +79,8 @@ public class DraftStoreClient {
 
 
         System.out.println("\n\n\n\n\n\n");
-        System.out.println(jwt);
-        System.out.println(id);
+        System.out.println("jwt = " + jwt);
+        System.out.println("id = " + id);
 
         try {
             restTemplate.exchange(
