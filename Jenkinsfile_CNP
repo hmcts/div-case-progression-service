@@ -38,7 +38,6 @@ withPipeline(type , product, component) {
         echo '${product}-${component} checked out'
 
         env.CNP_ENVIRONMENT = env.ENVIRONMENT
-
     }
 
 //    loadVaultSecrets(secrets)
