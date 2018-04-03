@@ -154,6 +154,8 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     }
 
     protected Response submitCase(String fileName) throws Exception {
+        System.out.println("\n\n\n transformationApiSubmitUrl = " + transformationApiSubmitUrl + "\n\n");
+
         return postToRestService(loadJSON(fileName), transformationApiSubmitUrl);
     }
 

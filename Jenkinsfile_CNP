@@ -20,8 +20,8 @@ def component = "case-progression"
 def channel = '#div-dev'
 
 //List<LinkedHashMap<String, Object>> secrets = [
-//    secret(vaultKeySecretPath((String)$env, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission:value"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-//    secret(vaultKeySecretPath((String)$env, "/divorce/draft/encryption_key:value"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+//    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission:value"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+//    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/divorce/draft/encryption_key:value"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
 //]
 //
 //static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -37,7 +37,7 @@ withPipeline(type , product, component) {
     after('checkout') {
         echo '${product}-${component} checked out'
 
-        env.CNP_ENVIRONMENT = ${env.ENVIRONMENT}
+        env.CNP_ENVIRONMENT = env.ENVIRONMENT
 
     }
 
