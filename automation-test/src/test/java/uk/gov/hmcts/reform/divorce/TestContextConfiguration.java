@@ -7,5 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ComponentScan(basePackages = {"uk.gov.hmcts.reform.divorce", "uk.gov.hmcts.auth.provider.service"})
 @PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-${env}.properties")
 public class TestContextConfiguration {
 }

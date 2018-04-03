@@ -43,6 +43,7 @@ public class CaseAddPdfFunctionalTest {
     private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String REQUEST_ID_HEADER_VALUE = "1234567";
+
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
         new WireMockConfiguration().port(4007).bindAddress("localhost"));
