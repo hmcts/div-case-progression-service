@@ -12,13 +12,13 @@ properties([
 ])
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission:value"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/divorce/draft/encryption_key:value"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
-      secretType: 'Secret',
+      secretType: 'value',
       name: secretName,
       version: '',
       envVariable: envVar
