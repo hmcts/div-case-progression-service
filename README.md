@@ -11,7 +11,6 @@
   *  Java8
   * Spring Boot
   * Junit, Mockito, WireMock and SpringBootTest
-  * Apache Maven
 * Plugins used by project
   * Jacoco
   * OWASP dependency check

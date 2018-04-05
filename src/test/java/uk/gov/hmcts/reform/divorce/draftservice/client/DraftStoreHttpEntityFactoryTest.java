@@ -68,7 +68,7 @@ public class DraftStoreHttpEntityFactoryTest {
 
     @Test
     public void createRequestEntityFroDraftShouldReturnAuthorizationServiceAuthorizationAndSecret() {
-        HttpEntity<Void> httpEntity = underTest.createRequestEntityFroDraft(JWT, SECRET);
+        HttpEntity<Void> httpEntity = underTest.createRequestEntityForDraft(JWT, SECRET);
 
         assertEquals(JWT, httpEntity.getHeaders().get(AUTHORIZATION_HEADER_NAME).get(0));
         assertEquals(SERVICE_JWT, httpEntity.getHeaders().get(SERVICE_AUTHORIZATION_HEADER_NAME).get(0));
@@ -77,7 +77,7 @@ public class DraftStoreHttpEntityFactoryTest {
 
     @Test
     public void createRequestEntityFroDraftShouldReturnAuthorizationAndServiceAuthorization() {
-        HttpEntity<Void> httpEntity = underTest.createRequestEntityFroDraft(JWT);
+        HttpEntity<Void> httpEntity = underTest.createRequestEntityForDraft(JWT);
 
         assertEquals(JWT, httpEntity.getHeaders().get(AUTHORIZATION_HEADER_NAME).get(0));
         assertEquals(SERVICE_JWT, httpEntity.getHeaders().get(SERVICE_AUTHORIZATION_HEADER_NAME).get(0));

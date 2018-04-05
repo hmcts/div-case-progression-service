@@ -1,0 +1,10 @@
+env = "prod"
+subscription = "prod"
+vault_env = "prod"
+
+auth_provider_service_client_baseurl = "http://betaProdccidamAppLB.reform.hmcts.net:4502"
+logging_level_org_springframework_web = "DEBUG"
+logging_level_uk_gov_hmcts_ccd = "DEBUG"
+draft_store_api_baseurl = "https://proddraftstorelb.moneyclaim.reform.hmcts.net:4301"
+pdf_generator_base_url = "https://div-document-generator-prod.service.core-compute-sandbox.internal"
+uk_gov_notify_email_templates = "{SAVE_DRAFT:'0f47ba30-0b94-4fc7-badd-b11721adcbfa'}"

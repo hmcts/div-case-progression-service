@@ -11,6 +11,33 @@ properties([
     ])
 ])
 
-withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+List<LinkedHashMap<String, Object>> secrets = [
+    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
 
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [ $class: 'AzureKeyVaultSecret',
+      secretType: 'value',
+      name: secretName,
+      version: '',
+      envVariable: envVar
+    ]
+}
+
+withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+    after('checkout') {
+        env.CNP_ENVIRONMENT = env.ENVIRONMENT
+    }
+
+    loadVaultSecrets(secrets)
+}
+
+
+String vaultKeySecretPath(String env, String secretPathPostFix){
+    if(env.toLowerCase().endsWith("prod")){
+        return "secret/" + "prod" + secretPathPostFix
+    }
+
+    return "secret/" + "test" + secretPathPostFix
 }

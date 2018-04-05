@@ -1,0 +1,3 @@
+include 'automation-test'
+findProject(':automation-test')?.name = 'case-progression-automation-test'
+
