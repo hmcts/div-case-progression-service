@@ -24,7 +24,7 @@ public class HealthCheckServerNotFoundFunctionalTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void shouldReturnStatusDownWhenDependenciesAreUnavailable() throws Exception {
+    public void shouldReturnStatusDownWhenDependenciesAreUnavailable() {
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
         assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");

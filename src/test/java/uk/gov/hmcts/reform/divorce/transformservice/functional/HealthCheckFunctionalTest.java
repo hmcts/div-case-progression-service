@@ -50,8 +50,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
         "endpoints.health.time-to-live=0",
         "feign.hystrix.enabled=true",
         "eureka.client.enabled=false"
-    }
-)
+    })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class HealthCheckFunctionalTest {
 
