@@ -37,6 +37,10 @@ withPipeline(type , product, component) {
     after('checkout') {
         echo '${product}-${component} checked out'
 
+        echo sh(returnStdout: true, script: 'env')
+
+        echo env.CNP_ENVIRONMENT
+
         env.CNP_ENVIRONMENT = env.ENVIRONMENT
     }
 
@@ -46,7 +50,7 @@ withPipeline(type , product, component) {
 }
 
 String vaultKeySecretPath(String env, String secretPathPostFix){
-    if(env.toLowerCase().endsWith("prod")){
+    if(env != null && env.toLowerCase().endsWith("prod")){
         return "secret/" + "prod" + secretPathPostFix
     }
 
