@@ -19,6 +19,7 @@ import org.springframework.cloud.netflix.ribbon.StaticServerList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,6 +52,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
         "eureka.client.enabled=false"
     }
 )
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class HealthCheckFunctionalTest {
 
     private static final String HEALTH_UP_RESPONSE = "{ \"status\": \"UP\"}";
