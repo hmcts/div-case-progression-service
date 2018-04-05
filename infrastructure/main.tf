@@ -13,8 +13,8 @@ module "div-case-progression" {
     is_frontend = false
 
     app_settings = {
-        REFORM_SERVICE_NAME = "${var.reform_service_name }"
-        REFORM_TEAM = "${var.reform_team }"
+        REFORM_SERVICE_NAME = "${var.reform_service_name}"
+        REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
         SERVER_PORT = "${var.case_progression_service_port}"
         SERVER_URL = "${var.case_progression_service_url}"
