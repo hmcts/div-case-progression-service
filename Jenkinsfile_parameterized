@@ -27,10 +27,18 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
     after('checkout') {
-        env.CNP_ENVIRONMENT = env.ENVIRONMENT
+        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
     }
 
     loadVaultSecrets(secrets)
+}
+
+String getEnvironment(String env){
+    if(env == null){
+        return "aat"
+    }
+
+    return env
 }
 
 
