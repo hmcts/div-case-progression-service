@@ -6,7 +6,6 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
@@ -24,7 +23,7 @@ import static java.lang.String.join;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@Mapper(componentModel = "spring", uses = DocumentCollectionMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = DocumentCollectionMapper.class)
 public abstract class DivorceCaseToCCDMapper {
 
     private static final String BLANK_SPACE = " ";
