@@ -1,15 +1,15 @@
 {
-    "event": {
-        "id": "create",
-        "summary": "Create case",
-        "description": null
-    },
-    "data": {
-        "D8PetitionerFirstName": "Danny",
-        "D8DerivedPetitionerCurrentFullName": "Danny ",
-        "D8Cohort": "onlineSubmissionPrivateBeta"
-    },
-    "security_classification": null,
-    "event_token": "abcde",
-    "ignore_warning": null
+  "event" : {
+    "id" : "create",
+    "summary" : "Create case",
+    "description" : null
+  },
+  "data" : {
+    "D8PetitionerFirstName" : "Danny",
+    "D8DerivedPetitionerCurrentFullName" : "Danny ",
+    "D8Cohort" : "onlineSubmissionPrivateBeta"
+  },
+  "security_classification" : null,
+  "event_token" : "abcde",
+  "ignore_warning" : null
 }

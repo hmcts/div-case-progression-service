@@ -209,14 +209,14 @@
     "courts": "eastMidlands",
     "confirmPrayer": "Yes",
     "payment": {
-        "PaymentChannel": "card",
-        "PaymentTransactionId": "111222333",
-        "PaymentReference": "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
-        "PaymentDate": "02022001",
-        "PaymentAmount": "55000",
-        "PaymentStatus": "success",
-        "PaymentFeeId": "X0165",
-        "PaymentSiteId": "AA00"
+        "PaymentChannel" : "card",
+        "PaymentTransactionId" : "111222333",
+        "PaymentReference" : "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
+        "PaymentDate" : "02022001",
+        "PaymentAmount" : "55000",
+        "PaymentStatus" : "success",
+        "PaymentFeeId" : "X0165",
+        "PaymentSiteId" : "AA00"
     },
     "sessionKey": "3ef126f177936ef4537b104b950f7342a098ae3047f9ee099c8a0dbf3a63b488:e2e2ad2acf3c03722df82477f9a29a2f:23b082fff0278efe6df50277f08684c77088678ec69238dde867923aef64e46d40d7cee00ea7253942e2bc93229f60b1ff3cee1d50d561b904dcea4bfaeda695"
 }

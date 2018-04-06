@@ -1,6 +1,6 @@
 {
-    "eventData": {
+    "eventData" : {
         "petitionerFirstName": "Dan"
     },
-    "eventId": "paymentMade"
+    "eventId" : "paymentMade"
 }

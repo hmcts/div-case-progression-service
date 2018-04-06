@@ -1,222 +1,222 @@
 {
-    "cookie": {
-        "originalMaxAge": null,
-        "expires": null,
-        "secure": false,
-        "httpOnly": true,
-        "path": "/"
+  "cookie": {
+    "originalMaxAge": null,
+    "expires": null,
+    "secure": false,
+    "httpOnly": true,
+    "path": "/"
+  },
+  "expires": 1507916125312,
+  "screenHasMarriageBroken": "Yes",
+  "screenHasRespondentAddress": "Yes",
+  "screenHasMarriageCert": "Yes",
+  "screenHasPrinter": "Yes",
+  "helpWithFeesNeedHelp": "Yes",
+  "helpWithFeesAppliedForFees": "Yes",
+  "helpWithFeesReferenceNumber": "HWF-123-456",
+  "divorceWho": "husband",
+  "marriageIsSameSexCouple": "No",
+  "marriageDateDay": 2,
+  "marriageDateMonth": 2,
+  "marriageDateYear": 2001,
+  "marriageDate": "2001-02-02T00:00:00.000Z",
+  "marriageCanDivorce": true,
+  "marriageDateIsFuture": false,
+  "marriageDateMoreThan100": false,
+  "marriageWhereMarried": "england",
+  "jurisdictionPath": [
+    "JurisdictionHabitualResidence",
+    "JurisdictionInterstitial"
+  ],
+  "jurisdictionConnection": [
+    "A",
+    "C"
+  ],
+  "connections": {
+    "A": "The Petitioner and the Respondent are habitually resident in England and Wales",
+    "C": "The Respondent is habitually resident in England and Wales"
+  },
+  "jurisdictionPetitionerResidence": "Yes",
+  "jurisdictionRespondentResidence": "Yes",
+  "jurisdictionConfidentLegal": "Yes",
+  "jurisdictionConnectionFirst": "A",
+  "petitionerContactDetailsConfidential": "share",
+  "petitionerFirstName": "John",
+  "petitionerLastName": "Smith",
+  "respondentFirstName": "Jane",
+  "respondentLastName": "Jamed",
+  "marriagePetitionerName": "John Doe",
+  "marriageRespondentName": "Jenny Benny",
+  "petitionerNameDifferentToMarriageCertificate": "Yes",
+  "petitionerNameChangedHow": [
+    "marriageCertificate"
+  ],
+  "petitionerEmail": "email@email.com",
+  "petitionerPhoneNumber": "01234567890",
+  "petitionerHomeAddress": {
+    "addressType": "postcode",
+    "postcode": "SW9 9PE",
+    "address": [
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/address",
+    "formattedAddress": {
+      "whereabouts": [
+        "82 Landor Road",
+        "London"
+      ],
+      "postcode": "SW9 9PE"
+    }
+  },
+  "petitionerCorrespondenceUseHomeAddress": "Yes",
+  "petitionerCorrespondenceAddress": {
+    "addressType": "postcode",
+    "postcode": "SW9 9PE",
+    "address": [
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/address",
+    "formattedAddress": {
+      "whereabouts": [
+        "82 Landor Road",
+        "London"
+      ],
+      "postcode": "SW9 9PE"
+    }
+  },
+  "livingArrangementsLiveTogether": "Yes",
+  "respondentHomeAddress": {
+    "addressType": "postcode",
+    "postcode": "SW9 9PE",
+    "address": [
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/address",
+    "formattedAddress": {
+      "whereabouts": [
+        "82 Landor Road",
+        "London"
+      ],
+      "postcode": "SW9 9PE"
+    }
+  },
+  "respondentCorrespondenceUseHomeAddress": "No",
+  "respondentCorrespondenceAddress": {
+    "addressType": "postcode",
+    "postcode": "SW9 9PE",
+    "address": [
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/respondent-correspondence-address",
+    "formattedAddress": {
+      "whereabouts": [
+        "82 Landor Road",
+        "London"
+      ],
+      "postcode": "SW9 9PE"
+    }
+  },
+  "reasonForDivorce": "unreasonable-behaviour",
+  "reasonForDivorceHasMarriageDate": true,
+  "reasonForDivorceShowAdultery": true,
+  "reasonForDivorceShowUnreasonableBehaviour": true,
+  "reasonForDivorceShowTwoYearsSeparation": true,
+  "reasonForDivorceShowFiveYearsSeparation": true,
+  "reasonForDivorceShowDesertion": true,
+  "reasonForDivorceLimitReasons": false,
+  "reasonForDivorceEnableAdultery": true,
+  "reasonForDivorceBehaviourDetails": [
+    "My wife is having an affair this week."
+  ],
+  "legalProceedings": "Yes",
+  "legalProceedingsRelated": [
+    "children"
+  ],
+  "legalProceedingsDetails": "The legal proceeding details",
+  "financialOrder": "Yes",
+  "financialOrderFor": [
+    "petitioner",
+    "children"
+  ],
+  "claimsCosts": "Yes",
+  "reasonForDivorceAdulteryIsNamed": "No",
+  "claimsCostsFrom": [
+    "respondent"
+  ],
+  "claimsCostsAppliedForFees": true,
+  "reasonForDivorceClaiming5YearSeparation": false,
+  "reasonForDivorceClaimingAdultery": false,
+  "marriageCertificateFiles": [
+    {
+      "createdBy" : 12661,
+      "createdOn" : "2017-12-11",
+      "lastModifiedBy" : 12661,
+      "modifiedOn" : "2017-12-11",
+      "fileName" : "govuklogo.png",
+      "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
+      "mimeType" : "image/png",
+      "status" : "OK"
     },
-    "expires": 1507916125312,
-    "screenHasMarriageBroken": "Yes",
-    "screenHasRespondentAddress": "Yes",
-    "screenHasMarriageCert": "Yes",
-    "screenHasPrinter": "Yes",
-    "helpWithFeesNeedHelp": "Yes",
-    "helpWithFeesAppliedForFees": "Yes",
-    "helpWithFeesReferenceNumber": "HWF-123-456",
-    "divorceWho": "husband",
-    "marriageIsSameSexCouple": "No",
-    "marriageDateDay": 2,
-    "marriageDateMonth": 2,
-    "marriageDateYear": 2001,
-    "marriageDate": "2001-02-02T00:00:00.000Z",
-    "marriageCanDivorce": true,
-    "marriageDateIsFuture": false,
-    "marriageDateMoreThan100": false,
-    "marriageWhereMarried": "england",
-    "jurisdictionPath": [
-        "JurisdictionHabitualResidence",
-        "JurisdictionInterstitial"
-    ],
-    "jurisdictionConnection": [
-        "A",
-        "C"
-    ],
-    "connections": {
-        "A": "The Petitioner and the Respondent are habitually resident in England and Wales",
-        "C": "The Respondent is habitually resident in England and Wales"
+    {
+      "createdBy" : 12661,
+      "createdOn" : "2017-12-11",
+      "lastModifiedBy" : 12661,
+      "modifiedOn" : "2017-12-11",
+      "fileName" : "d8-eng.pdf",
+      "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
+      "mimeType" : "application/pdf",
+      "status" : "OK"
+    }
+  ],
+  "court": {
+    "eastMidlands": {
+      "phone": "0115 955 8266",
+      "divorceCentre": "East Midlands Regional Divorce Centre",
+      "courtCity": "Nottingham",
+      "poBox": "PO Box 10447",
+      "postCode": "NG2 9QN",
+      "openingHours": "Telephone Enquiries from: 8am to 4pm",
+      "email": "eastmidlandsdivorce@hmcts.gsi.gov.uk",
+      "phoneNumber": "0115 955 8186"
     },
-    "jurisdictionPetitionerResidence": "Yes",
-    "jurisdictionRespondentResidence": "Yes",
-    "jurisdictionConfidentLegal": "Yes",
-    "jurisdictionConnectionFirst": "A",
-    "petitionerContactDetailsConfidential": "share",
-    "petitionerFirstName": "John",
-    "petitionerLastName": "Smith",
-    "respondentFirstName": "Jane",
-    "respondentLastName": "Jamed",
-    "marriagePetitionerName": "John Doe",
-    "marriageRespondentName": "Jenny Benny",
-    "petitionerNameDifferentToMarriageCertificate": "Yes",
-    "petitionerNameChangedHow": [
-        "marriageCertificate"
-    ],
-    "petitionerEmail": "email@email.com",
-    "petitionerPhoneNumber": "01234567890",
-    "petitionerHomeAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "url": "/petitioner-respondent/address",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
+    "westMidlands": {
+      "divorceCentre": "West Midlands Regional Divorce Centre",
+      "courtCity": "Stoke-on-Trent",
+      "poBox": "PO Box 3650",
+      "postCode": "ST4 9NH",
+      "openingHours": "Telephone Enquiries from: 8.30am to 5pm",
+      "phoneNumber": "0300 123 5577"
     },
-    "petitionerCorrespondenceUseHomeAddress": "Yes",
-    "petitionerCorrespondenceAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "url": "/petitioner-respondent/address",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "livingArrangementsLiveTogether": "Yes",
-    "respondentHomeAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "url": "/petitioner-respondent/address",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "respondentCorrespondenceUseHomeAddress": "No",
-    "respondentCorrespondenceAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "url": "/petitioner-respondent/respondent-correspondence-address",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "reasonForDivorce": "unreasonable-behaviour",
-    "reasonForDivorceHasMarriageDate": true,
-    "reasonForDivorceShowAdultery": true,
-    "reasonForDivorceShowUnreasonableBehaviour": true,
-    "reasonForDivorceShowTwoYearsSeparation": true,
-    "reasonForDivorceShowFiveYearsSeparation": true,
-    "reasonForDivorceShowDesertion": true,
-    "reasonForDivorceLimitReasons": false,
-    "reasonForDivorceEnableAdultery": true,
-    "reasonForDivorceBehaviourDetails": [
-        "My wife is having an affair this week."
-    ],
-    "legalProceedings": "Yes",
-    "legalProceedingsRelated": [
-        "children"
-    ],
-    "legalProceedingsDetails": "The legal proceeding details",
-    "financialOrder": "Yes",
-    "financialOrderFor": [
-        "petitioner",
-        "children"
-    ],
-    "claimsCosts": "Yes",
-    "reasonForDivorceAdulteryIsNamed": "No",
-    "claimsCostsFrom": [
-        "respondent"
-    ],
-    "claimsCostsAppliedForFees": true,
-    "reasonForDivorceClaiming5YearSeparation": false,
-    "reasonForDivorceClaimingAdultery": false,
-    "marriageCertificateFiles": [
-        {
-            "createdBy": 12661,
-            "createdOn": "2017-12-11",
-            "lastModifiedBy": 12661,
-            "modifiedOn": "2017-12-11",
-            "fileName": "govuklogo.png",
-            "fileUrl": "https://api-gateway.test.dm.reform.hmcts.net/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
-            "mimeType": "image/png",
-            "status": "OK"
-        },
-        {
-            "createdBy": 12661,
-            "createdOn": "2017-12-11",
-            "lastModifiedBy": 12661,
-            "modifiedOn": "2017-12-11",
-            "fileName": "d8-eng.pdf",
-            "fileUrl": "https://api-gateway.test.dm.reform.hmcts.net/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
-            "mimeType": "application/pdf",
-            "status": "OK"
-        }
-    ],
-    "court": {
-        "eastMidlands": {
-            "phone": "0115 955 8266",
-            "divorceCentre": "East Midlands Regional Divorce Centre",
-            "courtCity": "Nottingham",
-            "poBox": "PO Box 10447",
-            "postCode": "NG2 9QN",
-            "openingHours": "Telephone Enquiries from: 8am to 4pm",
-            "email": "eastmidlandsdivorce@hmcts.gsi.gov.uk",
-            "phoneNumber": "0115 955 8186"
-        },
-        "westMidlands": {
-            "divorceCentre": "West Midlands Regional Divorce Centre",
-            "courtCity": "Stoke-on-Trent",
-            "poBox": "PO Box 3650",
-            "postCode": "ST4 9NH",
-            "openingHours": "Telephone Enquiries from: 8.30am to 5pm",
-            "phoneNumber": "0300 123 5577"
-        },
-        "southWest": {
-            "divorceCentre": "South West Regional Divorce Centre",
-            "courtCity": "Southampton",
-            "poBox": "PO Box 1792",
-            "postCode": "SO15 9GG",
-            "openingHours": "Telephone Enquiries from: 8am to 4pm",
-            "email": "sw-region-divorce@hmcts.gsi.gov.uk",
-            "phoneNumber": "023 8038 4200"
-        }
-    },
-    "courts": "eastMidlands",
-    "sessionKey": "744e590518fd5a8114fe6c280df7ef9488b9b29c839ea08eef567cda752369b3:f0e0d0b7c03d6d0ffaf0e302f1c385d0:1f29a3d9dd276937ebdc06fff8fa8424c9bac0a15ab881feb518fb5e31d6fc09a37615ba5f728e99676810c40510ab80e9719aa1d595bb45a18709f47e9d9102"
+    "southWest": {
+      "divorceCentre": "South West Regional Divorce Centre",
+      "courtCity": "Southampton",
+      "poBox": "PO Box 1792",
+      "postCode": "SO15 9GG",
+      "openingHours": "Telephone Enquiries from: 8am to 4pm",
+      "email": "sw-region-divorce@hmcts.gsi.gov.uk",
+      "phoneNumber": "023 8038 4200"
+    }
+  },
+  "courts": "eastMidlands",
+  "sessionKey": "744e590518fd5a8114fe6c280df7ef9488b9b29c839ea08eef567cda752369b3:f0e0d0b7c03d6d0ffaf0e302f1c385d0:1f29a3d9dd276937ebdc06fff8fa8424c9bac0a15ab881feb518fb5e31d6fc09a37615ba5f728e99676810c40510ab80e9719aa1d595bb45a18709f47e9d9102"
 }

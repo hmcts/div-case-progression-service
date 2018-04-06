@@ -1,18 +1,20 @@
 {
-    "case_details": {
-        "case_data": {
-        },
-        "case_type_id": "divorce",
-        "created_date": "2001-01-01T00:00:00+01:00",
-        "id": 9879328,
-        "jurisdiction": "divorce",
-        "last_modified": "2001-01-01T00:00:00+01:00",
-        "locked_by_user": "test-user",
-        "security_classifications": {
-        },
-        "security_level": 3,
-        "state": "created"
+  "case_details": {
+    "case_data": {
+
     },
-    "event_id": "create",
-    "token": "abcde"
+    "case_type_id": "divorce",
+    "created_date": "2001-01-01T00:00:00+01:00",
+    "id": 9879328,
+    "jurisdiction": "divorce",
+    "last_modified": "2001-01-01T00:00:00+01:00",
+    "locked_by_user": "test-user",
+    "security_classifications": {
+
+    },
+    "security_level": 3,
+    "state": "created"
+  },
+  "event_id": "create",
+  "token": "abcde"
 }

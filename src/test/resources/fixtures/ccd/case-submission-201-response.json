@@ -1,12 +1,12 @@
 {
-    "case_data": {},
-    "case_type_id": "divorce",
-    "created_date": "2001-01-01T00:00:00+01:00",
-    "id": 83287,
-    "jurisdiction": "divorce",
-    "last_modified": "2001-01-01T00:00:00+01:00",
-    "locked_by_user_id": 99,
-    "security_classifications": {},
-    "security_level": 3,
-    "state": "awaitingAdminCheck"
+  "case_data": { },
+  "case_type_id": "divorce",
+  "created_date": "2001-01-01T00:00:00+01:00",
+  "id": 83287,
+  "jurisdiction": "divorce",
+  "last_modified": "2001-01-01T00:00:00+01:00",
+  "locked_by_user_id": 99,
+  "security_classifications": { },
+  "security_level": 3,
+  "state": "awaitingAdminCheck"
 }

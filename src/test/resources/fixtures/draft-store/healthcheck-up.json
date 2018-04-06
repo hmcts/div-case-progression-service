@@ -1,14 +1,14 @@
 {
+  "status": "UP",
+  "diskSpace": {
     "status": "UP",
-    "diskSpace": {
-        "status": "UP",
-        "total": 67371577344,
-        "free": 53154742272,
-        "threshold": 10485760
-    },
-    "db": {
-        "status": "UP",
-        "database": "PostgreSQL",
-        "hello": 1
-    }
+    "total": 67371577344,
+    "free": 53154742272,
+    "threshold": 10485760
+  },
+  "db": {
+    "status": "UP",
+    "database": "PostgreSQL",
+    "hello": 1
+  }
 }
