@@ -1,8 +1,8 @@
 {
-  "case_details": {
-    "id": 1235678,
-    "state": null,
-    "caseData":null
-  },
-  "event_id": "uploadDocument"
+    "case_details": {
+        "id": 1235678,
+        "state": null,
+        "caseData": null
+    },
+    "event_id": "uploadDocument"
 }

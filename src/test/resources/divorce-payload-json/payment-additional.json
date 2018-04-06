@@ -1,15 +1,15 @@
 {
-    "eventData" : {
-        "payment" : {
-            "PaymentChannel" : "card",
-            "PaymentTransactionId" : "123456789",
-            "PaymentReference" : "DIV1$$$1112223b-ffff-eeee-dddd-afe599e2d4d2$$$AA00$$$X0165",
-            "PaymentDate" : "02022001",
-            "PaymentAmount" : 12000,
-            "PaymentStatus" : "success",
-            "PaymentFeeId" : "X0165",
-            "PaymentSiteId" : "AA00"
-          }
+    "eventData": {
+        "payment": {
+            "PaymentChannel": "card",
+            "PaymentTransactionId": "123456789",
+            "PaymentReference": "DIV1$$$1112223b-ffff-eeee-dddd-afe599e2d4d2$$$AA00$$$X0165",
+            "PaymentDate": "02022001",
+            "PaymentAmount": 12000,
+            "PaymentStatus": "success",
+            "PaymentFeeId": "X0165",
+            "PaymentSiteId": "AA00"
+        }
     },
-    "eventId" : "paymentMade"
+    "eventId": "paymentMade"
 }

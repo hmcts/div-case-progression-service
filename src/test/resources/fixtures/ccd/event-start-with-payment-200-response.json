@@ -1,31 +1,33 @@
 {
     "case_details": {
-      "case_data": {
-        "D8DivorceWho": "husband",
-        "Payments": [{
-          "value" : {
-            "PaymentChannel" : "card",
-            "PaymentTransactionId" : "111222333",
-            "PaymentReference" : "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
-            "PaymentDate" : "2001-02-02",
-            "PaymentAmount" : 55000,
-            "PaymentStatus" : "success",
-            "PaymentFeeId" : "X0165",
-            "PaymentSiteId" : "AA00"
-          }
-        }]
-      },
-      "case_type_id": "divorce",
-      "created_date": "2001-01-01T00:00:00+01:00",
-      "id": 987654321,
-      "jurisdiction": "divorce",
-      "last_modified": "2001-01-01T00:00:00+01:00",
-      "data_classification": {
-        "D8DivorceWho": "PUBLIC"
-      },
-      "security_level": 3,
-      "state": "awaitingPayment"
+        "case_data": {
+            "D8DivorceWho": "husband",
+            "Payments": [
+                {
+                    "value": {
+                        "PaymentChannel": "card",
+                        "PaymentTransactionId": "111222333",
+                        "PaymentReference": "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
+                        "PaymentDate": "2001-02-02",
+                        "PaymentAmount": 55000,
+                        "PaymentStatus": "success",
+                        "PaymentFeeId": "X0165",
+                        "PaymentSiteId": "AA00"
+                    }
+                }
+            ]
+        },
+        "case_type_id": "divorce",
+        "created_date": "2001-01-01T00:00:00+01:00",
+        "id": 987654321,
+        "jurisdiction": "divorce",
+        "last_modified": "2001-01-01T00:00:00+01:00",
+        "data_classification": {
+            "D8DivorceWho": "PUBLIC"
+        },
+        "security_level": 3,
+        "state": "awaitingPayment"
     },
     "event_id": "paymentMade",
     "token": "abcde"
-  }
+}
