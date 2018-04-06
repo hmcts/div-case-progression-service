@@ -52,6 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {CaseProgressionApplication.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CaseUpdateFunctionalTest {
 
     private static final String USER_ID = "60";
@@ -79,10 +80,13 @@ public class CaseUpdateFunctionalTest {
     public static WireMockClassRule ccdServer = new WireMockClassRule(4000);
     @ClassRule
     public static WireMockClassRule draftStoreServer = new WireMockClassRule(4601);
+
     @Autowired
     private TestRestTemplate restTemplate;
+
     @Value("${draft.store.api.document.type}")
     private String draftDocumentType;
+
     private String requestBody;
 
     @Before
