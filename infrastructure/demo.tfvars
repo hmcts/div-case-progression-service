@@ -1,4 +1,4 @@
-env = "aat"
+env = "demo"
 subscription = "nonprod"
 vault_env = "test"
 
