@@ -26,10 +26,9 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-    before('smokeTest') {
-        env.TEST_HTTP_URL = getHttpURL((String)env.TEST_URL)
+    before('smoketest') {
+        echo 'before smoke test'
         echo env.TEST_ENVIRONMENT
-        error('Halting pipeline before prod stages')
     }
 
     after('functionalTest:aat') {
@@ -42,24 +41,6 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
     }
 
     loadVaultSecrets(secrets)
-}
-
-
-
-String getEnvironment(String env){
-    if(env == null){
-        return "demo"
-    }
-
-    return env
-}
-
-String getHttpURL(String url){
-    if(url != null){
-        return url.replaceFirst("https://", "http://")
-    }
-
-    return url
 }
 
 String vaultKeySecretPath(String env, String secretPathPostFix){

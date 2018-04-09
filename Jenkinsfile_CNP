@@ -34,12 +34,9 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type , product, component) {
-    before('smokeTest') {
+    before('smoketest') {
+        echo 'before smoke test'
         echo env.TEST_ENVIRONMENT
-
-        env.TEST_HTTP_URL = getHttpURL((String)env.TEST_URL)
-
-        error('Halting pipeline before prod stages')
     }
 
     after('functionalTest:aat') {
@@ -63,14 +60,6 @@ String getEnvironment(String env){
     }
 
     return env
-}
-
-String getHttpURL(String url){
-    if(url != null){
-        return url.replaceFirst("https://", "http://")
-    }
-
-    return url
 }
 
 String vaultKeySecretPath(String env, String secretPathPostFix){
