@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,6 @@ public class CoreCaseDataSubmitIntegrationTest extends BaseIntegrationTest {
      * @throws Exception Resource loading exception
      */
     @Test
-    @WithTag("test-type:smoke")
     public void shouldReturnCaseIdForValidAddressesSessionData() throws Exception {
 
         Response ccdResponse = submitCase("addresses.json");
@@ -68,7 +66,6 @@ public class CoreCaseDataSubmitIntegrationTest extends BaseIntegrationTest {
      * @throws Exception Resource loading exception
      */
     @Test
-    @WithTag("test-type:smoke")
     public void shouldReturnCaseIdForValidJurisdictionAllSessionData() throws Exception {
 
         Response ccdResponse = submitCase("jurisdiction-all.json");
