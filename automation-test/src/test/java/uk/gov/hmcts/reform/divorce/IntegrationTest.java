@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationMethodRule;
+import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.junit.Rule;
@@ -22,6 +23,7 @@ public abstract class IntegrationTest {
 
     public IntegrationTest() {
         this.springMethodIntegration = new SpringIntegrationMethodRule();
+        SerenityRest.useRelaxedHTTPSValidation("SSL");
         RestAssured.useRelaxedHTTPSValidation();
     }
 }
