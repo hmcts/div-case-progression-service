@@ -34,11 +34,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type , product, component) {
-    before('smoketest') {
-        echo 'before smoke test'
-        echo env.TEST_ENVIRONMENT
-    }
-
     after('functionalTest:aat') {
         error('Halting pipeline before prod stages')
     }

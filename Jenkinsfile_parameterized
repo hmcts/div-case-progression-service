@@ -26,11 +26,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-    before('smoketest') {
-        echo 'before smoke test'
-        echo env.TEST_ENVIRONMENT
-    }
-
     after('functionalTest:aat') {
         error('Halting pipeline before prod stages')
     }
