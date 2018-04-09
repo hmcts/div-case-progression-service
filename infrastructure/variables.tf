@@ -47,7 +47,7 @@ variable "auth_provider_service_client_tokentimetoliveinseconds" {
 }
 
 variable "ccd_casedatastore_baseurl" {
-    default = "https://case-data-app.test.ccd.reform.hmcts.net:4481"
+    default = "String"
 }
 
 variable "ccd_casedatagw_baseuri" {

@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = CaseProgressionApplication.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseAddPdfFunctionalTest {
 
     private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
