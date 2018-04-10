@@ -93,18 +93,6 @@ public class DraftsControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestWhenSavingADraftByExplicitCallWithInvalidEmail() throws Exception {
-        String notificationEmail = "InvalidEmailAddress";
-        mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
-
-        verify(emailService, never()).sendSaveDraftConfirmationEmail(eq(notificationEmail));
-    }
-
-    @Test
     public void shouldReturnNoContentWhenSavingADraftAutomatically() throws Exception {
         mvc.perform(put(DRAFTS_URL)
                 .content(requestContent.toString())
