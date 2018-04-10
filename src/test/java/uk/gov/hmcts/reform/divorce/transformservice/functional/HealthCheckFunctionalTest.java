@@ -51,22 +51,27 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
         "feign.hystrix.enabled=true",
         "eureka.client.enabled=false"
     })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class HealthCheckFunctionalTest {
 
     private static final String HEALTH_UP_RESPONSE = "{ \"status\": \"UP\"}";
+
     @ClassRule
     public static WireMockClassRule ccdServer = new WireMockClassRule(new WireMockConfiguration().port(4000)
         .bindAddress("localhost"));
+
     @ClassRule
     public static WireMockClassRule authServer = new WireMockClassRule(new WireMockConfiguration().port(4502)
         .bindAddress("localhost"));
+
     @ClassRule
     public static WireMockClassRule draftStoreServer = new WireMockClassRule(new WireMockConfiguration().port(4601)
         .bindAddress("localhost"));
+
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(new WireMockConfiguration().port(4007)
         .bindAddress("localhost"));
+
     @Value("${ccd.caseDataStore.health.path}")
     private String ccdHealthPath;
     @Value("${auth.provider.health.path}")

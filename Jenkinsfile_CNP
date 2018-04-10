@@ -20,8 +20,8 @@ def component = "case-progression"
 def channel = '#div-dev'
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath((String)env.ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -34,10 +34,12 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type , product, component) {
+    after('functionalTest:aat') {
+        error('Halting pipeline before prod stages')
+    }
+
     after('checkout') {
         echo '${product}-${component} checked out'
-
-        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
     }
 
     loadVaultSecrets(secrets)
@@ -45,17 +47,16 @@ withPipeline(type , product, component) {
     enableSlackNotifications(channel)
 }
 
-String getEnvironment(String env){
-    if(env == null){
-        return "aat"
-    }
-
-    return env
-}
-
 String vaultKeySecretPath(String env, String secretPathPostFix){
+
+    echo "calling vaultKeySecretPath"
+
     if(env != null && env.toLowerCase().endsWith("prod")){
         return "secret/" + "prod" + secretPathPostFix
+    }
+
+    if(env != null && env.toLowerCase().endsWith("demo")){
+        return "secret/" + "preprod" + secretPathPostFix
     }
 
     return "secret/" + "test" + secretPathPostFix

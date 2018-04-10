@@ -35,7 +35,6 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     private DraftStoreClient draftStoreClient;
 
     @Test
-    @WithTag("test-type:smoke")
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
         String draft = "{\"message\": \"Hello World!\"}";
 

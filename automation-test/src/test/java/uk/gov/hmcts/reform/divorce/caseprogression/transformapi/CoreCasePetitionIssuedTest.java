@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
     }
 
     @Test
-    @WithTag("test-type:smoke")
     public void shouldReturnSuccessWhenApdfIsCreated() throws Exception {
 
         Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
