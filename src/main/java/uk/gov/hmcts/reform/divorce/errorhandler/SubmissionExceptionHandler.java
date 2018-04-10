@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDR
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -123,16 +122,6 @@ public class SubmissionExceptionHandler {
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
     }
 
-    @ExceptionHandler(UnsupportedEncodingException.class)
-    public ResponseEntity<CCDResponse> handlUnsupportedEncodingException(
-        UnsupportedEncodingException unsupportedEncodingException,
-        HttpServletRequest request) {
-
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), unsupportedEncodingException.getMessage());
-        log.error(errorMessage);
-        return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
-    }
-
     @ExceptionHandler(DraftStoreUnavailableException.class)
     public ResponseEntity<Void> handleDraftStoreUnavailable() {
         return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
@@ -153,4 +142,6 @@ public class SubmissionExceptionHandler {
         return new ResponseEntity<>(errorAttributes, clientErrorException.getStatusCode());
     }
 
+
 }
+
