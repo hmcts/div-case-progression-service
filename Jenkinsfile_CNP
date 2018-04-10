@@ -40,21 +40,11 @@ withPipeline(type , product, component) {
 
     after('checkout') {
         echo '${product}-${component} checked out'
-
-        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
     }
 
     loadVaultSecrets(secrets)
 
     enableSlackNotifications(channel)
-}
-
-String getEnvironment(String env){
-    if(env == null){
-        return "test"
-    }
-
-    return env
 }
 
 String vaultKeySecretPath(String env, String secretPathPostFix){

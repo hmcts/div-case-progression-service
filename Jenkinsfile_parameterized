@@ -30,11 +30,6 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
         error('Halting pipeline before prod stages')
     }
 
-    after('checkout') {
-
-        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
-    }
-
     loadVaultSecrets(secrets)
 }
 
