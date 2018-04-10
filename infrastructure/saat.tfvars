@@ -1,4 +1,3 @@
-env = "sandbox"
 subscription = "sandbox"
 vault_env = "test"
 
