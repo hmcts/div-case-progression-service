@@ -1,5 +1,5 @@
 #!groovy
-@Library(value="Infrastructure@AddTestEnvironmentToTest") _
+@Library(value="Infrastructure") _
 
 properties([
         parameters([
@@ -26,11 +26,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-    before('smokeTest') {
-        echo env.TEST_ENVIRONMENT
-        error('Halting pipeline before prod stages')
-    }
-
     after('functionalTest:aat') {
         error('Halting pipeline before prod stages')
     }
@@ -42,15 +37,6 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
 
     loadVaultSecrets(secrets)
 }
-
-String getEnvironment(String env){
-    if(env == null){
-        return "test"
-    }
-
-    return env
-}
-
 
 String vaultKeySecretPath(String env, String secretPathPostFix){
     if(env.toLowerCase().endsWith("prod")){

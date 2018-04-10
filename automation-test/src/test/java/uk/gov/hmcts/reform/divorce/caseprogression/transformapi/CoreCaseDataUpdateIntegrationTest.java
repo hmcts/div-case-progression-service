@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
      * @throws Exception Resource loading exception
      */
     @Test
-    @WithTag("test-type:smoke")
     public void shouldReturnCaseIdWhenUpdatingDataAfterInitialSubmit() throws Exception {
 
         String caseId = getCaseIdFromSubmittingANewCase();

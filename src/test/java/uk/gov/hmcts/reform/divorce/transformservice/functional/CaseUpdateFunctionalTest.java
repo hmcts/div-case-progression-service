@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.util.Strings;
@@ -75,11 +76,14 @@ public class CaseUpdateFunctionalTest {
         + "wIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
 
     @ClassRule
-    public static WireMockClassRule authTokenServer = new WireMockClassRule(4502);
+    public static WireMockClassRule authTokenServer = new WireMockClassRule(new WireMockConfiguration().port(4502)
+        .bindAddress("localhost"));
     @ClassRule
-    public static WireMockClassRule ccdServer = new WireMockClassRule(4000);
+    public static WireMockClassRule ccdServer = new WireMockClassRule(new WireMockConfiguration().port(4000)
+        .bindAddress("localhost"));
     @ClassRule
-    public static WireMockClassRule draftStoreServer = new WireMockClassRule(4601);
+    public static WireMockClassRule draftStoreServer = new WireMockClassRule(new WireMockConfiguration().port(4601)
+        .bindAddress("localhost"));
 
     @Autowired
     private TestRestTemplate restTemplate;
