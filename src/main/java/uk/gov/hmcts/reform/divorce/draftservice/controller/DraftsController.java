@@ -53,7 +53,6 @@ public class DraftsController {
             final JsonNode data,
             @RequestParam(value = "notificationEmail", required = false)
             @ApiParam(value = "The email address that will receive the notification that the draft has been saved", required = false)
-            @Email
             final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
         service.saveDraft(jwt, data);
