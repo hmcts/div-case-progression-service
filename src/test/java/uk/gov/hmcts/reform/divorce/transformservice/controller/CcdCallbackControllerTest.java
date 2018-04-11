@@ -145,7 +145,7 @@ public class CcdCallbackControllerTest {
     public void givenCallbackIsReceivedFromCCD_thenProcessACallback_ExpectJWTTokenInTheHeader() throws Exception {
         String authorizationKey = "ZZZZZZZZZZZZZZ";
         when(updateService.addPdf(anyObject(), anyString())).thenReturn(null);
-         mvc.perform(post(ADD_PDF_URL)
+        mvc.perform(post(ADD_PDF_URL)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(new CreateEvent()))
             .header("Authorization", authorizationKey)
             .contentType(MediaType.APPLICATION_JSON_UTF8));
