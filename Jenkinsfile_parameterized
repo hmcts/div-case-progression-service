@@ -30,7 +30,7 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
         error('Halting pipeline before prod stages')
     }
 
-    loadVaultSecrets(secrets)
+//    loadVaultSecrets(secrets)
 }
 
 String vaultKeySecretPath(String env, String secretPathPostFix){
