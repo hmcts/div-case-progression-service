@@ -28,7 +28,7 @@ module "div-case-progression" {
         AUTH_PROVIDER_HEALTH_URI = "${var.auth_provider_service_client_baseurl}/health"
         CCD_CASEDATASTORE_BASEURL = "${var.ccd_casedatastore_baseurl}"
         CCD_CASEDATAGW_BASEURI = "${var.ccd_casedatagw_baseuri}"
-        CCD_CASEDATASTORE_HEALTH_URI = "${var.ccd_casedatastore_baseurl}/status/health"
+        CCD_CASEDATASTORE_HEALTH_URI = "${var.ccd_casedatastore_baseurl}/health"
         CCD_JURISDICTIONID = "${var.ccd_jurisdictionid}"
         CCD_CASETYPEID = "${var.ccd_casetypeid}"
         CCD_EVENTID_CREATE = "${var.ccd_eventid_create}"
