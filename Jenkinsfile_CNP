@@ -40,9 +40,15 @@ withPipeline(type , product, component) {
 
     after('checkout') {
         echo '${product}-${component} checked out'
+
+        sh 'kill -9 $(lsof -t -i:4000)'
+        sh 'kill -9 $(lsof -t -i:4007)'
+        sh 'kill -9 $(lsof -t -i:4502)'
+        sh 'kill -9 $(lsof -t -i:4601)'
+
     }
 
-    loadVaultSecrets(secrets)
+    //loadVaultSecrets(secrets)
 
     enableSlackNotifications(channel)
 }
