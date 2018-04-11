@@ -17,10 +17,6 @@ module "div-case-progression" {
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
         SERVER_PORT = "${var.case_progression_service_port}"
-        SERVER_URL = "${var.case_progression_service_url}"
-        EXTERNAL_SERVER_PORT = "${var.case_progression_external_servicer_port}"
-        AUTH_IDAM_CLIENT_BASEURL = "${var.auth_idam_client_baseUrl}"
-        AUTH_PROVIDER_SERVICE_CLIENT_PORT = "${var.auth_provider_service_client_port}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.auth_provider_service_client_baseurl}"
         AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
         AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.auth_provider_service_client_key.data["value"]}"
@@ -41,7 +37,7 @@ module "div-case-progression" {
         DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
-        no_proxy = "${var.no_proxy}"
+//        no_proxy = "${var.no_proxy}"
     }
 }
 
