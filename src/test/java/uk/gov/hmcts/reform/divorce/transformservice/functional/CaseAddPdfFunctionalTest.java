@@ -40,9 +40,11 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseAddPdfFunctionalTest {
 
+    public static final String TEST_AUTH_VALUE = "test";
     private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String REQUEST_ID_HEADER_VALUE = "1234567";
+    public static final String AUTHORIZATION = "Authorization";
 
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
@@ -87,6 +89,7 @@ public class CaseAddPdfFunctionalTest {
 
         HttpHeaders headers = setHttpHeaders();
 
+
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<CCDCallbackResponse> response =
@@ -112,6 +115,7 @@ public class CaseAddPdfFunctionalTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.add(REQUEST_ID_HEADER_KEY, REQUEST_ID_HEADER_VALUE);
+        headers.set(AUTHORIZATION, TEST_AUTH_VALUE);
 
         return headers;
     }

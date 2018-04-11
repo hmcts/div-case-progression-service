@@ -4,5 +4,5 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfFile;
 
 public interface PdfService {
-    PdfFile generatePdf(CreateEvent caseDetailsWrap);
+    PdfFile generatePdf(CreateEvent caseDetailsWrap, String authorization);
 }

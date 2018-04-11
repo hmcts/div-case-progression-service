@@ -39,14 +39,14 @@ public class PdfGeneratorServiceTest {
 
         PdfFile pdfFile = PdfFile.builder().url("oneUrl").build();
 
-        when(pdfGeneratorClient.generatePdf(submittedCase)).thenReturn(pdfFile);
+        when(pdfGeneratorClient.generatePdf(submittedCase, "test")).thenReturn(pdfFile);
 
-        PdfFile pdfFileGenerated = pdfGeneratorService.generatePdf(submittedCase);
+        PdfFile pdfFileGenerated = pdfGeneratorService.generatePdf(submittedCase, "test");
         assertThat(pdfFileGenerated).isEqualTo(pdfFile);
         assertThat(pdfFileGenerated.getUrl()).isEqualTo("oneUrl");
         assertThat(pdfFileGenerated.toString()).isEqualTo("PdfFile(url=oneUrl, fileName=d8petition990)");
 
-        verify(pdfGeneratorClient).generatePdf(submittedCase);
+        verify(pdfGeneratorClient).generatePdf(submittedCase, "test");
         verifyNoMoreInteractions(pdfGeneratorClient);
     }
 
@@ -57,16 +57,16 @@ public class PdfGeneratorServiceTest {
 
         RuntimeException exception = mock(RuntimeException.class);
 
-        doThrow(exception).when(pdfGeneratorClient).generatePdf(eq(submittedCase));
+        doThrow(exception).when(pdfGeneratorClient).generatePdf(eq(submittedCase), eq("test"));
 
-        pdfGeneratorService.generatePdf(submittedCase);
+        pdfGeneratorService.generatePdf(submittedCase, "test");
     }
 
     @Test
     public void pdfGeneratorReturnsNullReturnNull() {
         CreateEvent submittedCase = new CreateEvent();
-        when(pdfGeneratorClient.generatePdf(submittedCase)).thenReturn(null);
+        when(pdfGeneratorClient.generatePdf(submittedCase, "test")).thenReturn(null);
 
-        assertThat(pdfGeneratorService.generatePdf(submittedCase)).isNull();
+        assertThat(pdfGeneratorService.generatePdf(submittedCase, "test")).isNull();
     }
 }

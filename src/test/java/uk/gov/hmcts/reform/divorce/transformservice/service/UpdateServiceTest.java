@@ -95,13 +95,13 @@ public class UpdateServiceTest {
 
         PdfFile pdfFile = mock(PdfFile.class);
 
-        when(pdfService.generatePdf(caseDetailsRequest)).thenReturn(pdfFile);
+        when(pdfService.generatePdf(caseDetailsRequest, "test")).thenReturn(pdfFile);
         when(pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, coreCaseData)).thenReturn(coreCaseData);
 
-        assertEquals(coreCaseData, updateService.addPdf(caseDetailsRequest));
+        assertEquals(coreCaseData, updateService.addPdf(caseDetailsRequest, "test"));
 
         verify(petitionValidatorService).validateFieldsForIssued(caseDetailsRequest);
-        verify(pdfService).generatePdf(caseDetailsRequest);
+        verify(pdfService).generatePdf(caseDetailsRequest, "test");
         verify(pdfToCoreCaseDataMapper).toCoreCaseData(pdfFile, coreCaseData);
     }
 

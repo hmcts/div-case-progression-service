@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,8 +29,13 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -78,10 +84,11 @@ public class CcdCallbackControllerTest {
         caseDetails.setCaseId(caseId + "");
         submittedCase.setCaseDetails(caseDetails);
 
-        when(updateService.addPdf(submittedCase)).thenReturn(coreCaseData);
+        when(updateService.addPdf(submittedCase,"test")).thenReturn(coreCaseData);
 
         MvcResult result = mvc.perform(post(ADD_PDF_URL)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .header("Authorization", "test")
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk()).andReturn();
 
@@ -92,7 +99,7 @@ public class CcdCallbackControllerTest {
 
         assertEquals(coreCaseData, response.getData());
 
-        verify(updateService).addPdf(submittedCase);
+        verify(updateService).addPdf(submittedCase, "test");
         verifyNoMoreInteractions(updateService);
     }
 
@@ -117,19 +124,42 @@ public class CcdCallbackControllerTest {
 
         when(exception.getMessage()).thenReturn(errorMessage);
 
-        doThrow(exception).when(updateService).addPdf(submittedCase);
+        doThrow(exception).when(updateService).addPdf(submittedCase, "test");
 
         ResultActions perform = mvc.perform(post(ADD_PDF_URL)
             .content(requestContent)
             .header("requestId", "123")
+            .header("Authorization", "test")
             .contentType(MediaType.APPLICATION_JSON_UTF8));
         perform
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors[0]", is(exceptionMessage)));
 
-        verify(updateService).addPdf(eq(submittedCase));
+        verify(updateService).addPdf(eq(submittedCase), eq("test"));
         verify(exception).getMessage();
         verifyNoMoreInteractions(updateService);
+    }
+
+
+    @Test
+    public void givenCallbackIsReceivedFromCCD_thenProcessACallback_ExpectJWTTokenInTheHeader() throws Exception {
+        String authorizationKey = "ZZZZZZZZZZZZZZ";
+        when(updateService.addPdf(anyObject(), anyString())).thenReturn(null);
+         mvc.perform(post(ADD_PDF_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(new CreateEvent()))
+            .header("Authorization", authorizationKey)
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(updateService).addPdf(anyObject(), eq(authorizationKey));
+    }
+
+    @Test
+    public void givenCallbackIsReceivedFromCCD_thenProcessACallbackWithNullAuthHeader_ExpectToPass() throws Exception {
+        when(updateService.addPdf(anyObject(), anyString())).thenReturn(null);
+        mvc.perform(post(ADD_PDF_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(new CreateEvent()))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+        verify(updateService).addPdf(anyObject(), eq(null));
     }
 
 }

@@ -54,7 +54,7 @@ public class PdfGeneratorDefaultClientTest {
             new HashMap<>());
         when(pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(eq(submittedCase)))
             .thenReturn(pdfGenerateDocumentRequest);
-        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest))
+        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, "test"))
             .thenReturn(httpEntity);
         when(clientConfiguration.getPdfGeneratorUrl()).thenReturn(urlString);
 
@@ -62,9 +62,9 @@ public class PdfGeneratorDefaultClientTest {
             .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(pdfFile);
 
-        assertEquals(pdfFile, pdfGeneratorClient.generatePdf(submittedCase));
+        assertEquals(pdfFile, pdfGeneratorClient.generatePdf(submittedCase, "test"));
 
-        verify(httpEntityFactory).createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest);
+        verify(httpEntityFactory).createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, "test");
         verify(clientConfiguration).getPdfGeneratorUrl();
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.POST), eq(httpEntity), eq(PdfFile.class));
         verify(responseEntity).getBody();

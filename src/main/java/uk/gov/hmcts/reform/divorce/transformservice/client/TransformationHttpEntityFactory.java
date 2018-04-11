@@ -12,5 +12,5 @@ public interface TransformationHttpEntityFactory {
     HttpEntity<Object> createRequestEntityForHealthCheck();
 
     HttpEntity<PdfGenerateDocumentRequest> createRequestEntityForPdfGeneratorGet(
-        PdfGenerateDocumentRequest pdfGenerateDocumentRequest);
+        PdfGenerateDocumentRequest pdfGenerateDocumentRequest, String authorization);
 }
