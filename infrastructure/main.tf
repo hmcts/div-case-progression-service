@@ -4,7 +4,7 @@ locals {
 }
 
 module "div-case-progression" {
-    source = "git@github.com:hmcts/moj-module-webapp.git?ref=master"
+    source = "git@github.com:contino/moj-module-webapp?ref=master"
     product = "${var.reform_team}-${var.reform_service_name}"
     location = "${var.location}"
     env = "${var.env}"
