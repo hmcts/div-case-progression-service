@@ -1,6 +1,6 @@
 env = "aat"
 subscription = "nonprod"
-vault_env = "preprod"
+vault_env = "test"
 
 auth_provider_service_client_baseurl = "https://preprod-s2s-api.reform.hmcts.net:3511"
 logging_level_org_springframework_web = "DEBUG"
