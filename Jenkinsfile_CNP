@@ -19,10 +19,10 @@ def component = "case-progression"
 
 def channel = '#div-dev'
 
-List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath("preprod", "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath("preprod", "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
-]
+//List<LinkedHashMap<String, Object>> secrets = [
+//    secret(vaultKeySecretPath("preprod", "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+//    secret(vaultKeySecretPath("preprod", "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+//]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
@@ -34,15 +34,15 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type , product, component) {
-    after('functionalTest:aat') {
-        error('Halting pipeline before prod stages')
-    }
+//    after('functionalTest:aat') {
+//        error('Halting pipeline before prod stages')
+//    }
 
     after('checkout') {
         echo '${product}-${component} checked out'
     }
 
-    loadVaultSecrets(secrets)
+   // loadVaultSecrets(secrets)
 
     enableSlackNotifications(channel)
 }
