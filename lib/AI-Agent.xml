@@ -5,8 +5,31 @@
         <BuiltIn enabled="true">
             <HTTP enabled="true"/>
         </BuiltIn>
-        <Class name="uk.gov.hmcts.reform.emclient.service.EvidenceManagementDownloadServiceImpl">
-            <Method name="downloadFile" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        <Class name="uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService">
+            <Method name="saveDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="getDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="deleteDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="getDivorceDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="findDivorceDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.DivorceToCcdTransformationService">
+            <Method name="transform" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService">
+            <Method name="getRespondentGender" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="getPetitionerGender" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.PdfGeneratorService">
+            <Method name="generatePdf" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.PetitionValidatorService">
+            <Method name="validateFieldsForIssued" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService">
+            <Method name="submit" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService">
+            <Method name="update" reportCaughtExceptions="true" reportExecutionTime="true"/>
         </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
