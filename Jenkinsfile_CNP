@@ -15,7 +15,7 @@ properties([
 
 def type = "java"
 def product = "div"
-def component = "case-progression"
+def component = "case-progression-service"
 
 def channel = '#div-dev'
 
