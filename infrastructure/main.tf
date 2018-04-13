@@ -31,6 +31,7 @@ module "div-case-progression" {
         LOGGING_LEVEL_ORG_SRPINGFRAMEWORK_WEB = "${var.logging_level_org_springframework_web}"
         LOGGING_LEVEL_UK_GOV_HMCTS_CCD = "${var.logging_level_uk_gov_hmcts_ccd}"
         PDF_GENERATOR_BASE_URL = "${var.pdf_generator_base_url}"
+        PDF_GENERATOR_HEALTHURL = "${var.pdf_generator_base_url}/status/health"
         //PDF_GENERATOR_BASE_URL = "${local.tactical_div_document_generator}"
         DRAFT_STORE_API_ENCRYPTION_KEY = "${data.vault_generic_secret.draft_store_api_encryption_key.data["value"]}"
         DRAFT_STORE_API_BASEURL = "${var.draft_store_api_baseurl}"
