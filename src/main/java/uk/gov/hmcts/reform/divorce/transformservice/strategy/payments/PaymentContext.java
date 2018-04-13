@@ -10,8 +10,8 @@ import static java.util.Arrays.asList;
 
 public class PaymentContext {
 
-    private static final List<PaymentStrategy> paymentStrategies = asList(new ExistingTransactionIdStrategy(),
-        new NoExistingTransactionIdStrategy(), new NoExistingPaymentStrategy());
+    private static final List<PaymentStrategy> paymentStrategies = asList(new ExistingPaymentReferenceStrategy(),
+        new NoExistingPaymentReferenceStrategy(), new NoExistingPaymentStrategy());
 
     public List<PaymentCollection> getListOfPayments(DivorceSession divorceSession) {
         return paymentStrategies.stream()

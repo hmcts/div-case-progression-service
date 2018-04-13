@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class NoExistingTransactionIdStrategy implements PaymentStrategy {
+public class NoExistingPaymentReferenceStrategy implements PaymentStrategy {
 
     @Override
     public List<PaymentCollection> getCurrentPaymentsList(Payment newPayment,
@@ -22,8 +22,8 @@ public class NoExistingTransactionIdStrategy implements PaymentStrategy {
     public boolean accepts(Payment newPayment, List<PaymentCollection> existingPayments) {
         return Objects.nonNull(existingPayments) && existingPayments.stream()
             .noneMatch(payment -> payment.getValue()
-                .getPaymentTransactionId()
-                .equals(newPayment.getPaymentTransactionId()));
+                .getPaymentReference()
+                .equals(newPayment.getPaymentReference()));
     }
 
 }
