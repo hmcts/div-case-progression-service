@@ -30,6 +30,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withPipeline(type , product, component) {
     before('functionalTest:aat') {
+        env.TEST_ENVIRONMENT = "aat"
+
         List<LinkedHashMap<String, Object>> secrets = [
             secret(vaultKeySecretPath("test", "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
             secret(vaultKeySecretPath("test", "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
