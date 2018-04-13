@@ -13,7 +13,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class NoExistingPaymentReferenceStrategyTest {
 
-    private NoExistingPaymentReferenceStrategy noExistingPaymentReferenceStrategy = new NoExistingPaymentReferenceStrategy();
+    private NoExistingPaymentReferenceStrategy noExistingPaymentReferenceStrategy =
+        new NoExistingPaymentReferenceStrategy();
 
     @Test
     public void testNoExistingPaymentReferenceAddsNewPayment() {
