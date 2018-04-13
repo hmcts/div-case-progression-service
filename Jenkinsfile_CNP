@@ -38,8 +38,6 @@ withPipeline(type , product, component) {
         ]
 
         loadVaultSecrets(secrets)
-
-        error('Halting pipeline before prod stages')
     }
 
     after('functionalTest:aat') {
