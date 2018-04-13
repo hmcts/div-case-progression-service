@@ -114,6 +114,8 @@ public class IdamUserSupport {
                 .body()
                 .path("access-token");
 
+        System.out.println(token);
+
         return "Bearer " + token;
     }
 }
