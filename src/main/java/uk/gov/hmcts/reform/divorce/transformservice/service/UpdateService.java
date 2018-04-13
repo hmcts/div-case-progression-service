@@ -54,11 +54,11 @@ public class UpdateService {
         return caseEvent.getCaseId();
     }
 
-    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest) {
+    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest, String authorization) {
 
         petitionValidatorService.validateFieldsForIssued(caseDetailsRequest);
 
-        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest);
+        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest, authorization);
 
         return pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, caseDetailsRequest.getCaseDetails().getCaseData());
     }

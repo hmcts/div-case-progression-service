@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -36,9 +37,10 @@ public class CcdCallBackController {
         @ApiResponse(code = 400, message = "Bad Request")
         })
     public ResponseEntity<CCDCallbackResponse> addPdf(
+        @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
-        CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest);
+        CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest, authorizationToken);
         return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));
     }
 }

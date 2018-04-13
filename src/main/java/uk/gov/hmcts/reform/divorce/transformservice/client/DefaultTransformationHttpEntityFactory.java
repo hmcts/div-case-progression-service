@@ -15,6 +15,7 @@ import java.util.Collections;
 @Component
 public class DefaultTransformationHttpEntityFactory implements TransformationHttpEntityFactory {
 
+    public static final String AUTHORIZATION = "Authorization";
     private final AuthorizationHeaderService authorizationHeaderService;
 
     @Autowired
@@ -49,10 +50,11 @@ public class DefaultTransformationHttpEntityFactory implements TransformationHtt
 
     @Override
     public HttpEntity<PdfGenerateDocumentRequest> createRequestEntityForPdfGeneratorGet(
-        PdfGenerateDocumentRequest pdfGenerateDocumentRequest) {
+        PdfGenerateDocumentRequest pdfGenerateDocumentRequest, String authorization) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set(AUTHORIZATION, authorization);
 
         return new HttpEntity<>(pdfGenerateDocumentRequest, headers);
     }
