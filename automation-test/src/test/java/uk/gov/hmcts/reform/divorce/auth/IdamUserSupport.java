@@ -103,6 +103,8 @@ public class IdamUserSupport {
      * @return the string
      */
     private String generateUserTokenWithNoRoles(String username, String password) {
+        System.out.println(loginUrl());
+
         String userLoginDetails = String.join(":", username, password);
         final String authHeader = "Basic " + new String(Base64.getEncoder().encode((userLoginDetails).getBytes()));
 
