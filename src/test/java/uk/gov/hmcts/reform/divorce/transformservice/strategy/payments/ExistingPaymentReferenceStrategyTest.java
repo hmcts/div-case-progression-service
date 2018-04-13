@@ -11,12 +11,12 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class ExistingTransactionIdStrategyTest {
+public class ExistingPaymentReferenceStrategyTest {
 
-    private ExistingTransactionIdStrategy existingTransactionIdStrategy = new ExistingTransactionIdStrategy();
+    private ExistingPaymentReferenceStrategy existingPaymentReferenceStrategy = new ExistingPaymentReferenceStrategy();
 
     @Test
-    public void testExistingTransactionIdAndPaymentReferenceWillReplacePayment() {
+    public void testExistingPaymentReferenceAndPaymentReferenceWillReplacePayment() {
         PaymentCollection newPayment = createPayment("111222333", "success");
         PaymentCollection existingPayment = createPayment("999888777", "success");
         PaymentCollection toBeReplacedPayment = createPayment("111222333", "created");
@@ -26,15 +26,15 @@ public class ExistingTransactionIdStrategyTest {
         existingPaymentsList.add(toBeReplacedPayment);
 
         List<PaymentCollection> expectedPaymentsList = Arrays.asList(existingPayment, newPayment);
-        List<PaymentCollection> returnedPaymentsList = existingTransactionIdStrategy
+        List<PaymentCollection> returnedPaymentsList = existingPaymentReferenceStrategy
             .getCurrentPaymentsList(newPayment.getValue(), existingPaymentsList);
 
         assertThat(returnedPaymentsList, equalTo(expectedPaymentsList));
     }
 
-    private PaymentCollection createPayment(String id, String status) {
+    private PaymentCollection createPayment(String reference, String status) {
         Payment payment = new Payment();
-        payment.setPaymentTransactionId(id);
+        payment.setPaymentReference(reference);
         payment.setPaymentStatus(status);
 
         return PaymentCollection.builder().value(payment).build();

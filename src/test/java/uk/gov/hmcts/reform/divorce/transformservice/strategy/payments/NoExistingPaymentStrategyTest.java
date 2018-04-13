@@ -18,7 +18,7 @@ public class NoExistingPaymentStrategyTest {
     @Test
     public void testNoExistingPaymentsAddsJustNewPayment() {
         Payment newPayment = new Payment();
-        newPayment.setPaymentTransactionId("111222333");
+        newPayment.setPaymentReference("111222333");
 
         List<PaymentCollection> existingPaymentsList = null;
 

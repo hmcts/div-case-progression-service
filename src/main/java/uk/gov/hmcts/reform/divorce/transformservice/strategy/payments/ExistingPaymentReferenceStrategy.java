@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class ExistingTransactionIdStrategy implements PaymentStrategy {
+public class ExistingPaymentReferenceStrategy implements PaymentStrategy {
 
     @Override
     public List<PaymentCollection> getCurrentPaymentsList(Payment newPayment,
                                                           List<PaymentCollection> existingPayments) {
         existingPayments.removeIf(
-            payment -> payment.getValue().getPaymentTransactionId().equals(newPayment.getPaymentTransactionId()));
+            payment -> payment.getValue().getPaymentReference().equals(newPayment.getPaymentReference()));
 
         existingPayments.add(PaymentCollection.builder().value(newPayment).build());
 
@@ -25,7 +25,7 @@ public class ExistingTransactionIdStrategy implements PaymentStrategy {
     public boolean accepts(Payment newPayment, List<PaymentCollection> existingPayments) {
         return Objects.nonNull(existingPayments) && existingPayments.stream()
             .anyMatch(
-                payment -> payment.getValue().getPaymentTransactionId().equals(newPayment.getPaymentTransactionId()));
+                payment -> payment.getValue().getPaymentReference().equals(newPayment.getPaymentReference()));
     }
 
 }
