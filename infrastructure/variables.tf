@@ -14,22 +14,6 @@ variable "case_progression_service_port" {
     default = "4003"
 }
 
-variable "case_progression_external_servicer_port" {
-    default = "443"
-}
-
-variable "case_progression_service_url" {
-    default = "https://div-case-progression-sandbox-staging.service.core-compute-sandbox.internal"
-}
-
-variable "auth_idam_client_baseUrl" {
-    default = "http://betaDevBccidamAppLB.reform.hmcts.net"
-}
-
-variable "auth_provider_service_client_port" {
-    default = "4052"
-}
-
 variable "auth_provider_service_client_baseurl" {
     default = "http://betaDevBccidamS2SLB.reform.hmcts.net:80"
 }

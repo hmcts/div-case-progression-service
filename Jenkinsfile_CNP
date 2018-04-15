@@ -19,11 +19,6 @@ def component = "case-progression"
 
 def channel = '#div-dev'
 
-List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
-]
-
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
       secretType: 'value',
@@ -33,7 +28,16 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
+List<LinkedHashMap<String, Object>> secrets = [
+    secret("secret/test/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret("secret/test/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
+
 withPipeline(type , product, component) {
+    before('functionalTest:aat') {
+        env.TEST_ENVIRONMENT = "aat"
+    }
+
     after('functionalTest:aat') {
         error('Halting pipeline before prod stages')
     }
@@ -44,20 +48,5 @@ withPipeline(type , product, component) {
 
     loadVaultSecrets(secrets)
 
-    enableSlackNotifications(channel)
-}
-
-String vaultKeySecretPath(String env, String secretPathPostFix){
-
-    echo "calling vaultKeySecretPath"
-
-    if(env != null && env.toLowerCase().endsWith("prod")){
-        return "secret/" + "prod" + secretPathPostFix
-    }
-
-    if(env != null && env.toLowerCase().endsWith("demo")){
-        return "secret/" + "preprod" + secretPathPostFix
-    }
-
-    return "secret/" + "test" + secretPathPostFix
+   // enableSlackNotifications(channel)
 }

@@ -61,7 +61,7 @@ task smoke(type:GradleBuild) {
 task enableSmokeTest(){
     doFirst{
         project.ext.automatedTest = true
-        project.ext.tags = 'test-type:all'
+        project.ext.tags = 'test-type:smoke'
     }
 }
 
