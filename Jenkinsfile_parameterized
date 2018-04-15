@@ -6,14 +6,14 @@ properties([
                 string(name: 'PRODUCT_NAME', defaultValue: 'div', description: 'Divorce'),
                 string(name: 'APP', defaultValue: 'case-progression', description: 'Divorce Case Progression Service'),
                 string(name: 'TYPE', defaultValue: 'java', description: ''),
-                string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be built and deployed'),
+                string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be built and deployed'),
                 choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
     ])
 ])
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret("secret/test/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret("secret/test/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -26,22 +26,5 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
-    after('functionalTest:aat') {
-        error('Halting pipeline before prod stages')
-    }
-
-    after('checkout') {
-
-        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
-    }
-
     loadVaultSecrets(secrets)
-}
-
-String vaultKeySecretPath(String env, String secretPathPostFix){
-    if(env.toLowerCase().endsWith("prod")){
-        return "secret/" + "prod" + secretPathPostFix
-    }
-
-    return "secret/" + "test" + secretPathPostFix
 }

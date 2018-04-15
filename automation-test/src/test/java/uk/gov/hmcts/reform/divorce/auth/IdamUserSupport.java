@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,7 @@ public class IdamUserSupport {
     private void createUserInIdam() {
         idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
         idamPassword = UUID.randomUUID().toString();
+
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\"}")
@@ -103,14 +105,13 @@ public class IdamUserSupport {
      * @return the string
      */
     private String generateUserTokenWithNoRoles(String username, String password) {
-        String userLoginDetails = String.join(":", username, password);
-        final String authHeader = "Basic " + new String(Base64.getEncoder().encode((userLoginDetails).getBytes()));
-
-        final String token = RestAssured.given()
-                .header("Authorization", authHeader)
-                .post(loginUrl())
-                .body()
-                .path("access-token");
+        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        final String token = RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Authorization", "Basic " + encoded)
+            .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
+                + "https://case-worker-web.test.ccd.reform.hmcts.net/oauth2redirect")
+            .body()
+            .path("access-token");
 
         return "Bearer " + token;
     }

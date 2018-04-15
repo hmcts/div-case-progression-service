@@ -11,18 +11,13 @@ properties([
     ])
 ])
 
-@Library("Infrastructure")
+@Library("Infrastructure@AddTestEnvironmentToTest")
 
 def type = "java"
 def product = "div"
 def component = "case-progression"
 
 def channel = '#div-dev'
-
-List<LinkedHashMap<String, Object>> secrets = [
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"), 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret(vaultKeySecretPath((String)env.TEST_ENVIRONMENT, "/divorce/draft/encryption_key"), 'DRAFT_STORE_API_ENCRYPTION_KEY')
-]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
@@ -33,34 +28,25 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
+List<LinkedHashMap<String, Object>> secrets = [
+    secret("secret/test/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret("secret/test/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
+
 withPipeline(type , product, component) {
+    before('functionalTest:aat') {
+        env.TEST_ENVIRONMENT = "aat"
+    }
+
     after('functionalTest:aat') {
         error('Halting pipeline before prod stages')
     }
 
     after('checkout') {
         echo '${product}-${component} checked out'
-
-        env.CNP_ENVIRONMENT = getEnvironment((String)env.ENVIRONMENT)
     }
 
     loadVaultSecrets(secrets)
 
-    enableSlackNotifications(channel)
-}
-
-String getEnvironment(String env){
-    if(env == null){
-        return "demo"
-    }
-
-    return env
-}
-
-String vaultKeySecretPath(String env, String secretPathPostFix){
-    if(env != null && env.toLowerCase().endsWith("prod")){
-        return "secret/" + "prod" + secretPathPostFix
-    }
-
-    return "secret/" + "test" + secretPathPostFix
+   // enableSlackNotifications(channel)
 }
