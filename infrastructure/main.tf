@@ -1,6 +1,6 @@
 locals {
     ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
-    tactical_div_document_generator = "http://betaDevBdivorceAppLB.reform.hmcts.net:4017"
+    pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
 }
 
 module "div-case-progression" {
@@ -30,10 +30,8 @@ module "div-case-progression" {
         CCD_EVENTID_CREATE = "${var.ccd_eventid_create}"
         LOGGING_LEVEL_ORG_SRPINGFRAMEWORK_WEB = "${var.logging_level_org_springframework_web}"
         LOGGING_LEVEL_UK_GOV_HMCTS_CCD = "${var.logging_level_uk_gov_hmcts_ccd}"
-        //PDF_GENERATOR_BASE_URL = "${var.pdf_generator_base_url}"
-        //PDF_GENERATOR_HEALTHURL = "${var.pdf_generator_base_url}/status/health"
-        PDF_GENERATOR_BASE_URL = "${local.tactical_div_document_generator}"
-        PDF_GENERATOR_HEALTHURL = "${local.tactical_div_document_generator}/health"
+        PDF_GENERATOR_BASE_URL = "${local.pdf_generator_base_url}"
+        PDF_GENERATOR_HEALTHURL = "${local.pdf_generator_base_url}/health"
         DRAFT_STORE_API_ENCRYPTION_KEY = "${data.vault_generic_secret.draft_store_api_encryption_key.data["value"]}"
         DRAFT_STORE_API_BASEURL = "${var.draft_store_api_baseurl}"
         DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
