@@ -38,9 +38,9 @@ withPipeline(type , product, component) {
         env.TEST_ENVIRONMENT = "aat"
     }
 
-//    after('functionalTest:aat') {
-//        error('Halting pipeline before prod stages')
-//    }
+    after('functionalTest:aat') {
+        error('Halting pipeline before prod stages')
+    }
 
     after('checkout') {
         echo '${product}-${component} checked out'
@@ -48,5 +48,5 @@ withPipeline(type , product, component) {
 
     loadVaultSecrets(secrets)
 
-//    enableSlackNotifications(channel)
+    enableSlackNotifications(channel)
 }
