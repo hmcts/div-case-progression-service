@@ -53,8 +53,8 @@ dependencies {
     compile group: 'org.apache.pdfbox', name: 'pdfbox', version: versions.pdfbox
     compile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compile group: 'org.skyscreamer', name:'jsonassert', version: versions.jsonAssert
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
     compile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     compile group: 'net.serenity-bdd', name: 'serenity-cucumber', version: versions.serenityCucumber
