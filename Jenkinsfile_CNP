@@ -11,7 +11,7 @@ properties([
     ])
 ])
 
-@Library("Infrastructure@AddTestEnvironmentToTest")
+@Library("Infrastructure")
 
 def type = "java"
 def product = "div"
@@ -29,8 +29,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret("secret/test/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
-    secret("secret/test/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret("secret/preprod/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret("secret/preprod/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
 withPipeline(type , product, component) {
