@@ -166,6 +166,8 @@ dependencies {
 
     compile (group: 'uk.gov.hmcts.reform', name:'service-auth-provider-client', version: versions.serviceTokenGenerator){
         exclude group: 'io.reactivex', module: 'rxnetty'
+        exclude group: 'io.reactivex', module: 'rxnetty-servo'
+        exclude group: 'io.reactivex', module: 'io.reactivex'
     }
 
     compile group: 'uk.gov.hmcts.reform', name: 'http-proxy-spring-boot-autoconfigure', version: versions.hmctsHttpProxy
