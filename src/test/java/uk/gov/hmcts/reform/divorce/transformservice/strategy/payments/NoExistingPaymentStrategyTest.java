@@ -4,7 +4,6 @@ import org.junit.Test;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentCollection;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.Payment;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

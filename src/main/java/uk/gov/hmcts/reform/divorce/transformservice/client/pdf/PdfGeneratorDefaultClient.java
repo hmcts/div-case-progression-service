@@ -1,14 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.client.pdf;
 
-import com.netflix.ribbon.proxy.annotation.Http;
-import org.apache.http.Header;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.divorce.transformservice.client.TransformationHttpEntityFactory;
@@ -18,9 +13,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocume
 import uk.gov.hmcts.reform.divorce.transformservice.mapping.PdfGenerateDocumentRequestMapper;
 
 @Component
+@Slf4j
 public class PdfGeneratorDefaultClient implements PdfGeneratorClient {
-
-    private static final Logger log = LoggerFactory.getLogger(PdfGeneratorDefaultClient.class);
 
     @Autowired
     private RestTemplate restTemplate;
