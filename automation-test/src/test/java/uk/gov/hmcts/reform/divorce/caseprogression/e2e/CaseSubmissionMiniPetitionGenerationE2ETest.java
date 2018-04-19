@@ -36,18 +36,13 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     @Value("${document.management.store.baseUrl}")
     private String documentManagementURL;
 
-    @Value("${ccd.callback.e2e.enabled}")
-    private boolean e2eTestEnabled;
-
     @Test
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
-        if(e2eTestEnabled) {
-            Response ccdResponse = submitCase("submit-complete-case.json");
-            long caseId = assertAndGetCaseId(ccdResponse);
+        Response ccdResponse = submitCase("submit-complete-case.json");
+        long caseId = assertAndGetCaseId(ccdResponse);
 
-            Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
-            assertGeneratedDocumentExists(ccdSubmitResponse, caseId);
-        }
+        Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
+        assertGeneratedDocumentExists(ccdSubmitResponse, caseId);
     }
 
     private void assertGeneratedDocumentExists(Response ccdSubmitResponse, long caseId){

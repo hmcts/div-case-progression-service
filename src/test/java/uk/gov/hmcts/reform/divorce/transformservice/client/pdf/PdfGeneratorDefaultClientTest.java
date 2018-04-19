@@ -48,13 +48,14 @@ public class PdfGeneratorDefaultClientTest {
         ResponseEntity<PdfFile> responseEntity = mock(ResponseEntity.class);
         PdfFile pdfFile = mock(PdfFile.class);
         CreateEvent submittedCase = new CreateEvent();
-        String urlString = "anUrl";
+        final String urlString = "anUrl";
+        final String authToken = "test";
 
         PdfGenerateDocumentRequest pdfGenerateDocumentRequest = new PdfGenerateDocumentRequest("templateName",
             new HashMap<>());
         when(pdfGenerateDocumentRequestMapper.toPdfGenerateDocumentRequest(eq(submittedCase)))
             .thenReturn(pdfGenerateDocumentRequest);
-        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, "test"))
+        when(httpEntityFactory.createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, authToken))
             .thenReturn(httpEntity);
         when(clientConfiguration.getPdfGeneratorUrl()).thenReturn(urlString);
 
@@ -62,9 +63,9 @@ public class PdfGeneratorDefaultClientTest {
             .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(pdfFile);
 
-        assertEquals(pdfFile, pdfGeneratorClient.generatePdf(submittedCase, "test"));
+        assertEquals(pdfFile, pdfGeneratorClient.generatePdf(submittedCase, authToken));
 
-        verify(httpEntityFactory).createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, "test");
+        verify(httpEntityFactory).createRequestEntityForPdfGeneratorGet(pdfGenerateDocumentRequest, authToken);
         verify(clientConfiguration).getPdfGeneratorUrl();
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.POST), eq(httpEntity), eq(PdfFile.class));
         verify(responseEntity).getBody();

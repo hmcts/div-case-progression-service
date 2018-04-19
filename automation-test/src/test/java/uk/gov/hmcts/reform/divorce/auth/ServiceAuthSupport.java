@@ -35,7 +35,6 @@ public class ServiceAuthSupport {
         return serviceToken;
     }
 
-
     private AuthTokenGenerator getCaseProgressionAuthTokenGenerator(ServiceAuthTokenFor serviceAuthTokenFor) {
         switch (serviceAuthTokenFor) {
             case CASE_PROGRESSION:

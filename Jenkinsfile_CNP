@@ -35,7 +35,7 @@ List<LinkedHashMap<String, Object>> secrets = [
 
 withPipeline(type , product, component) {
     before('functionalTest:aat') {
-        env.TEST_ENVIRONMENT = "aat"
+        env.ITEST_ENVIRONMENT = "aat"
     }
 
     after('functionalTest:aat') {

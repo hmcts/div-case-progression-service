@@ -1,6 +1,7 @@
 locals {
     ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
     pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
+    ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
 }
 
 module "div-case-progression" {
@@ -16,15 +17,13 @@ module "div-case-progression" {
         REFORM_SERVICE_NAME = "${var.reform_service_name}"
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
-//        SERVER_PORT = "${var.case_progression_service_port}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.auth_provider_service_client_baseurl}"
         AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
         AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.auth_provider_service_client_key.data["value"]}"
         AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
         AUTH_PROVIDER_HEALTH_URI = "${var.auth_provider_service_client_baseurl}/health"
-        CCD_CASEDATASTORE_BASEURL = "${var.ccd_casedatastore_baseurl}"
-        CCD_CASEDATAGW_BASEURI = "${var.ccd_casedatagw_baseuri}"
-        CCD_CASEDATASTORE_HEALTH_URI = "${var.ccd_casedatastore_baseurl}/health"
+        CCD_CASEDATASTORE_BASEURL = "${local.ccd_casedatastore_baseurl}"
+        CCD_CASEDATASTORE_HEALTH_URI = "${local.ccd_casedatastore_baseurl}/health"
         CCD_JURISDICTIONID = "${var.ccd_jurisdictionid}"
         CCD_CASETYPEID = "${var.ccd_casetypeid}"
         CCD_EVENTID_CREATE = "${var.ccd_eventid_create}"
@@ -37,7 +36,6 @@ module "div-case-progression" {
         DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
-//        no_proxy = "${var.no_proxy}"
     }
 }
 

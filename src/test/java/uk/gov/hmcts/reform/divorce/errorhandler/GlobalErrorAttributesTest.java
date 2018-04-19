@@ -8,8 +8,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 
-import java.util.Map;
 import javax.xml.bind.ValidationException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

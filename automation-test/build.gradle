@@ -46,7 +46,6 @@ dependencies {
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     testCompile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
     testCompile group: 'org.skyscreamer', name:'jsonassert', version: '1.2.3'
-    testCompile group: 'uk.gov.hmcts.auth.provider.service', name: 'service-token-generator-spring', version: '1.0.5'
 }
 
 // Hook into the gradle processTestResources task to execute the copyPropsFile custom task

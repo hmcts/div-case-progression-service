@@ -10,10 +10,10 @@ import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdCallBackContro
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InvalidPetitionException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 
 @ControllerAdvice(basePackageClasses = CcdCallBackController.class)

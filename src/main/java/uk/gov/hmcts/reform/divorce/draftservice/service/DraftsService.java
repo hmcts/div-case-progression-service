@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
@@ -14,9 +13,8 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class DraftsService {
-
-    private static final Logger log = LoggerFactory.getLogger(DraftsService.class);
 
     @Autowired
     private DraftModelFactory modelFactory;

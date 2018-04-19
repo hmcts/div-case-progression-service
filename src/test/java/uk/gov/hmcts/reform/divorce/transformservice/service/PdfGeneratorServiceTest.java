@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PdfGeneratorServiceTest {
+    private  static final String AUTH_TOKEN = "test";
 
     @Mock
     private PdfGeneratorClient pdfGeneratorClient;
@@ -31,22 +32,24 @@ public class PdfGeneratorServiceTest {
     @Test
     public void pdfGeneratorReturnAPdf() {
 
-        Long caseId = 990L;
+        final Long caseId = 990L;
+        final String url = "oneUrl";
         CreateEvent submittedCase = new CreateEvent();
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseId(caseId + "");
         submittedCase.setCaseDetails(caseDetails);
 
-        PdfFile pdfFile = PdfFile.builder().url("oneUrl").build();
 
-        when(pdfGeneratorClient.generatePdf(submittedCase, "test")).thenReturn(pdfFile);
+        PdfFile pdfFile = PdfFile.builder().url(url).build();
 
-        PdfFile pdfFileGenerated = pdfGeneratorService.generatePdf(submittedCase, "test");
+        when(pdfGeneratorClient.generatePdf(submittedCase, AUTH_TOKEN)).thenReturn(pdfFile);
+
+        PdfFile pdfFileGenerated = pdfGeneratorService.generatePdf(submittedCase, AUTH_TOKEN);
         assertThat(pdfFileGenerated).isEqualTo(pdfFile);
-        assertThat(pdfFileGenerated.getUrl()).isEqualTo("oneUrl");
+        assertThat(pdfFileGenerated.getUrl()).isEqualTo(url);
         assertThat(pdfFileGenerated.toString()).isEqualTo("PdfFile(url=oneUrl, fileName=d8petition990)");
 
-        verify(pdfGeneratorClient).generatePdf(submittedCase, "test");
+        verify(pdfGeneratorClient).generatePdf(submittedCase, AUTH_TOKEN);
         verifyNoMoreInteractions(pdfGeneratorClient);
     }
 
@@ -57,16 +60,16 @@ public class PdfGeneratorServiceTest {
 
         RuntimeException exception = mock(RuntimeException.class);
 
-        doThrow(exception).when(pdfGeneratorClient).generatePdf(eq(submittedCase), eq("test"));
+        doThrow(exception).when(pdfGeneratorClient).generatePdf(eq(submittedCase), eq(AUTH_TOKEN));
 
-        pdfGeneratorService.generatePdf(submittedCase, "test");
+        pdfGeneratorService.generatePdf(submittedCase, AUTH_TOKEN);
     }
 
     @Test
     public void pdfGeneratorReturnsNullReturnNull() {
         CreateEvent submittedCase = new CreateEvent();
-        when(pdfGeneratorClient.generatePdf(submittedCase, "test")).thenReturn(null);
+        when(pdfGeneratorClient.generatePdf(submittedCase, AUTH_TOKEN)).thenReturn(null);
 
-        assertThat(pdfGeneratorService.generatePdf(submittedCase, "test")).isNull();
+        assertThat(pdfGeneratorService.generatePdf(submittedCase, AUTH_TOKEN)).isNull();
     }
 }

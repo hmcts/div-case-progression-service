@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -14,9 +13,9 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 
 @Component
+@Slf4j
 public class SubmitCcdClient implements CcdClient {
 
-    private static final Logger log = LoggerFactory.getLogger(SubmitCcdClient.class);
     @Autowired
     private CcdClientConfiguration ccdClientConfiguration;
     @Autowired
