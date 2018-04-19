@@ -29,7 +29,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret("secret/preprod/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'CASE_PROGRESSION_SERVICE_AUTH_SECRET'),
+    secret("secret/preprod/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'AUTH_PROVIDER_SERVICE_CLIENT_KEY'),
     secret("secret/preprod/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
