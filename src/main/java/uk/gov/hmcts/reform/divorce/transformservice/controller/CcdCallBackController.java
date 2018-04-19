@@ -17,8 +17,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(path = "/caseprogression")

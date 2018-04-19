@@ -43,6 +43,7 @@ public class PdfGeneratorDefaultClientTest {
     private PdfGeneratorDefaultClient pdfGeneratorClient;
 
     @Test
+    @SuppressWarnings("unchecked")
     public void createCaseReturnsCreateEvent() {
         HttpEntity<PdfGenerateDocumentRequest> httpEntity = mock(HttpEntity.class);
         ResponseEntity<PdfFile> responseEntity = mock(ResponseEntity.class);
