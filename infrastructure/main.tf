@@ -36,6 +36,7 @@ module "div-case-progression" {
         DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
+        UK_GOV_NOTIFY_EMAIL_TEMPLATE_VARS = "${var.uk_gov_notify_email_template_vars}"
     }
 }
 

@@ -15,7 +15,9 @@
 *.iws
 *.iml
 *.ipr
+out/
 
 .DS_store
 /target/
 bin/
+automation-test/

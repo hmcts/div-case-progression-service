@@ -1,57 +1,62 @@
 package uk.gov.hmcts.reform.divorce.notifications.service;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.hmcts.reform.divorce.draftservice.client.EmailClient;
 import uk.gov.hmcts.reform.divorce.notifications.domain.EmailTemplateNames;
-import uk.gov.service.notify.NotificationClientApi;
 import uk.gov.service.notify.NotificationClientException;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EmailServiceTest {
-    private NotificationClientApi client;
-    private String emailAddress;
-    private Map<String, String> templates;
+    private static final String EMAIL_ADDRESS = "simulate-delivered@notifications.service.gov.uk";
+
+    @MockBean
+    private EmailClient mockClient;
+
+    @Autowired
     private EmailService emailService;
 
-    @Before
-    public void init() {
-        client = mock(NotificationClientApi.class);
-        emailAddress = "simulate-delivered@notifications.service.gov.uk";
-        templates = new HashMap<>();
-        templates.put(EmailTemplateNames.SAVE_DRAFT.name(), "testTemplate123");
-        emailService = new EmailService(client, templates);
-    }
+    @Value("#{${uk.gov.notify.email.templates}}")
+    private Map<String, String> emailTemplates;
+
+    @Value("#{${uk.gov.notify.email.template.vars}}")
+    private Map<String, Map<String, String>> emailTemplateVars;
 
     @Test
-    public void successfullySendEmail() throws NotificationClientException {
-        emailService.sendSaveDraftConfirmationEmail(emailAddress);
+    public void sendSaveDraftConfirmationEmailShouldCallTheEmailClientToSendAnEmail() throws NotificationClientException {
+        emailService.sendSaveDraftConfirmationEmail(EMAIL_ADDRESS);
 
-        verify(client).sendEmail(
-            eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
-            eq(emailAddress),
-            eq(null),
+        verify(mockClient).sendEmail(
+            eq(emailTemplates.get(EmailTemplateNames.SAVE_DRAFT.name())),
+            eq(EMAIL_ADDRESS),
+            eq(emailTemplateVars.get(EmailTemplateNames.SAVE_DRAFT.name())),
             anyString());
     }
 
     @Test
-    public void failToSendEmail() throws NotificationClientException {
+    public void sendSaveDraftConfirmationEmailShouldNotPropagateNotificationClientException() throws NotificationClientException {
         doThrow(new NotificationClientException(new Exception("Exception inception")))
-            .when(client).sendEmail(anyString(), anyString(), eq(null), anyString());
+            .when(mockClient).sendEmail(anyString(), anyString(), eq(null), anyString());
 
-        emailService.sendSaveDraftConfirmationEmail(emailAddress);
+        try {
+            emailService.sendSaveDraftConfirmationEmail(EMAIL_ADDRESS);
+        } catch (Exception e) {
+            fail();
+        }
 
-        verify(client).sendEmail(
-            eq(templates.get(EmailTemplateNames.SAVE_DRAFT.name())),
-            eq(emailAddress),
-            eq(null),
-            anyString());
     }
 }
