@@ -69,6 +69,10 @@ variable "uk_gov_notify_email_templates" {
     type = "string"
 }
 
+variable "uk_gov_notify_email_template_vars" {
+    type = "string"
+}
+
 variable "subscription" {}
 
 variable "location" {
