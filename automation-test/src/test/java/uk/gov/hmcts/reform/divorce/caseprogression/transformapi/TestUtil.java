@@ -11,6 +11,8 @@ import static org.junit.Assert.assertThat;
 class TestUtil {
 
     static void assertOkResponseAndCaseIdIsNotZero(Response ccdResponse) {
+        System.out.println(ccdResponse);
+
         assertEquals(Integer.valueOf(HttpStatus.OK.toString()).intValue(), ccdResponse.getStatusCode());
 
         assertNotEquals(0L, Long.parseLong(ccdResponse.getBody().path("caseId").toString()));
