@@ -97,6 +97,8 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         if (serviceToken) {
             headers.put("ServiceAuthorization", getServiceToken());
         }
+
+        System.out.println("headers " + headers);
         return headers;
     }
 
