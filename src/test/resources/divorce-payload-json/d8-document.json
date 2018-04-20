@@ -214,7 +214,7 @@
         "lastModifiedBy" : 12661,
         "modifiedOn" : "2017-12-11",
         "fileName" : "d8-eng.pdf",
-        "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
+        "fileUrl" : "http://localhost:5006/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
         "mimeType" : "application/pdf",
         "status" : "OK"
     }],
