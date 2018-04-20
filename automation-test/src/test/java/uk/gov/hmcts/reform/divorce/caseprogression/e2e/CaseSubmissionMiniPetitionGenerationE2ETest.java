@@ -70,7 +70,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private Response makePaymentAndIssuePetition(long caseId) throws Exception {
         Response response = submitEvent(caseId, "paymentMade");
 
-        System.out.println("submit event response " + response.getBody());
+        System.out.println("submit event response " + response.getBody().asString());
 
         assertNotNull(response.getBody().path("id"));
 
