@@ -91,12 +91,17 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     }
 
     private Map<String, Object> headers(String token, boolean serviceToken) {
+        System.out.println("getServiceToken() " + getServiceToken());
+
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
         if (serviceToken) {
             headers.put("ServiceAuthorization", getServiceToken());
         }
+
+        System.out.println("headers " + headers);
+
 
         return headers;
     }

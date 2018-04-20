@@ -69,10 +69,6 @@ public class IdamUserSupport {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    private String loginUrl() {
-        return idamUserBaseUrl + "/oauth2/authorize";
-    }
-
     private String generateUserTokenWithNoRoles(String username, String password) {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
