@@ -11,19 +11,19 @@ properties([
     ])
 ])
 
-List<LinkedHashMap<String, Object>> secrets = [
-    secret("secret/preprod/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission", 'AUTH_PROVIDER_SERVICE_CLIENT_KEY'),
-    secret("secret/preprod/divorce/draft/encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
-]
-
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
-      secretType: 'value',
+      secretType: 'Secret',
       name: secretName,
       version: '',
       envVariable: envVar
     ]
 }
+
+List<LinkedHashMap<String, Object>> secrets = [
+    secret("ccd_submission_s2s_auth_secret", "IDAM_AUTH_SECRET"),
+    secret("draft_store_api_encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
     loadVaultSecrets(secrets)

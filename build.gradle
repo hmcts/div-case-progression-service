@@ -132,7 +132,7 @@ def versions = [
         hmctsHttpProxy: '1.1.0',
         hmctsJavaLogging: '2.0.2',
         hmctsNotify: '3.8.0-RELEASE',
-        serviceTokenGenerator: '0.4.2',
+        serviceTokenGenerator: '0.6.0',
         jackson: '2.9.5',
         jaxRS: '2.0.1',
         lombok: '1.16.18',
