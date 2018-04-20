@@ -58,7 +58,7 @@ module "key-vault" {
 }
 
 data "vault_generic_secret" "ccd-submission-s2s-auth-secret" {
-    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceDocumentGenerator"
+    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
 }
 
 data "vault_generic_secret" "draft-store-api-encryption-key" {
