@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CollectionMember;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentLink;
@@ -19,11 +20,16 @@ public abstract class DocumentCollectionMapper {
     @Mapping(source = "fileType", target = "value.documentType", defaultValue = "other")
     public abstract CollectionMember<Document> map(UploadedFile uploadedFile);
 
+    @Autowired
+    private DocumentUrlRewrite documentUrlRewrite;
+
     @AfterMapping
     protected void mapDocumentUrlToDocumentLinkObject(UploadedFile uploadedFile,
                                                       @MappingTarget CollectionMember<Document> result) {
 
+        String fileUrl = documentUrlRewrite.getDocumentUrl(uploadedFile.getFileUrl());
+
         result.getValue().setDocumentLink(DocumentLink.builder()
-            .documentUrl(uploadedFile.getFileUrl()).build());
+            .documentUrl(fileUrl).build());
     }
 }

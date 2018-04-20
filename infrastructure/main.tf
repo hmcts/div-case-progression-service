@@ -2,6 +2,7 @@ locals {
     ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
     pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
+    dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
 }
 
 module "div-case-progression" {
@@ -36,6 +37,7 @@ module "div-case-progression" {
         DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk_gov_notify_api_key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
+        DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
     }
 }
 
