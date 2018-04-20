@@ -107,6 +107,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         System.out.println("createEventUrl " + createEventUrl);
         System.out.println("fromRestService " + fromRestService.getBody().asString());
 
-        return fromRestService.getBody().path("event_token");
+        return fromRestService.getBody().path("token");
     }
 }
