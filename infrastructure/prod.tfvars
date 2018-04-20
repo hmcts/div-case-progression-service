@@ -1,6 +1,5 @@
 vault_env = "prod"
 
-auth_provider_service_client_baseurl = "http://betaProdccidamAppLB.reform.hmcts.net:4502"
 logging_level_org_springframework_web = "INFO"
 logging_level_uk_gov_hmcts_ccd = "INFO"
 draft_store_api_baseurl = "https://proddraftstorelb.moneyclaim.reform.hmcts.net:4301"

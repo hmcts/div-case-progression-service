@@ -3,6 +3,7 @@ locals {
     pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
     dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
+    idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
 }
 
 module "div-case-progression" {
@@ -18,11 +19,11 @@ module "div-case-progression" {
         REFORM_SERVICE_NAME = "${var.reform_service_name}"
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
-        AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${var.auth_provider_service_client_baseurl}"
+        AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${local.idam_s2s_url}"
         AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
         AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
         AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
-        AUTH_PROVIDER_HEALTH_URI = "${var.auth_provider_service_client_baseurl}/health"
+        AUTH_PROVIDER_HEALTH_URI = "${local.idam_s2s_url}/health"
         CCD_CASEDATASTORE_BASEURL = "${local.ccd_casedatastore_baseurl}"
         CCD_CASEDATASTORE_HEALTH_URI = "${local.ccd_casedatastore_baseurl}/health"
         CCD_JURISDICTIONID = "${var.ccd_jurisdictionid}"
