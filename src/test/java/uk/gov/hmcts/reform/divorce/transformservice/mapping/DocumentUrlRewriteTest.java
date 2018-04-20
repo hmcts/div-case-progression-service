@@ -26,7 +26,8 @@ public class DocumentUrlRewriteTest {
 
         String newUrl = urlRewrite.getDocumentUrl(oldUrl);
 
-        assertEquals(String.format("%s/documents/95f20d8e-7186-4180-98e9-f7400f7c6527", documentManagementStoreUrl), newUrl);
+        assertEquals(String.format("%s/documents/95f20d8e-7186-4180-98e9-f7400f7c6527", documentManagementStoreUrl),
+            newUrl);
     }
 
     @Test
