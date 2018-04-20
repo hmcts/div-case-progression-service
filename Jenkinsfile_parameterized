@@ -21,8 +21,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret("ccd_submission_s2s_auth_secret", "IDAM_AUTH_SECRET"),
-    secret("draft_store_api_encryption_key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret("ccd-submission-s2s-auth-secret", "IDAM_AUTH_SECRET"),
+    secret("draft-store-api-encryption-key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
 ]
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
