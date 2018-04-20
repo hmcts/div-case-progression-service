@@ -68,7 +68,7 @@ task enableSmokeTest(){
 task enableFunctionalTest(){
     doFirst{
         project.ext.automatedTest = true
-        project.ext.tags = 'test-type:all'
+        project.ext.tags = 'test-type:e2e'
     }
 }
 

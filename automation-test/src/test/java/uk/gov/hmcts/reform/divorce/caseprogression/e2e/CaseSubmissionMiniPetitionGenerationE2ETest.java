@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.caseprogression.e2e;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private String documentManagementURL;
 
     @Test
+    @WithTag("test-type:e2e")
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
         Response ccdResponse = submitCase("submit-complete-case.json");
         long caseId = assertAndGetCaseId(ccdResponse);
