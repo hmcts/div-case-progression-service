@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
 import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
 import uk.gov.hmcts.reform.divorce.emclient.EvidenceManagementUtil;
 
@@ -58,8 +59,11 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
         documentUri = EvidenceManagementUtil.getDocumentStoreURI(documentUri, documentManagementURL);
 
+        System.out.println("documentUri "+ documentUri);
+
         Response documentManagementResponse =
-                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri, getServiceToken(),
+                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri,
+                    getServiceToken(ServiceAuthTokenFor.DIV_DOCUMENT_GENERATOR),
                     getIdamTestCaseWorkerUser());
 
         assertEquals(HttpStatus.OK.value(), documentManagementResponse.statusCode());

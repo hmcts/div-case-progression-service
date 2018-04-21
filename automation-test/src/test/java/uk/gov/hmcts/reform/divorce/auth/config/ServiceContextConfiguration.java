@@ -21,10 +21,19 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 public class ServiceContextConfiguration {
 
     @Bean("caseProgressionAuthTokenGenerator")
-    public AuthTokenGenerator serviceAuthTokenGenerator(
+    public AuthTokenGenerator caseProgressionServiceAuthTokenGenerator(
             @Value("${case.progression.service.auth.secret}") final String secret,
             @Value("${case.progression.auth.microservice}") final String microService,
             final ServiceAuthorisationApi serviceAuthorisationApi
+    ) {
+        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
+    }
+
+    @Bean("documentGeneratorAuthTokenGenerator")
+    public AuthTokenGenerator documentGeneratorserviceAuthTokenGenerator(
+        @Value("${document.generator.service.auth.secret}") final String secret,
+        @Value("${document.generator.auth.microservice}") final String microService,
+        final ServiceAuthorisationApi serviceAuthorisationApi
     ) {
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }

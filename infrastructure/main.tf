@@ -62,6 +62,10 @@ data "vault_generic_secret" "ccd-submission-s2s-auth-secret" {
     path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
 }
 
+data "vault_generic_secret" "div-doc-s2s-auth-secret" {
+    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceDocumentGenerator"
+}
+
 data "vault_generic_secret" "draft-store-api-encryption-key" {
     path = "secret/${var.vault_env}/divorce/draft/encryption_key"
 }
@@ -73,6 +77,12 @@ data "vault_generic_secret" "uk-gov-notify-api-key" {
 resource "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
     name      = "ccd-submission-s2s-auth-secret"
     value     = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+    vault_uri = "${module.key-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "div-doc-s2s-auth-secret" {
+    name      = "div-doc-s2s-auth-secret"
+    value     = "${data.vault_generic_secret.div-doc-s2s-auth-secret.data["value"]}"
     vault_uri = "${module.key-vault.key_vault_uri}"
 }
 
