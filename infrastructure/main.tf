@@ -10,12 +10,12 @@ locals {
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 
     nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
-    previewVaultUri = "https://div-cps-aat.vault.azure.net/"
+    previewVaultUri = "https://div--${var.reform_service_name}-aat.vault.azure.net/"
     vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "div-case-progression" {
-    source = "git@github.com:hmcts/moj-module-webapp.git?ref=master"
+    source = "git@github.com:hmcts/moj-module-webapp.git"
     product = "${var.reform_team}-${var.reform_service_name}"
     location = "${var.location}"
     env = "${var.env}"
