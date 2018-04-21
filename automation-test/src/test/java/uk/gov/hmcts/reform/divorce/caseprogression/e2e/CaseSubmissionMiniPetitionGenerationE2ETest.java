@@ -72,8 +72,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private Response makePaymentAndIssuePetition(long caseId) throws Exception {
         Response response = submitEvent(caseId, "paymentMade");
 
-        System.out.println("submit event response " + response.getBody().asString());
-
         assertNotNull(response.getBody().path("id"));
 
         response = submitEvent(caseId, "issueFromSubmitted");
@@ -85,19 +83,14 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private Response submitEvent(long caseId, String eventId) throws Exception {
         String eventToken = createEventAsCaseWorker(caseId, eventId);
 
-        System.out.println("eventToken " + eventToken);
-
         JSONObject jsonObject = new JSONObject(loadJSON("submit-event.json"));
         JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
         jsonObject.put("event", eventObject);
         jsonObject.put("event_token", eventToken);
 
-        System.out.println("jsonObject " + jsonObject);
-
         String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId);
 
-        System.out.println("submitEventUrl " + submitEventUrl );
         return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
     }
 
@@ -105,9 +98,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId, event);
         Response fromRestService = getFromRestService(createEventUrl);
-
-        System.out.println("createEventUrl " + createEventUrl);
-        System.out.println("fromRestService " + fromRestService.getBody().asString());
 
         return fromRestService.getBody().path("token");
     }
