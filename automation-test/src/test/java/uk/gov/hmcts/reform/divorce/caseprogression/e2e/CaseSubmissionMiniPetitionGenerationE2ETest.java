@@ -49,8 +49,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     }
 
     private void assertGeneratedDocumentExists(Response ccdSubmitResponse, long caseId){
-        System.out.println("ccdSubmitResponse : " + ccdSubmitResponse.getBody().asString());
-
         String documentUri = ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_BINARY_URL_PATH);
 
         assertNotNull(documentUri);
@@ -60,8 +58,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
                 ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_FILENAME_PATH));
 
         documentUri = EvidenceManagementUtil.getDocumentStoreURI(documentUri, documentManagementURL);
-
-        System.out.println("documentUri "+ documentUri);
 
         Response documentManagementResponse =
                 EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri,
