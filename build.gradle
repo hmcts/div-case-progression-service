@@ -207,6 +207,7 @@ task developAddRelaseSuffix() {
 }
 
 test {
+    maxParallelForks = 1
     doFirst {
         project.ext.automatedTest = false
     }
