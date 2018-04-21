@@ -8,6 +8,10 @@ locals {
     previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.product}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
+
+    nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
+    previewVaultUri = "https://div-cps-aat.vault.azure.net/"
+    vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "div-case-progression" {
