@@ -5,8 +5,8 @@ locals {
     dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
 
-    previewVaultName = "${var.product}-${var.reform_service_name}"
-    nonPreviewVaultName = "${var.product}-${var.reform_service_name}-${var.env}"
+    previewVaultName = "${var.reform_team}-${var.reform_service_name}"
+    nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 
     nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
