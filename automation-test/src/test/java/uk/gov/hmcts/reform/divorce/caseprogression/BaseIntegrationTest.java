@@ -94,9 +94,9 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
-        if (serviceToken) {
+       // if (serviceToken) {
             headers.put("ServiceAuthorization", getServiceToken());
-        }
+       // }
         return headers;
     }
 

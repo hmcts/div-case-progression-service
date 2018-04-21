@@ -26,8 +26,6 @@ public class ServiceContextConfiguration {
             @Value("${case.progression.auth.microservice}") final String microService,
             final ServiceAuthorisationApi serviceAuthorisationApi
     ) {
-
-        System.out.println("Microsoft key : " + secret);
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }
 }

@@ -60,6 +60,6 @@ public class CollectionMemberTest {
             .writer(new SimpleDateFormat("yyyy-MM-dd"))
             .withDefaultPrettyPrinter();
 
-        assertEquals(jsonNullDocumentFieldsRemoved, objectWriter.writeValueAsString(collectionMember));
+        assertEquals(jsonNullDocumentFieldsRemoved.trim(), objectWriter.writeValueAsString(collectionMember));
     }
 }

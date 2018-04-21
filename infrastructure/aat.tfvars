@@ -1,8 +1,5 @@
-env = "aat"
-subscription = "nonprod"
 vault_env = "preprod"
 
-auth_provider_service_client_baseurl = "http://betaDevBccidamS2SLB.reform.hmcts.net:80"
 logging_level_org_springframework_web = "DEBUG"
 logging_level_uk_gov_hmcts_ccd = "DEBUG"
 draft_store_api_baseurl = "https://preproddraftstorelb.moneyclaim.reform.hmcts.net:4301"

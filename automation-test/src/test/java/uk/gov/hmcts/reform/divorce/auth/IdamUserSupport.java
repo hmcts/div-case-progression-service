@@ -69,16 +69,12 @@ public class IdamUserSupport {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    private String loginUrl() {
-        return idamUserBaseUrl + "/oauth2/authorize";
-    }
-    
     private String generateUserTokenWithNoRoles(String username, String password) {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://case-worker-web.test.ccd.reform.hmcts.net/oauth2redirect")
+                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
             .body()
             .path("access-token");
 

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.junit.ClassRule;
@@ -9,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.WireMockSpring;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = CaseProgressionApplication.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseAddPdfFunctionalTest {
 
     private static final String TEST_AUTH_VALUE = "test";
@@ -48,7 +48,7 @@ public class CaseAddPdfFunctionalTest {
 
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
-        new WireMockConfiguration().port(4007).bindAddress("localhost"));
+        WireMockSpring.options().port(4007).bindAddress("localhost"));
     @Autowired
     private TestRestTemplate restTemplate;
 

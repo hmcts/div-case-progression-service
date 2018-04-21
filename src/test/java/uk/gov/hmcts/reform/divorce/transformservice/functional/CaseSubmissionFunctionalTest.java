@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.util.Strings;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.WireMockSpring;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -53,7 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {CaseProgressionApplication.class})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseSubmissionFunctionalTest {
 
     private static final String USER_ID = "60";
@@ -75,13 +75,13 @@ public class CaseSubmissionFunctionalTest {
         + "hwIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
 
     @ClassRule
-    public static WireMockClassRule authTokenServer = new WireMockClassRule(new WireMockConfiguration().port(4502)
+    public static WireMockClassRule authTokenServer = new WireMockClassRule(WireMockSpring.options().port(4502)
         .bindAddress("localhost"));
     @ClassRule
-    public static WireMockClassRule ccdServer = new WireMockClassRule(new WireMockConfiguration().port(4000)
+    public static WireMockClassRule ccdServer = new WireMockClassRule(WireMockSpring.options().port(4000)
         .bindAddress("localhost"));
     @ClassRule
-    public static WireMockClassRule draftStoreServer = new WireMockClassRule(new WireMockConfiguration().port(4601)
+    public static WireMockClassRule draftStoreServer = new WireMockClassRule(WireMockSpring.options().port(4601)
         .bindAddress("localhost"));
     @Autowired
     private TestRestTemplate restTemplate;

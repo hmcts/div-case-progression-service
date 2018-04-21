@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.caseprogression.e2e;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private String documentManagementURL;
 
     @Test
+    @WithTag("test-type:e2e")
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
         Response ccdResponse = submitCase("submit-complete-case.json");
         long caseId = assertAndGetCaseId(ccdResponse);
@@ -69,6 +71,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
     private Response makePaymentAndIssuePetition(long caseId) throws Exception {
         Response response = submitEvent(caseId, "paymentMade");
+
         assertNotNull(response.getBody().path("id"));
 
         response = submitEvent(caseId, "issueFromSubmitted");
@@ -84,8 +87,10 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
         jsonObject.put("event", eventObject);
         jsonObject.put("event_token", eventToken);
+
         String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId);
+
         return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
     }
 
@@ -93,6 +98,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId, event);
         Response fromRestService = getFromRestService(createEventUrl);
-        return fromRestService.getBody().path("event_token");
+
+        return fromRestService.getBody().path("token");
     }
 }
