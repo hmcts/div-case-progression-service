@@ -51,6 +51,10 @@ tasks.withType(Checkstyle).each { checkstyleTask ->
     }
 }
 
+tasks.withType(Test)  {
+    maxParallelForks = 1
+}
+
 task smoke(type:GradleBuild) {
     group = 'Delivery pipeline'
     description = 'Executes non-destructive smoke tests against a running Case Prgression Instance'
