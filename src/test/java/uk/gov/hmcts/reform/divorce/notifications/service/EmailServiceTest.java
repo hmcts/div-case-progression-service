@@ -37,7 +37,8 @@ public class EmailServiceTest {
     private Map<String, Map<String, String>> emailTemplateVars;
 
     @Test
-    public void sendSaveDraftConfirmationEmailShouldCallTheEmailClientToSendAnEmail() throws NotificationClientException {
+    public void sendSaveDraftConfirmationEmailShouldCallTheEmailClientToSendAnEmail()
+        throws NotificationClientException {
         emailService.sendSaveDraftConfirmationEmail(EMAIL_ADDRESS);
 
         verify(mockClient).sendEmail(
@@ -48,7 +49,8 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void sendSaveDraftConfirmationEmailShouldNotPropagateNotificationClientException() throws NotificationClientException {
+    public void sendSaveDraftConfirmationEmailShouldNotPropagateNotificationClientException()
+        throws NotificationClientException {
         doThrow(new NotificationClientException(new Exception("Exception inception")))
             .when(mockClient).sendEmail(anyString(), anyString(), eq(null), anyString());
 
