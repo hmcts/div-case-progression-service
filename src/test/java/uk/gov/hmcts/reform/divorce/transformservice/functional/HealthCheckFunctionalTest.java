@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.jayway.jsonpath.JsonPath;
 import com.netflix.loadbalancer.Server;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.WireMockSpring;
 import org.springframework.cloud.netflix.ribbon.StaticServerList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -57,19 +57,19 @@ public class HealthCheckFunctionalTest {
     private static final String HEALTH_UP_RESPONSE = "{ \"status\": \"UP\"}";
 
     @ClassRule
-    public static WireMockClassRule ccdServer = new WireMockClassRule(new WireMockConfiguration().port(4000)
+    public static WireMockClassRule ccdServer = new WireMockClassRule(WireMockSpring.options().port(4000)
         .bindAddress("localhost"));
 
     @ClassRule
-    public static WireMockClassRule authServer = new WireMockClassRule(new WireMockConfiguration().port(4502)
+    public static WireMockClassRule authServer = new WireMockClassRule(WireMockSpring.options().port(4502)
         .bindAddress("localhost"));
 
     @ClassRule
-    public static WireMockClassRule draftStoreServer = new WireMockClassRule(new WireMockConfiguration().port(4601)
+    public static WireMockClassRule draftStoreServer = new WireMockClassRule(WireMockSpring.options().port(4601)
         .bindAddress("localhost"));
 
     @ClassRule
-    public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(new WireMockConfiguration().port(4007)
+    public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(WireMockSpring.options().port(4007)
         .bindAddress("localhost"));
 
     @Value("${ccd.caseDataStore.health.path}")
