@@ -16,7 +16,7 @@ locals {
 
 module "div-case-progression" {
     source = "git@github.com:hmcts/moj-module-webapp.git"
-    product = "${var.reform_team}-${var.reform_service_name}"
+    product = "${var.product}-${var.reform_service_name}"
     location = "${var.location}"
     env = "${var.env}"
     ilbIp = "${var.ilbIp}"
@@ -58,7 +58,7 @@ provider "vault" {
 module "key-vault" {
     source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
     name                = "${local.vaultName}"
-    product             = "${var.reform_team}"
+    product             = "${var.product}"
     env                 = "${var.env}"
     tenant_id           = "${var.tenant_id}"
     object_id           = "${var.jenkins_AAD_objectId}"
