@@ -4,6 +4,10 @@ locals {
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
     dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
+
+    previewVaultName = "${var.product}-${var.reform_service_name}"
+    nonPreviewVaultName = "${var.product}-${var.reform_service_name}-${var.env}"
+    vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 }
 
 module "div-case-progression" {
@@ -49,7 +53,7 @@ provider "vault" {
 
 module "key-vault" {
     source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-    name                = "${var.reform_team}-cps-${var.env}"
+    name                = "${local.vaultName}"
     product             = "${var.product}"
     env                 = "${var.env}"
     tenant_id           = "${var.tenant_id}"
