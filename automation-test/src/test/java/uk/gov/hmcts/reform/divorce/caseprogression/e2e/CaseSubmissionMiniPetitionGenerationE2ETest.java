@@ -60,7 +60,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
         Response documentManagementResponse =
                 EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri, getServiceToken(),
-                    getUserId(getIdamTestCaseWorkerUser()));
+                    getIdamTestCaseWorkerUser());
 
         assertEquals(HttpStatus.OK.value(), documentManagementResponse.statusCode());
     }
