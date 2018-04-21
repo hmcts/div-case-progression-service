@@ -12,18 +12,17 @@ import static net.serenitybdd.rest.SerenityRest.given;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EvidenceManagementUtil {
 
-    public static Response readDataFromEvidenceManagement(String uri, String caseWorkerToken) {
+    public static Response readDataFromEvidenceManagement(String uri, String serviceAuthToken, String userId) {
         Map<String, Object> headers = new HashMap<>();
-
-        headers.put("Authorization", caseWorkerToken);
+        headers.put("ServiceAuthorization", serviceAuthToken);
+        headers.put("user-id", userId);
         headers.put("user-roles", "caseworker-divorce");
-
         return given()
-                .contentType("application/json")
-                .headers(headers)
-                .when()
-                .get(uri)
-                .andReturn();
+            .contentType("application/json")
+            .headers(headers)
+            .when()
+            .get(uri)
+            .andReturn();
     }
 
     public static String getDocumentStoreURI(String uri, String documentManagementURL) {
