@@ -5,12 +5,12 @@ locals {
     dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
 
-    previewVaultName = "${var.reform_team}-${var.reform_service_name}"
+    previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 
     nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
-    previewVaultUri = "https://div--${var.reform_service_name}-aat.vault.azure.net/"
+    previewVaultUri = "https://div-${var.reform_service_name}-aat.vault.azure.net/"
     vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
