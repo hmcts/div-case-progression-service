@@ -2,10 +2,15 @@
 @Library(value="Infrastructure") _
 
 properties([
-    parameters([
-        choice(name: 'ENVIRONMENT', choices: 'saat\nsprod', description: 'Environment where code should be build and deployed')
+        parameters([
+                string(name: 'PRODUCT_NAME', defaultValue: 'div', description: 'Divorce'),
+                string(name: 'APP', defaultValue: 'case-progression', description: 'Divorce Case Progression Service'),
+                string(name: 'TYPE', defaultValue: 'java', description: ''),
+                string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be built and deployed'),
+                choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
     ])
 ])
+
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
       secretType: 'Secret',
