@@ -45,16 +45,12 @@ public class DraftsControllerTest {
 
     private static final String DRAFTS_URL = "/draftsapi/version/1";
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
-
-    @Autowired
-    private WebApplicationContext applicationContext;
-
     @MockBean
     public DraftsService service;
-
     @MockBean
     public EmailService emailService;
-
+    @Autowired
+    private WebApplicationContext applicationContext;
     private MockMvc mvc;
 
     private JsonNode requestContent;
@@ -65,17 +61,17 @@ public class DraftsControllerTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(new File(getClass()
-                .getResource("/fixtures/divorce/submit-request-body.json").toURI()));
+            .getResource("/fixtures/divorce/submit-request-body.json").toURI()));
     }
 
     @Test
     public void shouldReturnNoContentWhenSavingADraftByExplicitCallWithValidEmailProvided() throws Exception {
         String notificationEmail = "simulate-delivered@notifications.service.gov.uk";
         mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
 
         verify(emailService).sendSaveDraftConfirmationEmail(eq(notificationEmail));
     }
@@ -84,10 +80,10 @@ public class DraftsControllerTest {
     public void shouldReturnNoContentWhenSavingADraftByExplicitCallWithBlankEmail() throws Exception {
         String notificationEmail = "";
         mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
 
         verify(emailService, never()).sendSaveDraftConfirmationEmail(eq(notificationEmail));
     }
@@ -96,10 +92,10 @@ public class DraftsControllerTest {
     public void shouldReturnBadRequestWhenSavingADraftByExplicitCallWithInvalidEmail() throws Exception {
         String notificationEmail = "InvalidEmailAddress";
         mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest());
 
         verify(emailService, never()).sendSaveDraftConfirmationEmail(eq(notificationEmail));
     }
@@ -107,10 +103,10 @@ public class DraftsControllerTest {
     @Test
     public void shouldReturnNoContentWhenSavingADraftAutomatically() throws Exception {
         mvc.perform(put(DRAFTS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
 
         verify(emailService, never()).sendSaveDraftConfirmationEmail(anyString());
     }
@@ -120,44 +116,44 @@ public class DraftsControllerTest {
         when(service.getDraft(JWT)).thenReturn(requestContent);
 
         mvc.perform(get(DRAFTS_URL)
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(content().json(requestContent.toString()));
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andExpect(content().json(requestContent.toString()));
     }
 
     @Test
     public void shouldReturnNotFoundWhenTheDraftDoesNotExist() throws Exception {
         mvc.perform(get(DRAFTS_URL)
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(""));
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string(""));
     }
 
     @Test
     public void shouldReturnNoContentWhenDeletingADraft() throws Exception {
         mvc.perform(delete(DRAFTS_URL)
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNoContent());
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNoContent());
     }
 
     @Test
     public void shouldReturnErrorResponseWhenDraftBodyIsInvalidJson() throws Exception {
         HttpClientErrorException httpClientErrorException =
-                new HttpClientErrorException(HttpStatus.NOT_FOUND, "Not found");
+            new HttpClientErrorException(HttpStatus.NOT_FOUND, "Not found");
 
         doThrow(httpClientErrorException).when(service).saveDraft(anyString(), any());
 
         mvc.perform(put(DRAFTS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status", is(404)))
-                .andExpect(jsonPath("$.error", is("Not Found")))
-                .andExpect(jsonPath("path", is("/draftsapi/version/1")));
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status", is(404)))
+            .andExpect(jsonPath("$.error", is("Not Found")))
+            .andExpect(jsonPath("path", is("/draftsapi/version/1")));
 
     }
 
@@ -166,10 +162,10 @@ public class DraftsControllerTest {
         doThrow(DraftStoreUnavailableException.class).when(service).saveDraft(anyString(), any());
 
         mvc.perform(put(DRAFTS_URL)
-                .content(requestContent.toString())
-                .header("Authorization", JWT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isServiceUnavailable());
+            .content(requestContent.toString())
+            .header("Authorization", JWT)
+            .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isServiceUnavailable());
 
     }
 

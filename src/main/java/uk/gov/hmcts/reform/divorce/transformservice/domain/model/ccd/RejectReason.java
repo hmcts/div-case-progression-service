@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
-public @Data class RejectReason {
-    
+@Data
+public class RejectReason {
+
     @JsonProperty("RejectReasonType")
     private String rejectReasonType;
 

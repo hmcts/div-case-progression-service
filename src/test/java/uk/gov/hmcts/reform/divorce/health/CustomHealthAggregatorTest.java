@@ -31,7 +31,7 @@ public class CustomHealthAggregatorTest {
     @Test
     public void aggregateShouldIgnoreServicesWithUnknownStatuses() {
         Map<String, Health> healts = ImmutableMap.of("service1", Health.up().build(),
-                "service2", Health.status(new Status("Happy")).build());
+            "service2", Health.status(new Status("Happy")).build());
 
         Health health = underTest.aggregate(healts);
         assertEquals(Status.UP, health.getStatus());
@@ -40,7 +40,7 @@ public class CustomHealthAggregatorTest {
     @Test
     public void aggregateShouldSetTheStatusToTheLowestStatus() {
         Map<String, Health> healts = ImmutableMap.of("service1", Health.up().build(),
-                "service2", Health.down().build());
+            "service2", Health.down().build());
 
         Health health = underTest.aggregate(healts);
         assertEquals(Status.DOWN, health.getStatus());
@@ -49,7 +49,7 @@ public class CustomHealthAggregatorTest {
     @Test
     public void aggregateShouldIgnoreTheStatusOfTheDraftStoreAPI() {
         Map<String, Health> healts = ImmutableMap.of("service1", Health.up().build(),
-                "draftStoreApi", Health.down().build());
+            "draftStoreApi", Health.down().build());
 
         Health health = underTest.aggregate(healts);
         assertEquals(Status.UP, health.getStatus());

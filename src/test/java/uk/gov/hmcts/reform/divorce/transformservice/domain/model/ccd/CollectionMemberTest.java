@@ -20,13 +20,22 @@ public class CollectionMemberTest {
 
     private CollectionMember<Document> collectionMember;
     private String json;
+    private String jsonNullDocumentFieldsRemoved;
 
     @Before
     public void setUp() throws Exception {
-        json = FileUtils.readFileToString(new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/CollectionMember.json").toURI()), Charset.defaultCharset());
+        json = FileUtils.readFileToString(
+            new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/CollectionMember.json").toURI()),
+            Charset.defaultCharset());
+
+
+        jsonNullDocumentFieldsRemoved = FileUtils.readFileToString(
+            new File(
+                UploadedFileTest.class.getResource("/fixtures/model/ccd/CollectionMemberNoNullFields.json").toURI()),
+            Charset.defaultCharset());
 
         Document document = new Document();
-        document.setDocumentType(DocumentType.MARRIAGE_CERT);
+        document.setDocumentType("marriageCert");
         document.setDocumentFileName("test-file-name");
         document.setDocumentLink(DocumentLink.builder().documentUrl("http://localhost/document").build());
         document.setDocumentEmailContent("test-email-content");
@@ -39,7 +48,8 @@ public class CollectionMemberTest {
 
     @Test
     public void shouldMarshalJsonStringToObject() throws Exception {
-        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {});
+        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {
+        });
 
         assertEquals(collectionMember, objectReader.readValue(json));
     }
@@ -47,9 +57,9 @@ public class CollectionMemberTest {
     @Test
     public void shouldUnmarshalObjectToJsonString() throws Exception {
         ObjectWriter objectWriter = objectMapper
-                .writer(new SimpleDateFormat("yyyy-MM-dd"))
-                .withDefaultPrettyPrinter();
+            .writer(new SimpleDateFormat("yyyy-MM-dd"))
+            .withDefaultPrettyPrinter();
 
-        assertEquals(json, objectWriter.writeValueAsString(collectionMember));
+        assertEquals(jsonNullDocumentFieldsRemoved.trim(), objectWriter.writeValueAsString(collectionMember));
     }
 }

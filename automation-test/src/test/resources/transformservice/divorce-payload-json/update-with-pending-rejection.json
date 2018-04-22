@@ -1,0 +1,15 @@
+{
+    "eventData" : {
+        "payment" : {
+            "PaymentChannel" : null,
+            "PaymentTransactionId" : "111222333",
+            "PaymentReference" : null,
+            "PaymentDate" : null,
+            "PaymentAmount" : null,
+            "PaymentStatus" : null,
+            "PaymentFeeId" : null,
+            "PaymentSiteId" : null
+          }
+    },
+    "eventId" : "pendingRejection"
+}

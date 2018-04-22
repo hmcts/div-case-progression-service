@@ -1,26 +1,26 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
-public @Data class Document {
-	
-	@JsonProperty("DocumentType")
-	private DocumentType documentType;
+@Data
+public class Document {
 
-	@JsonProperty("DocumentLink")
-	private DocumentLink documentLink;
+    @JsonProperty("DocumentType")
+    private String documentType;
 
-	@JsonProperty("DocumentDateAdded")
-	private String documentDateAdded;
+    @JsonProperty("DocumentLink")
+    private DocumentLink documentLink;
 
-	@JsonProperty("DocumentComment")
-	private String documentComment;
+    @JsonProperty("DocumentDateAdded")
+    private String documentDateAdded;
 
-	@JsonProperty("DocumentFileName")
-	private String documentFileName;
+    @JsonProperty("DocumentComment")
+    private String documentComment;
 
-	@JsonProperty("DocumentEmailContent")
-	private String documentEmailContent;
+    @JsonProperty("DocumentFileName")
+    private String documentFileName;
+
+    @JsonProperty("DocumentEmailContent")
+    private String documentEmailContent;
 }

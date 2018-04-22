@@ -1,20 +1,18 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd;
 
-import static org.junit.Assert.assertEquals;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.UploadedFileTest;
 
 import java.io.File;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Test;
-
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.UploadedFileTest;
+import static org.junit.Assert.assertEquals;
 
 public class DocumentTest {
 
@@ -22,13 +20,20 @@ public class DocumentTest {
 
     private Document document;
     private String json;
+    private String jsonWithNullFieldsIgnored;
 
     @Before
     public void setUp() throws Exception {
-        json = FileUtils.readFileToString(new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/Document.json").toURI()), Charset.defaultCharset());
+        json = FileUtils.readFileToString(
+            new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/Document.json").toURI()),
+            Charset.defaultCharset());
+
+        jsonWithNullFieldsIgnored = FileUtils.readFileToString(new File(UploadedFileTest.class
+                .getResource("/fixtures/model/ccd/DocumentNullFieldsIgnored.json").toURI()),
+            Charset.defaultCharset());
 
         document = new Document();
-        document.setDocumentType(DocumentType.MARRIAGE_CERT);
+        document.setDocumentType("marriageCert");
         document.setDocumentFileName("test-file-name");
         document.setDocumentLink(DocumentLink.builder().documentUrl("http://localhost/document").build());
         document.setDocumentEmailContent("test-email-content");
@@ -46,9 +51,9 @@ public class DocumentTest {
     @Test
     public void shouldUnmarshalObjectToJsonString() throws Exception {
         ObjectWriter objectWriter = objectMapper
-                .writer(new SimpleDateFormat("yyyy-MM-dd"))
-                .withDefaultPrettyPrinter();
+            .writer(new SimpleDateFormat("yyyy-MM-dd"))
+            .withDefaultPrettyPrinter();
 
-        assertEquals(json, objectWriter.writeValueAsString(document));
+        assertEquals(jsonWithNullFieldsIgnored.trim(), objectWriter.writeValueAsString(document));
     }
 }

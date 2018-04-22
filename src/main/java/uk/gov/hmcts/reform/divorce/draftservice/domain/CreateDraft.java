@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.divorce.draftservice.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 public class CreateDraft {

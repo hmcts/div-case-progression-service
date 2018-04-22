@@ -9,7 +9,9 @@ import org.springframework.http.HttpHeaders;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthorizationHeaderServiceTest {

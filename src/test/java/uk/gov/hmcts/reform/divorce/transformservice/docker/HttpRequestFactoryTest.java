@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,7 +17,11 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpRequestFactoryTest {
@@ -33,7 +36,7 @@ public class HttpRequestFactoryTest {
     private HttpRequestFactory httpRequestFactory;
 
     @Test
-    public void shouldReturnHttpPostWithUrlAndEntity() throws Exception {
+    public void shouldReturnHttpPostWithUrlAndEntity() {
         Map<String, String> params = new HashMap<>();
         params.put("role", "citizen");
         params.put("id", "15");
@@ -49,7 +52,8 @@ public class HttpRequestFactoryTest {
 
         assertEquals(url, request.getURI().toString());
         assertEquals(httpEntity, request.getEntity());
-        assertEquals("application/x-www-form-urlencoded", request.getFirstHeader("Content-type").getValue());
+        assertEquals("application/x-www-form-urlencoded",
+            request.getFirstHeader("Content-type").getValue());
 
         verify(httpEntityFactory).createEntity(content);
     }
@@ -112,8 +116,8 @@ public class HttpRequestFactoryTest {
     }
 
     @Test
-    public void shouldReturnMultipartFormRequest() throws Exception {
-        String url = "http://localhost/";
+    public void shouldReturnMultipartFormRequest() {
+        final String url = "http://localhost/";
         String filepath = "/path/to/file";
         String fileField = "file";
 

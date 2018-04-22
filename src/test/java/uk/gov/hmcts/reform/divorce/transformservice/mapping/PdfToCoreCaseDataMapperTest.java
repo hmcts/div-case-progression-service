@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Document;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.DocumentType;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfFile;
 
 import static org.junit.Assert.assertEquals;
@@ -21,7 +20,7 @@ public class PdfToCoreCaseDataMapperTest {
     private PdfToCoreCaseDataMapper mapper;
 
     @Test
-    public void mapperIsMapping(){
+    public void mapperIsMapping() {
         CoreCaseData coreCaseData = new CoreCaseData();
 
         PdfFile pdfFile = PdfFile.builder().url("OneUrl").fileName("OneName").build();
@@ -29,7 +28,7 @@ public class PdfToCoreCaseDataMapperTest {
 
         Document result = mapped.getD8Documents().get(0).getValue();
 
-        assertEquals(DocumentType.PETITION, result.getDocumentType());
+        assertEquals("petition", result.getDocumentType());
         assertEquals("OneName", result.getDocumentFileName());
         assertEquals("OneUrl", result.getDocumentLink().getDocumentUrl());
         assertEquals("OneUrl/binary", result.getDocumentLink().getDocumentBinaryUrl());

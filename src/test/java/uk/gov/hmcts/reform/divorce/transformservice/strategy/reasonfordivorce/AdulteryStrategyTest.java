@@ -1,11 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import org.junit.Test;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class AdulteryStrategyTest {
 

@@ -1,16 +1,15 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata;
 
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentCollection;
+
+import java.util.Date;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -29,19 +28,26 @@ public class DivorceSession {
     private String helpWithFeesNeedHelp;
     @ApiModelProperty(value = "Has petitioner applied for Help With Fees?", allowableValues = "Yes, No")
     private String helpWithFeesAppliedForFees;
-    @ApiModelProperty(value = "Help with fees reference. Must conform to regex ([Hh][Ww][Ff]-?)?[0-9a-zA-Z]{3}-?[0-9a-zA-Z]{3}$")
+    @ApiModelProperty(
+        value = "Help with fees reference. Must conform to regex ([Hh][Ww][Ff]-?)?[0-9a-zA-Z]{3}-?[0-9a-zA-Z]{3}$")
     private String helpWithFeesReferenceNumber;
     @ApiModelProperty(value = "Who is petitioner divorcing?", allowableValues = "husband,wife")
     private String divorceWho;
     @ApiModelProperty(value = "Is same sex couple?", allowableValues = "Yes, No")
     private String marriageIsSameSexCouple;
-    @ApiModelProperty(value = "The day component of the marriage date in 'dd' format. This field is not currently used.")
+    @ApiModelProperty(
+        value = "The day component of the marriage date in 'dd' format. This field is not currently used.")
     private String marriageDateDay;
-    @ApiModelProperty(value = "The month component of the marriage date in 'MM' format. This field is not currently used")
+    @ApiModelProperty(
+        value = "The month component of the marriage date in 'MM' format. This field is not currently used")
     private String marriageDateMonth;
-    @ApiModelProperty(value = "The year component of the marriage date in 'yyyy' format. This field is not currently used")
+    @ApiModelProperty(
+        value = "The year component of the marriage date in 'yyyy' format. This field is not currently used")
     private String marriageDateYear;
-    @ApiModelProperty(value = "The marriage date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", \"yyyy-MM-dd\")")
+    @ApiModelProperty(
+        value = "The marriage date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", "
+            + "\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", "
+            + "\"yyyy-MM-dd\")")
     private Date marriageDate;
     @ApiModelProperty(/* The spreadsheet does not say what this field means */ allowableValues = "Yes, No")
     private String marriageCanDivorce;
@@ -55,7 +61,8 @@ public class DivorceSession {
     private String marriedInUk;
     @ApiModelProperty(value = "Is the marriage certificate in English?", allowableValues = "Yes, No")
     private String certificateInEnglish;
-    @ApiModelProperty(value = "Has petitioner got a translation of the marriage certificate?", allowableValues = "Yes, No")
+    @ApiModelProperty(value = "Has petitioner got a translation of the marriage certificate?",
+        allowableValues = "Yes, No")
     private String certifiedTranslation;
     @ApiModelProperty(value = "Country of marriage.")
     private String countryName;
@@ -101,9 +108,11 @@ public class DivorceSession {
     private String marriagePetitionerName;
     @ApiModelProperty(value = "Respondent's full name (as on marriage certificate).")
     private String marriageRespondentName;
-    @ApiModelProperty(value = "Is petitioner's current name the same as that on marriage certificate?", allowableValues = "Yes, No")
+    @ApiModelProperty(value = "Is petitioner's current name the same as that on marriage certificate?",
+        allowableValues = "Yes, No")
     private String petitionerNameDifferentToMarriageCertificate;
-    @ApiModelProperty(value = "How did the petitioner change their name?", allowableValues = "marriageCertificate, deedPoll, other")
+    @ApiModelProperty(
+        value = "How did the petitioner change their name?", allowableValues = "marriageCertificate, deedPoll, other")
     private List<String> petitionerNameChangedHow;
     @ApiModelProperty(value = "What other details does the petitioner have of the name change?")
     private String petitionerNameChangedHowOtherDetails;
@@ -127,11 +136,14 @@ public class DivorceSession {
     private String respondentLivesAtLastAddress;
     @ApiModelProperty(value = "Respondent home address.")
     private Address respondentHomeAddress;
-    @ApiModelProperty(value = "Use respondent's home address as their address for service?", allowableValues = "Yes, No, Solicitor")
+    @ApiModelProperty(
+        value = "Use respondent's home address as their address for service?", allowableValues = "Yes, No, Solicitor")
     private String respondentCorrespondenceUseHomeAddress;
     @ApiModelProperty(value = "Respondent service address.")
     private Address respondentCorrespondenceAddress;
-    @ApiModelProperty(value = "Fact (reason for divorce)", allowableValues = "unreasonable-behaviour, adultery, separation-2-years, separation-5-years, desertion")
+    @ApiModelProperty(
+        value = "Fact (reason for divorce)",
+        allowableValues = "unreasonable-behaviour, adultery, separation-2-years, separation-5-years, desertion")
     private String reasonForDivorce;
     @ApiModelProperty(/* The spreadsheet does not say what this field means */ allowableValues = "Yes, No")
     private String reasonForDivorceHasMarriageDate;
@@ -171,9 +183,11 @@ public class DivorceSession {
     private String reasonForDivorceAdulteryWhereDetails;
     @ApiModelProperty(/* The spreadsheet does not say what this field means */ allowableValues = "Yes, No")
     private String reasonForDivorceDesertionAlright;
-    @ApiModelProperty(value = "Are there legal proceedings relating to property, marriage or children?", allowableValues = "Yes, No")
+    @ApiModelProperty(
+        value = "Are there legal proceedings relating to property, marriage or children?", allowableValues = "Yes, No")
     private String legalProceedings;
-    @ApiModelProperty(value = "Legal proceedings relating to divorce.", allowableValues = "children, property, marriage")
+    @ApiModelProperty(
+        value = "Legal proceedings relating to divorce.", allowableValues = "children, property, marriage")
     private List<String> legalProceedingsRelated;
     @ApiModelProperty(value = "Legal proceeding details")
     private String legalProceedingsDetails;
@@ -199,7 +213,10 @@ public class DivorceSession {
     private String reasonForDivorceSeperationMonth;
     @ApiModelProperty(value = "Separation date year in yyyy format.")
     private String reasonForDivorceSeperationYear;
-    @ApiModelProperty(value = "The separation date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", \"yyyy-MM-dd\").")
+    @ApiModelProperty(
+        value = "The separation date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", "
+            + "\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", "
+            + "\"yyyy-MM-dd\").")
     private Date reasonForDivorceSeperationDate;
     @ApiModelProperty(value = "Is separation date same as or after limit date?", allowableValues = "Yes, No")
     private String reasonForDivorceSeperationDateIsSameOrAfterLimitDate;
@@ -217,7 +234,10 @@ public class DivorceSession {
     private String reasonForDivorceDesertionBeforeMarriage;
     @ApiModelProperty(value = "Is desertion date in the future?", allowableValues = "Yes, No")
     private String reasonForDivorceDesertionDateInFuture;
-    @ApiModelProperty(value = "Desertion date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", \"yyyy-MM-dd\").")
+    @ApiModelProperty(
+        value = "Desertion date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", "
+            + "\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", "
+            + "\"yyyy-MM-dd\").")
     private Date reasonForDivorceDesertionDate;
     @ApiModelProperty(value = "Did petitioner agree to the desertion?", allowableValues = "Yes, No")
     private String reasonForDivorceDesertionAgreed;
@@ -245,7 +265,8 @@ public class DivorceSession {
     private String reasonForDivorceDesertionInFuture;
     @ApiModelProperty(/* The spreadsheet does not say what this field means */)
     private String reasonForDivorceDesertion;
-    @ApiModelProperty(value = "Respondent current name is the same as that on marriage certificate?", allowableValues = "Yes, No")
+    @ApiModelProperty(
+        value = "Respondent current name is the same as that on marriage certificate?", allowableValues = "Yes, No")
     private String respondentNameAsOnMarriageCertificate;
     @ApiModelProperty(value = "Is respondent using a solicitor?", allowableValues = "Yes, No")
     private String respondentCorrespondenceSendToSolicitor;
@@ -273,9 +294,9 @@ public class DivorceSession {
     @JsonProperty("d8")
     @Setter(AccessLevel.NONE)
     private List<UploadedFile> d8Documents;
-    
+
     public void setD8Documents(List<UploadedFile> d8Documents) {
-        d8Documents.forEach(doc->doc.setFileType(UploadedFileType.PETITION));
+        d8Documents.forEach(doc -> doc.setFileType("petition"));
         this.d8Documents = d8Documents;
     }
 }

@@ -25,12 +25,16 @@ public class HowNameChangedCaseToCCDMapperTest {
     private DivorceCaseToCCDMapper mapper;
 
     @Test
-    public void shouldMapAllAndTransformAllFieldsForHowNameChangedMappingScenario() throws URISyntaxException, IOException {
+    public void shouldMapAllAndTransformAllFieldsForHowNameChangedMappingScenario()
+        throws URISyntaxException, IOException {
 
-        CoreCaseData expectedCoreCaseData = (CoreCaseData)DivorceCaseToCCDMapperTestUtil.jsonToPOJO("fixtures/ccdmapping/hownamechanged.json", AddressesCaseToCCDMapperTest.class, CoreCaseData.class);
+        CoreCaseData expectedCoreCaseData = (CoreCaseData) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("fixtures/ccdmapping/hownamechanged.json", AddressesCaseToCCDMapperTest.class,
+                CoreCaseData.class);
         expectedCoreCaseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
-        DivorceSession divorceSession = (DivorceSession)DivorceCaseToCCDMapperTestUtil.jsonToPOJO(
-                "divorce-payload-json/how-name-changed.json", HowNameChangedCaseToCCDMapperTest.class, DivorceSession.class);
+        DivorceSession divorceSession = (DivorceSession) DivorceCaseToCCDMapperTestUtil.jsonToObject(
+            "divorce-payload-json/how-name-changed.json", HowNameChangedCaseToCCDMapperTest.class,
+            DivorceSession.class);
 
         CoreCaseData actualCoreCaseData = mapper.divorceCaseDataToCourtCaseData(divorceSession);
 

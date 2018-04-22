@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.util.Strings;
@@ -15,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.WireMockSpring;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
@@ -52,6 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {CaseProgressionApplication.class})
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseSubmissionFunctionalTest {
 
     private static final String USER_ID = "60";
@@ -62,24 +64,29 @@ public class CaseSubmissionFunctionalTest {
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String REQUEST_ID_HEADER_VALUE = "1234567";
     private static final String SERVICE_AUTHORIZATION_HEADER_KEY = "ServiceAuthorization";
-    private static final String JWT = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhOGdyMjR2NmtiYXRibXFlcWthM3VuamVicSIsInN1YiI6IjYwIiwiaWF0IjoxNTA2NDE0OTI0LCJleHAiOjE1MDY0NDM3MjQsImRhdGEiOiJjaXRpemVuLGRpdm9yY2UtcHJpdmF0ZS1iZXRhLGNpdGl6ZW4tbG9hMSxkaXZvcmNlLXByaXZhdGUtYmV0YS1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiNjAiLCJmb3JlbmFtZSI6ImpvaG4iLCJzdXJuYW1lIjoic21pdGgiLCJkZWZhdWx0LXNlcnZpY2UiOiJEaXZvcmNlIiwibG9hIjoxLCJkZWZhdWx0LXVybCI6Imh0dHBzOi8vd3d3LWxvY2FsLnJlZ2lzdHJhdGlvbi5yZWZvcm0uaG1jdHMubmV0OjkwMDAvcG9jL2Rpdm9yY2UiLCJncm91cCI6ImRpdm9yY2UtcHJpdmF0ZS1iZXRhIn0.mkKaw1_CGwC7KuntMlp8SWsLLgrCFwKtr0oFmFq42AA";
-    private static final String SERVICE_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaXZvcmNlX2NjZF9zdWJtaXNzaW9uIiwiZXhwIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
+    private static final String JWT = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhOGdyMjR2NmtiYXRibXFlcWthM3VuamVicSIsInN1YiI6"
+        + "IjYwIiwiaWF0IjoxNTA2NDE0OTI0LCJleHAiOjE1MDY0NDM3MjQsImRhdGEiOiJjaXRpemVuLGRpdm9yY2UtcHJpdmF0ZS1iZXRhLGNpd"
+        + "Gl6ZW4tbG9hMSxkaXZvcmNlLXByaXZhdGUtYmV0YS1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiNjAiLCJmb3JlbmFtZSI6ImpvaG"
+        + "4iLCJzdXJuYW1lIjoic21pdGgiLCJkZWZhdWx0LXNlcnZpY2UiOiJEaXZvcmNlIiwibG9hIjoxLCJkZWZhdWx0LXVybCI6Imh0dHBzOi8"
+        + "vd3d3LWxvY2FsLnJlZ2lzdHJhdGlvbi5yZWZvcm0uaG1jdHMubmV0OjkwMDAvcG9jL2Rpdm9yY2UiLCJncm91cCI6ImRpdm9yY2UtcHJp"
+        + "dmF0ZS1iZXRhIn0.mkKaw1_CGwC7KuntMlp8SWsLLgrCFwKtr0oFmFq42AA";
 
+    private static final String SERVICE_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaXZvcmNlX2NjZF9zdWJtaXNzaW9uIiwiZX"
+        + "hwIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
+
+    @ClassRule
+    public static WireMockClassRule authTokenServer = new WireMockClassRule(WireMockSpring.options().port(4502)
+        .bindAddress("localhost"));
+    @ClassRule
+    public static WireMockClassRule ccdServer = new WireMockClassRule(WireMockSpring.options().port(4000)
+        .bindAddress("localhost"));
+    @ClassRule
+    public static WireMockClassRule draftStoreServer = new WireMockClassRule(WireMockSpring.options().port(4601)
+        .bindAddress("localhost"));
     @Autowired
     private TestRestTemplate restTemplate;
-
     @Value("${draft.store.api.document.type}")
     private String draftDocumentType;
-
-    @ClassRule
-    public static WireMockClassRule authTokenServer = new WireMockClassRule(new WireMockConfiguration().port(4502).bindAddress("localhost"));
-
-    @ClassRule
-    public static WireMockClassRule ccdServer = new WireMockClassRule(new WireMockConfiguration().port(4000).bindAddress("localhost"));
-
-    @ClassRule
-    public static WireMockClassRule draftStoreServer = new WireMockClassRule(new WireMockConfiguration().port(4601).bindAddress("localhost"));
-
     private String requestBody;
 
     @Before
@@ -98,7 +105,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -120,7 +128,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -142,7 +151,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -164,7 +174,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -186,7 +197,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -208,7 +220,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -230,7 +243,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -252,7 +266,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -274,7 +289,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -296,7 +312,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -318,7 +335,8 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -339,11 +357,13 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getError()).isEqualTo("Request Id : 1234567 and Exception message : 422 Unprocessable Entity, Exception response body: ");
+        assertThat(body.getError()).isEqualTo("Request Id : 1234567 and Exception message : 422 Unprocessable Entity, "
+            + "Exception response body: ");
 
         verifyServiceTokenStub();
         verifyCaseCreationProcessCouldNotBeStartedStub();
@@ -360,11 +380,13 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getError()).isEqualTo("Request Id : 1234567 and Exception message : 422 Unprocessable Entity, Exception response body: ");
+        assertThat(body.getError()).isEqualTo("Request Id : 1234567 and Exception message : 422 Unprocessable Entity, "
+            + "Exception response body: ");
 
         verifyServiceTokenStub();
         verifyCaseCreationStub();
@@ -375,13 +397,17 @@ public class CaseSubmissionFunctionalTest {
     public void submitHandlesServiceAuthUnknownMicroService() throws Exception {
         serviceTokenUnknownMicroserviceStub();
 
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(
+            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
+            Charset.defaultCharset()
+        );
 
         HttpHeaders headers = setHttpHeaders();
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+            entity, CCDResponse.class, new HashMap<>());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verifyServiceTokenUnknownMicroserviceStub();
@@ -391,13 +417,18 @@ public class CaseSubmissionFunctionalTest {
     public void submitHandlesServiceAuthInvalidOneTimePassword() throws Exception {
         serviceTokenInvalidOneTimePasswordStub();
 
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(
+            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
+            Charset.defaultCharset()
+        );
 
         HttpHeaders headers = setHttpHeaders();
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class, new HashMap<>());
+        ResponseEntity<CCDResponse> response =
+            restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class,
+                new HashMap<>());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verifyServiceTokenInvalidOneTimePasswordStub();
@@ -415,28 +446,29 @@ public class CaseSubmissionFunctionalTest {
         ObjectMapper objectMapper = new ObjectMapper();
         DraftList draftList = createDraftList();
         draftStoreServer.stubFor(
-                get(anyUrl())
-                        .willReturn(ok()
-                                .withHeader("Content-type", "application/json;charset=UTF-8")
-                                .withBody(objectMapper.writeValueAsBytes(draftList))));
+            get(anyUrl())
+                .willReturn(ok()
+                    .withHeader("Content-type", "application/json;charset=UTF-8")
+                    .withBody(objectMapper.writeValueAsBytes(draftList))));
     }
 
     private DraftList createDraftList() throws IOException {
         return new DraftList(
-                    Collections.singletonList(createDivorceDraft("{}")),
-                    new DraftList.PagingCursors(null));
+            Collections.singletonList(createDivorceDraft("{}")),
+            new DraftList.PagingCursors(null));
     }
 
     private Draft createDivorceDraft(String content) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return new Draft(
-                "1",
-                objectMapper.readTree(content),
-                draftDocumentType);
+            "1",
+            objectMapper.readTree(content),
+            draftDocumentType);
     }
 
     private void loadDivorceSessionData(final String filePath) throws Exception {
-        requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
+        requestBody = FileUtils.readFileToString(
+            new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
     }
 
     private HttpHeaders setHttpHeaders() {
@@ -450,11 +482,11 @@ public class CaseSubmissionFunctionalTest {
 
     private void serviceTokenStub() {
         authTokenServer.stubFor(post(urlPathMatching("/lease.*"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-type", "text/plain")
-                        .withBody(SERVICE_TOKEN)
-                ));
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-type", "text/plain")
+                .withBody(SERVICE_TOKEN)
+            ));
     }
 
     private void verifyServiceTokenStub() {
@@ -464,15 +496,16 @@ public class CaseSubmissionFunctionalTest {
 
     private void serviceTokenUnknownMicroserviceStub() throws Exception {
         String responseBody = FileUtils.readFileToString(
-                new File(getClass().getResource("/fixtures/service-auth/401-unknown-microservice-response.json").toURI()),
-                Charset.defaultCharset());
+            new File(getClass().getResource("/fixtures/service-auth/401-unknown-microservice-response.json")
+                .toURI()),
+            Charset.defaultCharset());
 
         authTokenServer.stubFor(post(urlPathMatching("/lease.*"))
-                .willReturn(aResponse()
-                        .withStatus(401)
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withBody(responseBody)
-                ));
+            .willReturn(aResponse()
+                .withStatus(401)
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withBody(responseBody)
+            ));
     }
 
     private void verifyServiceTokenUnknownMicroserviceStub() {
@@ -482,15 +515,16 @@ public class CaseSubmissionFunctionalTest {
 
     private void serviceTokenInvalidOneTimePasswordStub() throws Exception {
         String responseBody = FileUtils.readFileToString(
-                new File(getClass().getResource("/fixtures/service-auth/401-invalid-one-time-password-response.json").toURI()),
-                Charset.defaultCharset());
+            new File(getClass().getResource("/fixtures/service-auth/401-invalid-one-time-password-response.json")
+                .toURI()),
+            Charset.defaultCharset());
 
         authTokenServer.stubFor(post(urlPathMatching("/lease.*"))
-                .willReturn(aResponse()
-                        .withStatus(401)
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withBody(responseBody)
-                ));
+            .willReturn(aResponse()
+                .withStatus(401)
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withBody(responseBody)
+            ));
     }
 
     private void verifyServiceTokenInvalidOneTimePasswordStub() {
@@ -499,117 +533,138 @@ public class CaseSubmissionFunctionalTest {
 
 
     private void caseCreationStub() throws Exception {
-        String caseCreationResponseBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/ccd/case-creation-200-response.json").toURI()), Charset.defaultCharset());
+        String caseCreationResponseBody = FileUtils.readFileToString(new File(getClass()
+            .getResource("/fixtures/ccd/case-creation-200-response.json").toURI()), Charset.defaultCharset());
 
         String eventTypeId = "create";
 
-        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
 
         ccdServer.stubFor(get(Strings.concat("/").concat(url).concat("?ignore-warning=true"))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .willReturn(aResponse()
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withStatus(200)
-                        .withBody(caseCreationResponseBody)));
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .willReturn(aResponse()
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withStatus(200)
+                .withBody(caseCreationResponseBody)));
     }
 
     private void verifyCaseCreationStub() {
         String eventTypeId = "create";
 
-        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
 
-        ccdServer.verify(getRequestedFor(urlEqualTo(Strings.concat("/").concat(url).concat("?ignore-warning=true")))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
+        ccdServer.verify(getRequestedFor(urlEqualTo(Strings.concat("/")
+            .concat(url)
+            .concat("?ignore-warning=true")))
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
     }
 
     private void caseSubmissionStub(final String filePath) throws Exception {
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(
+            new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
+
         JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
 
-        String responseBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/ccd/case-submission-201-response.json").toURI()), Charset.defaultCharset());
+        String responseBody = FileUtils.readFileToString(new File(getClass()
+            .getResource("/fixtures/ccd/case-submission-201-response.json").toURI()), Charset.defaultCharset());
 
-        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
+        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
 
         ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .willReturn(aResponse()
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withBody(responseBody)));
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .willReturn(aResponse()
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withBody(responseBody)));
     }
 
     private void verifyCaseSubmissionStub(final String filePath) throws Exception {
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()),
+            Charset.defaultCharset());
         JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
 
-        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
+        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
 
-        ccdServer.verify(postRequestedFor(urlEqualTo(url)).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
+        ccdServer.verify(postRequestedFor(urlEqualTo(url)).withRequestBody(
+            equalToJson(requestBodyWithCreatedDate.toString()))
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
     }
 
     private void caseCreationProcessCouldNotBeStartedStub() {
         String eventTypeId = "create";
 
-        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
 
         ccdServer.stubFor(get(Strings.concat("/").concat(url).concat("?ignore-warning=true"))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .willReturn(aResponse()
-                        .withHeader("Content-type", "application/json;charset=UTF-8")
-                        .withStatus(422)));
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .willReturn(aResponse()
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withStatus(422)));
     }
 
     private void verifyCaseCreationProcessCouldNotBeStartedStub() {
         String eventTypeId = "create";
 
-        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+        String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
 
-        ccdServer.verify(getRequestedFor(urlEqualTo(Strings.concat("/").concat(url).concat("?ignore-warning=true")))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
+        ccdServer.verify(getRequestedFor(urlEqualTo(Strings.concat("/")
+            .concat(url)
+            .concat("?ignore-warning=true")))
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
     }
 
     private void caseSubmissionFailedStub() throws Exception {
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/ccd/case-submission-request-body.json").toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(new File(getClass()
+            .getResource("/fixtures/ccd/case-submission-request-body.json").toURI()), Charset.defaultCharset());
 
         JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
 
-        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
+        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
 
         ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
-                .willReturn(aResponse()
-                        .withStatus(422)));
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
+            .willReturn(aResponse()
+                .withStatus(422)));
     }
 
     private JSONObject populateCreatedDate(String requestBody) throws JSONException {
         JSONObject requestBodyJson = new JSONObject(requestBody);
-        JSONObject data=(JSONObject) requestBodyJson.get("data");
+        JSONObject data = (JSONObject) requestBodyJson.get("data");
         data.put("createdDate", LocalDate.now().format(ofPattern("yyyy-MM-dd")));
         return requestBodyJson;
     }
 
     private void verifyCaseSubmissionFailedStub() throws Exception {
-        String requestBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/ccd/case-submission-request-body.json").toURI()), Charset.defaultCharset());
+        String requestBody = FileUtils.readFileToString(new File(getClass()
+            .getResource("/fixtures/ccd/case-submission-request-body.json").toURI()), Charset.defaultCharset());
         JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
-        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION, "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
+        String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
+            "case-types", CASE_TYPE_ID, "cases?ignore-warning=true");
 
-        ccdServer.verify(postRequestedFor(urlEqualTo(url)).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
-                .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
-                .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
-                .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
+        ccdServer.verify(postRequestedFor(urlEqualTo(url)).withRequestBody(
+            equalToJson(requestBodyWithCreatedDate.toString()))
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
+            .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
     }
 }

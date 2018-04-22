@@ -4,7 +4,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HttpEntityFactoryTest {
 

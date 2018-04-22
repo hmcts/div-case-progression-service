@@ -32,13 +32,16 @@ public class UpdateService {
     @Autowired
     private DraftsService draftsService;
 
+    @Autowired
+    private PetitionValidatorService petitionValidatorService;
+
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
 
         CreateEvent createEvent = updateCcdEventClient.startEvent(jwt, caseId,
-                divorceEventSessionData.getEventId());
+            divorceEventSessionData.getEventId());
 
         CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(jwt, caseId,
-                transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);
@@ -51,8 +54,11 @@ public class UpdateService {
         return caseEvent.getCaseId();
     }
 
-    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest) {
-        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest);
+    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest, String authorization) {
+
+        petitionValidatorService.validateFieldsForIssued(caseDetailsRequest);
+
+        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest, authorization);
 
         return pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, caseDetailsRequest.getCaseDetails().getCaseData());
     }

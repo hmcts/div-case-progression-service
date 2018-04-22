@@ -22,21 +22,24 @@ public class UploadedFileTest {
     private Date modifiedOn = java.sql.Date.valueOf(LocalDate.of(2017, 11, 29));
 
     private UploadedFile uploadedFile = UploadedFile.builder()
-            .fileName("marriage-certificate.pdf")
-            .fileUrl("http://em-api-gateway-web:3404/documents/3627acc4-cb3b-4c95-9588-fea94e6c5855")
-            .createdBy(8)
-            .lastModifiedBy(8)
-            .createdOn(createdOn)
-            .modifiedOn(modifiedOn)
-            .mimeType("application/pdf")
-            .status("OK")
-            .build();
+        .fileName("marriage-certificate.pdf")
+        .fileUrl("http://em-api-gateway-web:3404/documents/3627acc4-cb3b-4c95-9588-fea94e6c5855")
+        .createdBy(8)
+        .lastModifiedBy(8)
+        .createdOn(createdOn)
+        .modifiedOn(modifiedOn)
+        .mimeType("application/pdf")
+        .status("OK")
+        .build();
 
     private String json;
 
     @Before
     public void setUp() throws Exception {
-        json = FileUtils.readFileToString(new File(UploadedFileTest.class.getResource("/fixtures/model/divorce/UploadedFile.json").toURI()), Charset.defaultCharset());
+        json = FileUtils.readFileToString(
+            new File(UploadedFileTest.class.getResource("/fixtures/model/divorce/UploadedFile.json").toURI()),
+            Charset.defaultCharset()
+        );
     }
 
     @Test
@@ -47,10 +50,10 @@ public class UploadedFileTest {
     }
 
     @Test
-    public void shouldUnmarshalObjectToJsonString() throws Exception {
+    public void shouldUnMarshalObjectToJsonString() throws Exception {
         ObjectWriter objectWriter = objectMapper
-                .writer(new SimpleDateFormat("yyyy-MM-dd"))
-                .withDefaultPrettyPrinter();
+            .writer(new SimpleDateFormat("yyyy-MM-dd"))
+            .withDefaultPrettyPrinter();
 
         assertEquals(json, objectWriter.writeValueAsString(uploadedFile));
     }

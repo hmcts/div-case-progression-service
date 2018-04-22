@@ -47,18 +47,21 @@ public class UpdateServiceTest {
     @Mock
     private DraftsService draftsService;
 
+    @Mock
+    private PetitionValidatorService petitionValidatorService;
+
     @InjectMocks
     private UpdateService updateService;
 
     @Test
-    public void updateReturnsCaseId() throws Exception {
-        DivorceEventSession divorceEventSession = new DivorceEventSession();
-        CaseDataContent caseDataContent = mock(CaseDataContent.class);
-        String jwt = "_jwt";
-        String token = "_token";
-        String eventSummary = "Update case";
-        Long caseId = 2893L;
-        String eventId = "paymentMade";
+    public void updateReturnsCaseId() {
+        final DivorceEventSession divorceEventSession = new DivorceEventSession();
+        final CaseDataContent caseDataContent = mock(CaseDataContent.class);
+        final String jwt = "_jwt";
+        final String token = "_token";
+        final String eventSummary = "Update case";
+        final Long caseId = 2893L;
+        final String eventId = "paymentMade";
 
         divorceEventSession.setEventId(eventId);
         divorceEventSession.setEventData(new DivorceSession());
@@ -69,7 +72,8 @@ public class UpdateServiceTest {
         caseEvent.setCaseId(caseId);
 
         when(ccdEventClient.startEvent(jwt, caseId, eventId)).thenReturn(createEvent);
-        when(transformationService.transform(divorceEventSession.getEventData(), createEvent, eventSummary)).thenReturn(caseDataContent);
+        when(transformationService.transform(divorceEventSession.getEventData(), createEvent, eventSummary))
+            .thenReturn(caseDataContent);
         when(ccdEventClient.createCaseEvent(jwt, caseId, caseDataContent)).thenReturn(caseEvent);
 
         assertThat(updateService.update(caseId, divorceEventSession, jwt)).isEqualTo(caseId);
@@ -91,12 +95,13 @@ public class UpdateServiceTest {
 
         PdfFile pdfFile = mock(PdfFile.class);
 
-        when(pdfService.generatePdf(caseDetailsRequest)).thenReturn(pdfFile);
+        when(pdfService.generatePdf(caseDetailsRequest, "test")).thenReturn(pdfFile);
         when(pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, coreCaseData)).thenReturn(coreCaseData);
 
-        assertEquals(coreCaseData, updateService.addPdf(caseDetailsRequest));
+        assertEquals(coreCaseData, updateService.addPdf(caseDetailsRequest, "test"));
 
-        verify(pdfService).generatePdf(caseDetailsRequest);
+        verify(petitionValidatorService).validateFieldsForIssued(caseDetailsRequest);
+        verify(pdfService).generatePdf(caseDetailsRequest, "test");
         verify(pdfToCoreCaseDataMapper).toCoreCaseData(pdfFile, coreCaseData);
     }
 
@@ -106,11 +111,11 @@ public class UpdateServiceTest {
         String jwt = "_jwt";
 
         CaseEvent caseEvent = new CaseEvent();
-        caseEvent.setCaseId(1l);
+        caseEvent.setCaseId(1L);
         when(ccdEventClient.createCaseEvent(anyString(), anyLong(), any()))
-                .thenReturn(caseEvent);
+            .thenReturn(caseEvent);
 
-        updateService.update(1l, divorceEventSession, jwt);
+        updateService.update(1L, divorceEventSession, jwt);
 
         verify(draftsService).deleteDraft(jwt);
     }
@@ -121,15 +126,16 @@ public class UpdateServiceTest {
         String jwt = "_jwt";
 
         CaseEvent caseEvent = new CaseEvent();
-        caseEvent.setCaseId(1l);
+        caseEvent.setCaseId(1L);
         when(ccdEventClient.createCaseEvent(anyString(), anyLong(), any()))
-                .thenReturn(caseEvent);
+            .thenReturn(caseEvent);
         doThrow(Exception.class).when(draftsService).deleteDraft(jwt);
 
         try {
-            updateService.update(1l, divorceEventSession, jwt);
+            updateService.update(1L, divorceEventSession, jwt);
         } catch (Exception e) {
             fail("Submission to CCD should not fail if the draft cannot be deleted");
         }
     }
+
 }

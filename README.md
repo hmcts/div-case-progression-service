@@ -1,5 +1,6 @@
 # div-case-progression-service
 
+
 ## A restful service used to transform a divorce frontend session to a general core case data format
 
 
@@ -10,7 +11,6 @@
   *  Java8
   * Spring Boot
   * Junit, Mockito, WireMock and SpringBootTest
-  * Apache Maven
 * Plugins used by project
   * Jacoco
   * OWASP dependency check

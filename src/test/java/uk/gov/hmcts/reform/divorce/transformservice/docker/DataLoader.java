@@ -97,7 +97,8 @@ public class DataLoader {
         headers.put("Authorization", "Bearer " + userToken);
         headers.put("ServiceAuthorization", "Bearer " + serviceToken);
 
-        HttpPost request = httpRequestFactory.createMultipartPostRequest(UPLOAD_SPREADSHEET_URL, headers, "file", filepath);
+        HttpPost request = httpRequestFactory.createMultipartPostRequest(UPLOAD_SPREADSHEET_URL, headers, "file",
+            filepath);
 
         try {
             httpClient.execute(request);
