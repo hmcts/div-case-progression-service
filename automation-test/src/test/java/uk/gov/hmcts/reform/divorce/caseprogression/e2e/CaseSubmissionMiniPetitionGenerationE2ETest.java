@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
 import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
 import uk.gov.hmcts.reform.divorce.emclient.EvidenceManagementUtil;
 
@@ -48,10 +49,10 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     }
 
     private void assertGeneratedDocumentExists(Response ccdSubmitResponse, long caseId){
-        String documentUri = ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_URL_PATH);
+        String documentUri = ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_BINARY_URL_PATH);
 
         assertNotNull(documentUri);
-        assertNotNull(ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_BINARY_URL_PATH));
+        assertNotNull(ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_URL_PATH));
         assertEquals(PETITION, ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_TYPE_PATH));
         assertEquals(String.format(D8_MINI_PETITION_FILE_NAME_FORMAT, caseId),
                 ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_FILENAME_PATH));
@@ -59,7 +60,9 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         documentUri = EvidenceManagementUtil.getDocumentStoreURI(documentUri, documentManagementURL);
 
         Response documentManagementResponse =
-                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri, getIdamTestCaseWorkerUser());
+                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri,
+                    getServiceToken(ServiceAuthTokenFor.DIV_DOCUMENT_GENERATOR),
+                    getIdamTestCaseWorkerUser());
 
         assertEquals(HttpStatus.OK.value(), documentManagementResponse.statusCode());
     }

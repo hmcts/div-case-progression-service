@@ -11,16 +11,16 @@ import java.util.UUID;
 @Service
 public class IdamUserSupport {
 
+    private static final String idamCaseworkerUser = "CaseWorkerTest";
+
+    private static final String idamCaseworkerPassword = "password";
+
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
     private String idamUsername;
 
     private String idamPassword;
-
-    private String idamCaseworkerUser;
-
-    private String idamCaseworkerPassword;
 
     private String testUserJwtToken;
 
@@ -55,8 +55,6 @@ public class IdamUserSupport {
     }
 
     private void createCaseworkerUserInIdam() {
-        idamCaseworkerUser = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        idamCaseworkerPassword = UUID.randomUUID().toString();
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
