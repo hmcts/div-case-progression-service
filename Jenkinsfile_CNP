@@ -41,10 +41,6 @@ withPipeline(type , product, component) {
         env.ITEST_ENVIRONMENT = "aat"
     }
 
-    after('functionalTest:aat') {
-        error('Halting pipeline before prod stages')
-    }
-
     after('checkout') {
         echo '${product}-${component} checked out'
     }
