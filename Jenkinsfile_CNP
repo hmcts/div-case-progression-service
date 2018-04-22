@@ -42,7 +42,7 @@ withPipeline(type , product, component) {
     }
 
     before('functionalTest:preview') {
-        env.ITEST_ENVIRONMENT = "aat"
+        env.ITEST_ENVIRONMENT = "preview"
     }
 
     after('checkout') {
