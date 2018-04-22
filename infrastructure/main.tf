@@ -1,10 +1,18 @@
 locals {
     ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
-    pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
-    ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
-    dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
-    idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
 
+    local_pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
+    pdf_generator_base_url = "${var.env == "preview" ? "http://div-document-generator-aat.service.core-compute-aat.internal" : local.local_pdf_generator_base_url}"
+
+    local_ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
+    ccd_casedatastore_baseurl = "${var.env == "preview" ? "http://ccd-data-store-api-aat.service.core-compute-aat.internal" : local.local_ccd_casedatastore_baseurl}"
+
+    local_dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
+    dm_store_url = "${var.env == "preview" ? "http://dm-store-aat.service.core-compute-aat.internal" : local.local_dm_store_url}"
+
+    local_idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
+    idam_s2s_url = "${var.env == "preview" ? "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal" : local.local_idam_s2s_url}"
+    
     previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
