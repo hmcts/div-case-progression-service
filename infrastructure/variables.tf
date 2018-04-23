@@ -1,5 +1,5 @@
 variable "reform_service_name" {
-    default = "case-progression"
+    default = "cps"
 }
 
 variable "reform_team" {
