@@ -4,6 +4,7 @@ import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +41,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
     @Test
     @WithTag("test-type:e2e")
+    @Ignore
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
         Response ccdResponse = submitCase("submit-complete-case.json");
         long caseId = assertAndGetCaseId(ccdResponse);
