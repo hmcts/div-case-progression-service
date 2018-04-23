@@ -1,6 +1,6 @@
 locals {
     ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
-    pdf_generator_base_url = "http://div-document-generator-${var.env}.service.${local.ase_name}.internal"
+    pdf_generator_base_url = "http://div-dgs-${var.env}.service.${local.ase_name}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${var.env}.service.core-compute-${var.env}.internal"
     dm_store_url = "http://dm-store-${var.env}.service.${local.ase_name}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${var.env}.service.${local.ase_name}.internal"
