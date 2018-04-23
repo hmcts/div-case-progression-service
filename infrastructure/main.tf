@@ -3,7 +3,7 @@ locals {
 
     local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
 
-    pdf_generator_base_url = "http://div-document-generator-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    pdf_generator_base_url = "http://div-dgs-${local.local_env}.service.core-compute-${local.local_env}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
