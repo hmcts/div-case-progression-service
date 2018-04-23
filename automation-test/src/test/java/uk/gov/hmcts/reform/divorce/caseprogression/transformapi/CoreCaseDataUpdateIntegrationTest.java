@@ -152,7 +152,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
     }
 
     private String getCaseIdFromSubmittingANewCase() throws Exception {
-
         return postToRestService(loadJSON("addresses.json"), transformationApiSubmitUrl)
                 .getBody().path("caseId").toString();
     }
