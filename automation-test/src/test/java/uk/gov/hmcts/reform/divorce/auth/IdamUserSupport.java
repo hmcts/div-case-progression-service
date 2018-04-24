@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,25 +10,17 @@ import java.util.UUID;
 
 @Service
 public class IdamUserSupport {
-    /**
-     * The idam user base url.
-     */
+
+    private static final String idamCaseworkerUser = "CaseWorkerTest";
+
+    private static final String idamCaseworkerPassword = "password";
+
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
-    /**
-     * The username for a valid idam user
-     */
     private String idamUsername;
 
-    /**
-     * The password for a valid idam user
-     */
     private String idamPassword;
-
-    private String idamCaseworkerUser;
-
-    private String idamCaseworkerPassword;
 
     private String testUserJwtToken;
 
@@ -53,9 +44,6 @@ public class IdamUserSupport {
         return testCaseworkerJwtToken;
     }
 
-    /**
-     * Create a new user in IDAM
-     */
     private void createUserInIdam() {
         idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
         idamPassword = UUID.randomUUID().toString();
@@ -66,13 +54,7 @@ public class IdamUserSupport {
                 .post(idamCreateUrl());
     }
 
-
-    /**
-     * Create a new user in IDAM
-     */
     private void createCaseworkerUserInIdam() {
-        idamCaseworkerUser = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        idamCaseworkerPassword = UUID.randomUUID().toString();
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
@@ -81,35 +63,16 @@ public class IdamUserSupport {
                 .post(idamCreateUrl());
     }
 
-    /**
-     * Testing support url for Idam create user
-     *
-     * @return the string
-     */
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    /**
-     * Login url.
-     *
-     * @return the string
-     */
-    private String loginUrl() {
-        return idamUserBaseUrl + "/oauth2/authorize";
-    }
-
-    /**
-     * Generate user token with no roles.
-     *
-     * @return the string
-     */
     private String generateUserTokenWithNoRoles(String username, String password) {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://case-worker-web.test.ccd.reform.hmcts.net/oauth2redirect")
+                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
             .body()
             .path("access-token");
 

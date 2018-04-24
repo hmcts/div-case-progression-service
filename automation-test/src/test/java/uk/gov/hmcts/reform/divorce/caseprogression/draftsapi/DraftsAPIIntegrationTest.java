@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.divorce.caseprogression.draftsapi;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,9 +24,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SerenityRunner.class)
 public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
 
-    /**
-     * The endpoint route for submitting a case
-     */
     @Value("${drafts.api.url}")
     private String draftsApiUrl;
 
@@ -109,11 +105,6 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
         return headers(getIdamTestUser());
     }
 
-    /**
-     * Setup headers required for POST to CCD
-     *
-     * @return map of objects
-     */
     private Map<String, Object> headers(String token) {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);

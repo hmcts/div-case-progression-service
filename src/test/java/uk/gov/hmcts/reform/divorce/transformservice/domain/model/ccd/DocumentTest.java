@@ -54,6 +54,6 @@ public class DocumentTest {
             .writer(new SimpleDateFormat("yyyy-MM-dd"))
             .withDefaultPrettyPrinter();
 
-        assertEquals(jsonWithNullFieldsIgnored, objectWriter.writeValueAsString(document));
+        assertEquals(jsonWithNullFieldsIgnored.trim(), objectWriter.writeValueAsString(document));
     }
 }

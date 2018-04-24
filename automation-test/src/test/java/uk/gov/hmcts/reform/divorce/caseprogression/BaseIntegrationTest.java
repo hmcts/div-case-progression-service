@@ -22,39 +22,24 @@ import java.util.Map;
 @Getter
 public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSupport {
 
-    /**
-     * The ccd base url.
-     */
     @Value("${ccd.caseDataStore.baseUrl}")
     private String ccdBaseUrl;
 
-    /**
-     * The endpoint url for transformation
-     */
     @Value("${transformation.api.url}")
     private String transformationApiUrl;
 
     @Value("${ccd.retrieve.case.url}")
     private String cadRetrieveCaseAdiUrl;
 
-    /**
-     * The endpoint route for submitting a case
-     */
     @Value("${transformation.api.endpoint.submit}")
     private String transformationApiSubmitEndpoint;
 
-    /**
-     * The endpoint route for submitting a case
-     */
     @Value("${transformation.api.endpoint.generatePetition}")
     private String transformationApiGeneratePdfEndpoint;
 
     @Value("${transformation.api.url}${transformation.api.endpoint.submit}")
     private String transformationApiSubmitUrl;
 
-    /**
-     * The endpoint route for submitting a case
-     */
     @Value("${transformation.api.endpoint.update}")
     private String transformationApiUpdateEndpoint;
 
@@ -64,25 +49,11 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Qualifier("caseProgressionAuthTokenGenerator")
     private AuthTokenGenerator authTokenGenerator;
 
-    /**
-     * Load JSON.
-     *
-     * @param fileName the file name
-     * @return the string
-     * @throws Exception Resource loading exception
-     */
     public String loadJSON(final String fileName) throws Exception {
-        String jsonPayload = ResourceLoader.loadJSON("transformservice/divorce-payload-json/" + fileName);
+        String jsonPayload = ResourceLoader.loadAsText("transformservice/divorce-payload-json/" + fileName);
         return replaceMockFileMetadataWithActualMetadata(jsonPayload);
     }
 
-    /**
-     * Make REST call to an API
-     *
-     * @param requestBody the request body to be sent in JSON string format
-     * @param url         the endpoint to make a call as a string url
-     * @return the rest assured response
-     */
     public Response postToRestService(String requestBody, String url) {
         //default to case worker
         return postToRestService(requestBody, url, null);
@@ -115,27 +86,17 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         return headers(getIdamTestUser());
     }
 
-    /**
-     * Setup headers required for POST to CCD
-     *
-     * @return map of objects
-     */
     private Map<String, Object> headers(String token) {
         return headers(token, false);
     }
 
-    /**
-     * Setup headers required for POST to CCD
-     *
-     * @return map of objects
-     */
     private Map<String, Object> headers(String token, boolean serviceToken) {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
-        if (serviceToken) {
+       // if (serviceToken) {
             headers.put("ServiceAuthorization", getServiceToken());
-        }
+       // }
         return headers;
     }
 

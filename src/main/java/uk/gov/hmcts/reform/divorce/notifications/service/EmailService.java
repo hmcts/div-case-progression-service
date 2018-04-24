@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.divorce.draftservice.client.EmailClient;
 import uk.gov.hmcts.reform.divorce.notifications.domain.EmailTemplateNames;
 import uk.gov.hmcts.reform.divorce.notifications.domain.EmailToSend;
 import uk.gov.service.notify.NotificationClient;
@@ -17,28 +18,20 @@ import java.util.UUID;
 @Slf4j
 public class EmailService {
 
-    private NotificationClientApi notificationClient;
+    @Autowired
+    private EmailClient emailClient;
+
+    @Value("#{${uk.gov.notify.email.templates}}")
     private Map<String, String> emailTemplates;
 
-    @Autowired
-    public EmailService(@Value("${uk.gov.notify.api.key}")
-                            String apiKey,
-                        @Value("#{${uk.gov.notify.email.templates}}")
-                            Map<String, String> emailTemplates) {
-        this(new NotificationClient(apiKey), emailTemplates);
-    }
-
-    EmailService(NotificationClientApi notificationClient,
-                 Map<String, String> emailTemplates) {
-        this.notificationClient = notificationClient;
-        this.emailTemplates = emailTemplates;
-    }
+    @Value("#{${uk.gov.notify.email.template.vars}}")
+    private Map<String, Map<String, String>> emailTemplateVars;
 
     public void sendSaveDraftConfirmationEmail(String destinationAddress) {
         String referenceId = UUID.randomUUID().toString();
         EmailToSend emailToSend = new EmailToSend(destinationAddress,
             emailTemplates.get(EmailTemplateNames.SAVE_DRAFT.name()),
-            null,
+            emailTemplateVars.get(EmailTemplateNames.SAVE_DRAFT.name()),
             referenceId);
         try {
             log.debug("Attempting to send email. Reference ID: {}", referenceId);
@@ -50,7 +43,7 @@ public class EmailService {
     }
 
     private void sendEmail(EmailToSend emailToSend) throws NotificationClientException {
-        notificationClient.sendEmail(
+        emailClient.sendEmail(
             emailToSend.getTemplateId(),
             emailToSend.getEmailAddress(),
             emailToSend.getTemplateFields(),

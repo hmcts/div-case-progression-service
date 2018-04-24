@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.junit.ClassRule;
@@ -9,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.WireMockSpring;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,18 +37,18 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = CaseProgressionApplication.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CaseAddPdfFunctionalTest {
 
-    public static final String TEST_AUTH_VALUE = "test";
+    private static final String TEST_AUTH_VALUE = "test";
     private static final String PDF_GENERATOR_ENDPOINT = "/version/1/generatePDF";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String REQUEST_ID_HEADER_VALUE = "1234567";
-    public static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION = "Authorization";
 
     @ClassRule
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(
-        new WireMockConfiguration().port(4007).bindAddress("localhost"));
+        WireMockSpring.options().port(4007).bindAddress("localhost"));
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -88,7 +88,6 @@ public class CaseAddPdfFunctionalTest {
             + "This must be set before a new PDF can be created";
 
         HttpHeaders headers = setHttpHeaders();
-
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 

@@ -14,9 +14,6 @@ import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 
-/**
- * Created by mrganeshraja on 08/02/2018.
- */
 @Configuration
 @Lazy
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
@@ -24,10 +21,19 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 public class ServiceContextConfiguration {
 
     @Bean("caseProgressionAuthTokenGenerator")
-    public AuthTokenGenerator serviceAuthTokenGenerator(
+    public AuthTokenGenerator caseProgressionServiceAuthTokenGenerator(
             @Value("${case.progression.service.auth.secret}") final String secret,
             @Value("${case.progression.auth.microservice}") final String microService,
             final ServiceAuthorisationApi serviceAuthorisationApi
+    ) {
+        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
+    }
+
+    @Bean("documentGeneratorAuthTokenGenerator")
+    public AuthTokenGenerator documentGeneratorserviceAuthTokenGenerator(
+        @Value("${document.generator.service.auth.secret}") final String secret,
+        @Value("${document.generator.auth.microservice}") final String microService,
+        final ServiceAuthorisationApi serviceAuthorisationApi
     ) {
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
     }

@@ -44,7 +44,7 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
         return (String) claims.get("id");
     }
 
-    private String getServiceToken(ServiceAuthTokenFor serviceAuthTokenFor) {
+    protected String getServiceToken(ServiceAuthTokenFor serviceAuthTokenFor) {
         return serviceAuthSupport.getServiceAuthTokenFor(serviceAuthTokenFor);
     }
 

@@ -13,9 +13,6 @@ import static org.junit.Assert.assertEquals;
 import static uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil.assertOkResponseAndCaseIdIsNotZero;
 import static uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil.assertResponseErrorsAreAsExpected;
 
-/**
- * The Class CoreCaseDataIntegration.
- */
 @RunWith(SerenityRunner.class)
 public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
@@ -35,11 +32,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         transformationApiUpdateUrl = getTransformationApiUrl().concat(getTransformationApiUpdateEndpoint());
     }
 
-    /**
-     * Verify case id with update endpoint using address session data
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnCaseIdWhenUpdatingDataAfterInitialSubmit() throws Exception {
 
@@ -51,11 +43,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
     }
 
-    /**
-     * Verify case id with update endpoint using payment data
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnCaseIdWhenUpdatingPaymentAfterUpdatingWithPaymentReference() throws Exception {
 
@@ -68,11 +55,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
     }
 
-    /**
-     * Error should be returned when passing in invalid request body
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorWhenUpdatingDataWithInvalidRequestBody() throws Exception {
 
@@ -83,11 +65,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event null for case type DIVORCE\"");
     }
 
-    /**
-     * Verify 404 is returned when no caseId is passed in
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnNotFoundForNoCaseId() throws Exception {
 
@@ -98,11 +75,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertEquals("Not Found", ccdResponse.getBody().path("error").toString());
     }
 
-    /**
-     * Verify bad request is returned when a bad case reference is passed in
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnBadRequestForNonExistingCaseReference() throws Exception {
 
@@ -111,11 +83,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, BAD_REQUEST_EXCEPTION, "\"message\":\"Case reference is not valid\"");
     }
 
-    /**
-     * Verify validation error is returned for invalid event id
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorForInvalidEventId() throws Exception {
 
@@ -126,11 +93,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event invalidId for case type DIVORCE\"");
     }
 
-    /**
-     * Verify bad request is returned when a bad case reference is passed in
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorUpdatingWithCaseSameEventId() throws Exception {
 
@@ -143,11 +105,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
 
-    /**
-     * Verify bad request is returned when a bad case reference is passed in
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorUpdatingWithCaseWrongFlowEventId() throws Exception {
 
@@ -158,11 +115,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
 
-    /**
-     * Incorrect data as per spreadsheet.
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorForInvalidSessionData() throws Exception {
 
@@ -173,11 +125,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, CASE_VALIDATION_EXCEPTION, "\"details\":{\"field_errors\":[{\"id\":\"D8DivorceWho\",\"message\":\"notAValidValue is not a valid value\"}]}");
     }
 
-    /**
-     * Invalid idam token.
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnErrorForInvalidUserJwtToken() throws Exception {
 
@@ -194,11 +141,6 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertResponseErrorsAreAsExpected(ccdResponse, UNAUTHORISED_JWT_EXCEPTION, "");
     }
 
-    /**
-     * Without request body.
-     *
-     * @throws Exception Resource loading exception
-     */
     @Test
     public void shouldReturnBadRequestForNoRequestBody() throws Exception {
 
@@ -209,14 +151,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         assertEquals(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()).intValue(), ccdResponse.getStatusCode());
     }
 
-    /**
-     * Submit initial case and return caseId
-     *
-     * @return the caseId in string
-     * @throws Exception Resource loading exception
-     */
     private String getCaseIdFromSubmittingANewCase() throws Exception {
-
         return postToRestService(loadJSON("addresses.json"), transformationApiSubmitUrl)
                 .getBody().path("caseId").toString();
     }

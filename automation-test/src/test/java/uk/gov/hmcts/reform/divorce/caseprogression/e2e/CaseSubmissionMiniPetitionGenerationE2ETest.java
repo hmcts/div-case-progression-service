@@ -2,11 +2,13 @@ package uk.gov.hmcts.reform.divorce.caseprogression.e2e;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
 import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
 import uk.gov.hmcts.reform.divorce.emclient.EvidenceManagementUtil;
 
@@ -36,25 +38,21 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     @Value("${document.management.store.baseUrl}")
     private String documentManagementURL;
 
-    @Value("${ccd.callback.e2e.enabled}")
-    private boolean e2eTestEnabled;
-
     @Test
+    @WithTag("test-type:e2e")
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
-        if(e2eTestEnabled) {
-            Response ccdResponse = submitCase("submit-complete-case.json");
-            long caseId = assertAndGetCaseId(ccdResponse);
+        Response ccdResponse = submitCase("submit-complete-case.json");
+        long caseId = assertAndGetCaseId(ccdResponse);
 
-            Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
-            assertGeneratedDocumentExists(ccdSubmitResponse, caseId);
-        }
+        Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
+        assertGeneratedDocumentExists(ccdSubmitResponse, caseId);
     }
 
     private void assertGeneratedDocumentExists(Response ccdSubmitResponse, long caseId){
-        String documentUri = ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_URL_PATH);
+        String documentUri = ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_BINARY_URL_PATH);
 
         assertNotNull(documentUri);
-        assertNotNull(ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_BINARY_URL_PATH));
+        assertNotNull(ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_URL_PATH));
         assertEquals(PETITION, ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_TYPE_PATH));
         assertEquals(String.format(D8_MINI_PETITION_FILE_NAME_FORMAT, caseId),
                 ccdSubmitResponse.path(D8_MINI_PETITION_DOCUMENT_FILENAME_PATH));
@@ -62,7 +60,9 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         documentUri = EvidenceManagementUtil.getDocumentStoreURI(documentUri, documentManagementURL);
 
         Response documentManagementResponse =
-                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri, getIdamTestCaseWorkerUser());
+                EvidenceManagementUtil.readDataFromEvidenceManagement(documentUri,
+                    getServiceToken(ServiceAuthTokenFor.DIV_DOCUMENT_GENERATOR),
+                    getIdamTestCaseWorkerUser());
 
         assertEquals(HttpStatus.OK.value(), documentManagementResponse.statusCode());
     }
@@ -74,6 +74,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
     private Response makePaymentAndIssuePetition(long caseId) throws Exception {
         Response response = submitEvent(caseId, "paymentMade");
+
         assertNotNull(response.getBody().path("id"));
 
         response = submitEvent(caseId, "issueFromSubmitted");
@@ -89,8 +90,10 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
         jsonObject.put("event", eventObject);
         jsonObject.put("event_token", eventToken);
+
         String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId);
+
         return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
     }
 
@@ -98,6 +101,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
                 caseId, event);
         Response fromRestService = getFromRestService(createEventUrl);
-        return fromRestService.getBody().path("event_token");
+
+        return fromRestService.getBody().path("token");
     }
 }

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.health;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.HttpEntity;
@@ -15,9 +14,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.TransformationHttpEnt
 
 import java.util.HashMap;
 
+@Slf4j
 public abstract class WebServiceHealthCheck implements HealthIndicator {
-    private static final Logger log = LoggerFactory.getLogger(WebServiceHealthCheck.class);
-
     protected final TransformationHttpEntityFactory httpEntityFactory;
     protected final RestTemplate restTemplate;
     protected final String uri;

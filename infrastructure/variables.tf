@@ -1,5 +1,5 @@
 variable "reform_service_name" {
-    default = "case-progression"
+    default = "cps"
 }
 
 variable "reform_team" {
@@ -10,12 +10,23 @@ variable "env" {
     type = "string"
 }
 
-variable "case_progression_service_port" {
-    default = "4003"
+variable "product" {
+    type    = "string"
 }
 
-variable "auth_provider_service_client_baseurl" {
-    default = "http://betaDevBccidamS2SLB.reform.hmcts.net:80"
+variable "tenant_id" {}
+
+variable "client_id" {
+    description = "(Required) The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. This is usually sourced from environment variables and not normally required to be specified."
+}
+
+variable "jenkins_AAD_objectId" {
+    type        = "string"
+    description = "(Required) The Azure AD object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
+}
+
+variable "idam_s2s_url_prefix" {
+    default = "rpe-service-auth-provider"
 }
 
 variable "auth_provider_service_client_microservice" {
@@ -28,14 +39,6 @@ variable "auth_provider_service_client_key" {
 
 variable "auth_provider_service_client_tokentimetoliveinseconds" {
     default = "900"
-}
-
-variable "ccd_casedatastore_baseurl" {
-    default = "String"
-}
-
-variable "ccd_casedatagw_baseuri" {
-    default = "https://case-api-gateway-web.test.ccd.reform.hmcts.net"
 }
 
 variable "ccd_jurisdictionid" {
@@ -62,16 +65,12 @@ variable "draft_store_api_baseurl" {
     type = "string"
 }
 
-variable "pdf_generator_base_url" {
-    default = "string"
-}
-
 variable "uk_gov_notify_email_templates" {
     type = "string"
 }
 
-variable "no_proxy" {
-    default = "localhost,127.0.0.0/8,127.0.0.1,127.0.0.1*,local.home,reform.hmcts.net,*.reform.hmcts.net,internal,*.internal"
+variable "uk_gov_notify_email_template_vars" {
+    type = "string"
 }
 
 variable "subscription" {}

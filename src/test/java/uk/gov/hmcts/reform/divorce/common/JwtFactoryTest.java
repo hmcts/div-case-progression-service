@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
 
 public class JwtFactoryTest {
 
-    private JwtFactory jwtFactory = new JwtFactory();
+    private final JwtFactory jwtFactory = new JwtFactory();
 
     @Test
     public void shouldReturnJwtDomainObjectFromEncodedJwt() {

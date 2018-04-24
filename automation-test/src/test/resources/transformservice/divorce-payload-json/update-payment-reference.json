@@ -3,7 +3,7 @@
         "payment" : {
             "PaymentChannel" : null,
             "PaymentTransactionId" : "111222333",
-            "PaymentReference" : null,
+            "PaymentReference" : "111222333",
             "PaymentDate" : null,
             "PaymentAmount" : null,
             "PaymentStatus" : null,
