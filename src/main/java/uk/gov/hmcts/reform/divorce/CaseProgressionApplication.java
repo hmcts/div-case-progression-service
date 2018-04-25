@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.HealthAggregator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -15,6 +16,7 @@ import uk.gov.hmcts.reform.divorce.health.CustomHealthAggregator;
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.divorce.idam.api"})
 @SpringBootApplication
 public class CaseProgressionApplication {
 
