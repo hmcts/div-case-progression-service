@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.common;
 
 import com.nimbusds.jwt.JWTParser;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.divorce.errorhandler.JwtParsingException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
 
 import java.text.ParseException;
@@ -33,7 +32,7 @@ public class JwtFactory {
                 .group(((String) claims.get("group")))
                 .build();
         } catch (ParseException e) {
-            throw new JwtParsingException("Exception while parsing JWT", e);
+            throw new RuntimeException("Exception while parsing JWT", e);
         }
     }
 }

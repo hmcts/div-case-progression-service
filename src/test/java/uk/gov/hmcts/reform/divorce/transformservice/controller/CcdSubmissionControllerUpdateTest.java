@@ -16,7 +16,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-import uk.gov.hmcts.reform.divorce.errorhandler.JwtParsingException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceEventSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
@@ -107,12 +106,6 @@ public class CcdSubmissionControllerUpdateTest {
         divorceEventSession.setEventData(divorceSession);
         divorceEventSession.setEventId("paymentMade");
 
-        JwtParsingException exception = mock(JwtParsingException.class);
-
-        when(exception.getMessage()).thenReturn(errorMessage);
-
-        doThrow(exception).when(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-
         mvc.perform(post(UPDATE_URL + "/" + caseId)
             .content(requestContent)
             .header("requestId", "123")
@@ -123,7 +116,6 @@ public class CcdSubmissionControllerUpdateTest {
             .andExpect(jsonPath("$.status", is("error")));
 
         verify(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-        verify(exception).getMessage();
         verifyNoMoreInteractions(updateService);
     }
 
