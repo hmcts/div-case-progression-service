@@ -3,34 +3,27 @@ package uk.gov.hmcts.reform.divorce.transformservice.client;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import uk.gov.hmcts.reform.divorce.common.JwtFactory;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BaseCcdClientConfigurationTest {
 
+    private static final String CASEWORKER_DIVORCE = "caseworker-divorce";
+
     @InjectMocks
     private BaseCcdClientConfiguration ccdClientConfiguration;
 
-    @Mock
-    private JwtFactory jwtFactory;
-
     @Test
     public void startingEventAsCitizenReturnsCitizenEndpointUrl() {
-        long userId = 99L;
-
-        String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data("citizen, divorce")
-            .id(userId)
-            .build();
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.emptyList()).build();
 
         long caseId = 1234567812345678L;
         String eventId = "paymentMade";
@@ -40,20 +33,17 @@ public class BaseCcdClientConfigurationTest {
                 + "event-triggers/{eventId}/token?ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId, eventId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
 
-        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(encodedJwt, caseId, eventId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, caseId, eventId));
     }
 
     @Test
     public void startingEventAsCaseworkerReturnsCaseworkerEndpointUrl() {
-        long userId = 99L;
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
+
 
         String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data("caseworker-divorce")
-            .id(userId)
-            .build();
 
         long caseId = 1234567812345678L;
         String eventId = "paymentMade";
@@ -63,20 +53,13 @@ public class BaseCcdClientConfigurationTest {
                 + "event-triggers/{eventId}/token?ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId, eventId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-
-        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(encodedJwt, caseId, eventId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, caseId, eventId));
     }
 
     @Test
     public void creatingEventAsCitizenReturnsCitizenEndpointUrl() {
-        long userId = 99L;
-
-        String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data("citizen, divorce")
-            .id(userId)
-            .build();
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.emptyList()).build();
 
         long caseId = 1234567812345678L;
 
@@ -85,20 +68,16 @@ public class BaseCcdClientConfigurationTest {
                 + "?ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-
-        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(encodedJwt, caseId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, caseId));
     }
 
     @Test
     public void creatingEventAsCaseworkerReturnsCaseworkerEndpointUrl() {
-        long userId = 99L;
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
+
 
         String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data("caseworker-divorce")
-            .id(userId)
-            .build();
 
         long caseId = 1234567812345678L;
 
@@ -107,20 +86,13 @@ public class BaseCcdClientConfigurationTest {
                 + "events?ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-
-        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(encodedJwt, caseId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, caseId));
     }
 
     @Test
     public void startingEventWithNullDataReturnsCitizenEndpointUrl() {
-        long userId = 99L;
-
-        String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data(null)
-            .id(userId)
-            .build();
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.emptyList()).build();
 
         long caseId = 1234567812345678L;
         String eventId = "paymentMade";
@@ -130,20 +102,13 @@ public class BaseCcdClientConfigurationTest {
                 + "event-triggers/{eventId}/token?ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId, eventId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-
-        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(encodedJwt, caseId, eventId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, caseId, eventId));
     }
 
     @Test
     public void creatingEventWithNullDataReturnsCitizenEndpointUrl() {
-        long userId = 99L;
-
-        String encodedJwt = "_jwt";
-        Jwt jwt = Jwt.builder()
-            .data(null)
-            .id(userId)
-            .build();
+        String userId = "99";
+        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.emptyList()).build();
 
         long caseId = 1234567812345678L;
 
@@ -152,8 +117,6 @@ public class BaseCcdClientConfigurationTest {
                 + "ignore-warning=true")
             .buildAndExpand("null", userId, "null", "null", caseId);
 
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-
-        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(encodedJwt, caseId));
+        assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, caseId));
     }
 }
