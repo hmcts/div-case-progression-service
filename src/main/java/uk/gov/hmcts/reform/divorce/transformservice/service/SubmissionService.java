@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
@@ -23,10 +25,14 @@ public class SubmissionService {
     @Autowired
     private TransformationService transformationService;
 
-    public long submit(final DivorceSession divorceSessionData, final String jwt) {
-        CreateEvent createEvent = ccdClient.createCase(jwt);
+    @Autowired
+    UserService userService;
 
-        SubmitEvent submitEvent = ccdClient.submitCase(jwt,
+    public long submit(final DivorceSession divorceSessionData, final String jwt) {
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        CreateEvent createEvent = ccdClient.createCase(userDetails, jwt);
+
+        SubmitEvent submitEvent = ccdClient.submitCase(userDetails, jwt,
             transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));
 
         try {

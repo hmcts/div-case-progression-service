@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.util.Optional;
 
@@ -24,6 +25,9 @@ public class DraftsService {
 
     @Autowired
     private DraftStoreClient client;
+
+    @Autowired
+    private UserService userService;
 
     public void saveDraft(String jwt, JsonNode data) {
         String secret = keyFactory.createEncryptionKey(jwt);
