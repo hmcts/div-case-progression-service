@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.assertj.core.util.Strings;
@@ -30,6 +31,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDR
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -83,6 +85,9 @@ public class CaseSubmissionFunctionalTest {
     @ClassRule
     public static WireMockClassRule draftStoreServer = new WireMockClassRule(WireMockSpring.options().port(4601)
         .bindAddress("localhost"));
+    @ClassRule
+    public static WireMockClassRule idamServer = new WireMockClassRule(new WireMockConfiguration().port(4503).bindAddress("localhost"));
+
     @Autowired
     private TestRestTemplate restTemplate;
     @Value("${draft.store.api.document.type}")
@@ -90,8 +95,9 @@ public class CaseSubmissionFunctionalTest {
     private String requestBody;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, URISyntaxException {
         setUpDraftStore();
+        idamUserDetailsStub();
     }
 
     @Test
@@ -549,6 +555,17 @@ public class CaseSubmissionFunctionalTest {
                 .withHeader("Content-type", "application/json;charset=UTF-8")
                 .withStatus(200)
                 .withBody(caseCreationResponseBody)));
+    }
+
+    private void idamUserDetailsStub() throws URISyntaxException, IOException {
+        String idamResponseBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/idam/user-details-200-response.json").toURI()), Charset.defaultCharset());
+
+        idamServer.stubFor(get("/details")
+            .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
+            .willReturn(aResponse()
+                .withHeader("Content-type", "application/json;charset=UTF-8")
+                .withStatus(200)
+                .withBody(idamResponseBody)));
     }
 
     private void verifyCaseCreationStub() {

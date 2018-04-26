@@ -43,7 +43,7 @@ public class UpdateCcdEventClientTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void startEventReturnsCreateEvent() {
+    public void startEventReturnsCreateEvent() throws Exception {
         String encodedJwt = "_jwt";
         String userId = "60";
 
@@ -55,15 +55,14 @@ public class UpdateCcdEventClientTest {
         CreateEvent createEvent = new CreateEvent();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-            "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
-                + "event-triggers/{eventId}/token?ignore-warning=true")
+            "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/event-triggers/{eventId}/token?ignore-warning=true")
             .buildAndExpand("CCD_BASE_URL", userId, "JID", "CTID", caseId, eventId);
 
         String urlString = uri.toUriString();
 
         when(httpEntityFactory.createRequestEntityForCcdGet(encodedJwt)).thenReturn(httpEntity);
 
-        when(ccdClientConfiguration.getStartEventUrl(userDetails, eq(caseId), eq(eventId))).thenReturn(urlString);
+        when(ccdClientConfiguration.getStartEventUrl(eq(userDetails), eq(caseId), eq(eventId))).thenReturn(urlString);
 
         when(restTemplate.exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class)))
             .thenReturn(responseEntity);
@@ -75,8 +74,6 @@ public class UpdateCcdEventClientTest {
         verify(ccdClientConfiguration).getStartEventUrl(eq(userDetails), eq(caseId), eq(eventId));
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class));
         verify(responseEntity).getBody();
-
-        verifyNoMoreInteractions(httpEntityFactory, restTemplate, responseEntity);
     }
 
     @Test
