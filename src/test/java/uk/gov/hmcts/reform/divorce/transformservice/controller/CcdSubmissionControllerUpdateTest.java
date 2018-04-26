@@ -92,34 +92,6 @@ public class CcdSubmissionControllerUpdateTest {
     }
 
     @Test
-    public void shouldReturnErrorInResponseBodyWhenJwtParsingExceptionIsThrown() throws Exception {
-        final String errorMessage = "error-message JwtParsingException";
-        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
-        final String exceptionMessage = MessageFormat.format(genericExceptionMessage, "123", errorMessage);
-        final String jwt = "Bearer hgsdja87wegqeuf...";
-        final Long caseId = 123567L;
-        final DivorceSession divorceSession = new DivorceSession();
-        final DivorceEventSession divorceEventSession = new DivorceEventSession();
-
-        divorceSession.setPetitionerFirstName("Dan");
-
-        divorceEventSession.setEventData(divorceSession);
-        divorceEventSession.setEventId("paymentMade");
-
-        mvc.perform(post(UPDATE_URL + "/" + caseId)
-            .content(requestContent)
-            .header("requestId", "123")
-            .header("Authorization", jwt)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
-            .isOk())
-            .andExpect(jsonPath("$.error", is(exceptionMessage)))
-            .andExpect(jsonPath("$.status", is("error")));
-
-        verify(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-        verifyNoMoreInteractions(updateService);
-    }
-
-    @Test
     public void shouldReturnErrorInResponseBodyWhenHttpServerErrorExceptionThrown() throws Exception {
         final String errorMessage = "error-message HttpServerErrorException";
         final String message = "Request Id : 123 and Exception message : error-message HttpServerErrorException, "
