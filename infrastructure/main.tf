@@ -60,7 +60,7 @@ provider "vault" {
 
 module "key-vault" {
     source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-    name                = "${local.vaultName}"
+    name                = "${var.product}-${var.reform_service_name}-${var.env}"
     product             = "${var.product}"
     env                 = "${var.env}"
     tenant_id           = "${var.tenant_id}"
