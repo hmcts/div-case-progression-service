@@ -37,13 +37,13 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
     private String ccdBaseUrl;
 
     @Override
-    public String getCreateCaseUrl(String jwtId) {
-        return String.format(CREATE_CASE_URL_FORMAT, ccdBaseUrl, jwtId, jurisdictionId, caseTypeId);
+    public String getCreateCaseUrl(String userId) {
+        return String.format(CREATE_CASE_URL_FORMAT, ccdBaseUrl, userId, jurisdictionId, caseTypeId);
     }
 
     @Override
-    public String getSubmitCaseUrl(String jwtId) {
-        return String.format(SUBMIT_CASE_URL_FORMAT, ccdBaseUrl, jwtId, jurisdictionId, caseTypeId);
+    public String getSubmitCaseUrl(String userId) {
+        return String.format(SUBMIT_CASE_URL_FORMAT, ccdBaseUrl, userId, jurisdictionId, caseTypeId);
     }
 
     @Override
