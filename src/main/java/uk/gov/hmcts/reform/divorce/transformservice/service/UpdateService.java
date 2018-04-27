@@ -38,7 +38,7 @@ public class UpdateService {
     private PetitionValidatorService petitionValidatorService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
 
