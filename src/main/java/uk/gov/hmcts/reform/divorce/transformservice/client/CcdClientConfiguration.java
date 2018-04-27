@@ -4,9 +4,9 @@ import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 
 public interface CcdClientConfiguration {
 
-    String getCreateCaseUrl(String jwtId);
+    String getCreateCaseUrl(String userId);
 
-    String getSubmitCaseUrl(String jwtId);
+    String getSubmitCaseUrl(String userId);
 
     String getStartEventUrl(UserDetails userDetails, Long caseId, String eventId);
 
