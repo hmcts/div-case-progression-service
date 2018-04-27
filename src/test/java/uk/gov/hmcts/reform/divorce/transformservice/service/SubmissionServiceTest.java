@@ -45,11 +45,11 @@ public class SubmissionServiceTest {
 
     @Test
     public void submitReturnsCaseId() throws Exception {
-        DivorceSession divorceSession = new DivorceSession();
-        CaseDataContent caseDataContent = mock(CaseDataContent.class);
+        final DivorceSession divorceSession = new DivorceSession();
+        final CaseDataContent caseDataContent = mock(CaseDataContent.class);
         String jwt = "_jwt";
         String token = "_token";
-        String eventSummary = "Create case";
+        final String eventSummary = "Create case";
         int caseId = 2893;
         String userId = "60";
         UserDetails userDetails = UserDetails.builder().id(userId).build();

@@ -55,7 +55,8 @@ public class UpdateCcdEventClientTest {
         CreateEvent createEvent = new CreateEvent();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-            "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/event-triggers/{eventId}/token?ignore-warning=true")
+            "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}"
+                + "/event-triggers/{eventId}/token?ignore-warning=true")
             .buildAndExpand("CCD_BASE_URL", userId, "JID", "CTID", caseId, eventId);
 
         String urlString = uri.toUriString();

@@ -43,7 +43,7 @@ public class SubmitCcdClientTest {
     public void createCaseReturnsCreateEvent() {
         String encodedJwt = "_jwt";
         String id = "60";
-        UserDetails userDetails = UserDetails.builder().id(id).build();
+        final UserDetails userDetails = UserDetails.builder().id(id).build();
         HttpEntity<String> httpEntity = mock(HttpEntity.class);
         ResponseEntity<CreateEvent> responseEntity = mock(ResponseEntity.class);
 
@@ -76,11 +76,11 @@ public class SubmitCcdClientTest {
     @Test
     @SuppressWarnings("unchecked")
     public void submitCaseReturnsSubmitEvent()  {
-        String userId= "60";
+        String userId = "60";
         String encodedJwt = "_jwt";
         CaseDataContent coreCaseData = mock(CaseDataContent.class);
         HttpEntity<CaseDataContent> httpEntity = mock(HttpEntity.class);
-        UserDetails userDetails = UserDetails.builder().id(userId).build();
+        final UserDetails userDetails = UserDetails.builder().id(userId).build();
         ResponseEntity<SubmitEvent> responseEntity = mock(ResponseEntity.class);
         SubmitEvent submitEvent = new SubmitEvent();
 

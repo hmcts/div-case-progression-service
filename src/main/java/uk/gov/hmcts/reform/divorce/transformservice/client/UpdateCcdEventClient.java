@@ -33,7 +33,8 @@ public class UpdateCcdEventClient implements CcdEventClient {
     }
 
     @Override
-    public CaseEvent createCaseEvent(UserDetails userDetails, String encodedJwt, Long caseId, CaseDataContent caseDataContent) {
+    public CaseEvent createCaseEvent(UserDetails userDetails, String encodedJwt, Long caseId,
+                                     CaseDataContent caseDataContent) {
 
         HttpEntity<CaseDataContent> httpEntity = httpEntityFactory.createRequestEntityForSubmitCase(encodedJwt,
             caseDataContent);
