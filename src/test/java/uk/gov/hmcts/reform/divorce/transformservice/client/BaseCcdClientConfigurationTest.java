@@ -40,10 +40,8 @@ public class BaseCcdClientConfigurationTest {
     @Test
     public void startingEventAsCaseworkerReturnsCaseworkerEndpointUrl() {
         String userId = "99";
-        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
-
-
-        String encodedJwt = "_jwt";
+        UserDetails userDetails = UserDetails.builder()
+            .id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
 
         long caseId = 1234567812345678L;
         String eventId = "paymentMade";
@@ -74,10 +72,8 @@ public class BaseCcdClientConfigurationTest {
     @Test
     public void creatingEventAsCaseworkerReturnsCaseworkerEndpointUrl() {
         String userId = "99";
-        UserDetails userDetails = UserDetails.builder().id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
-
-
-        String encodedJwt = "_jwt";
+        UserDetails userDetails = UserDetails.builder()
+            .id(userId).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
 
         long caseId = 1234567812345678L;
 

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserDetailsTest {
 
     @Test
-    public void UserAndUserDetailsTest() {
+    public void userAndUserDetailsTest() {
 
         List<String> roles = Collections.singletonList("oneRole");
         UserDetails userDetails = UserDetails.builder()
@@ -28,7 +28,8 @@ public class UserDetailsTest {
         assertThat(userDetails.getEmail()).isEqualTo("one@email.com");
         assertThat(userDetails.getForename()).isEqualTo("two");
         assertThat(userDetails.getSurname()).isEqualTo("one");
-        assertThat(UserDetails.builder().toString()).isEqualTo("UserDetails.UserDetailsBuilder(id=null, email=null, forename=null, surname=null, roles=null)");
+        assertThat(UserDetails.builder().toString()).isEqualTo("UserDetails.UserDetailsBuilder(id=null, email=null,"
+            + " forename=null, surname=null, roles=null)");
     }
 
 }

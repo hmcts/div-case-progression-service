@@ -48,14 +48,16 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
 
     @Override
     public String getStartEventUrl(UserDetails userDetails, Long caseId, String eventId) {
-        String url = isCaseWorkerUser(userDetails) ? START_CASE_EVENT_URL_CASEWORKER_FORMAT : START_CASE_EVENT_URL_FORMAT;
+        String url = isCaseWorkerUser(userDetails)
+            ? START_CASE_EVENT_URL_CASEWORKER_FORMAT : START_CASE_EVENT_URL_FORMAT;
         return String.format(url, ccdBaseUrl, userDetails.getId(), jurisdictionId, caseTypeId, caseId,
             eventId);
     }
 
     @Override
     public String getCreateCaseEventUrl(UserDetails userDetails, Long caseId) {
-        String url = isCaseWorkerUser(userDetails) ? CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT : CREATE_CASE_EVENT_URL_FORMAT;
+        String url = isCaseWorkerUser(userDetails)
+            ? CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT : CREATE_CASE_EVENT_URL_FORMAT;
         return String.format(url, ccdBaseUrl, userDetails.getId(), jurisdictionId, caseTypeId, caseId);
     }
 

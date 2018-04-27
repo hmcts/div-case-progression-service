@@ -86,7 +86,9 @@ public class CaseSubmissionFunctionalTest {
     public static WireMockClassRule draftStoreServer = new WireMockClassRule(WireMockSpring.options().port(4601)
         .bindAddress("localhost"));
     @ClassRule
-    public static WireMockClassRule idamServer = new WireMockClassRule(new WireMockConfiguration().port(4503).bindAddress("localhost"));
+    public static WireMockClassRule idamServer = new WireMockClassRule(
+        new WireMockConfiguration().port(4503).bindAddress("localhost")
+    );
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -558,7 +560,8 @@ public class CaseSubmissionFunctionalTest {
     }
 
     private void idamUserDetailsStub() throws URISyntaxException, IOException {
-        String idamResponseBody = FileUtils.readFileToString(new File(getClass().getResource("/fixtures/idam/user-details-200-response.json").toURI()), Charset.defaultCharset());
+        String idamResponseBody = FileUtils.readFileToString(new File(getClass()
+            .getResource("/fixtures/idam/user-details-200-response.json").toURI()), Charset.defaultCharset());
 
         idamServer.stubFor(get("/details")
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
