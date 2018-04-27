@@ -26,9 +26,6 @@ public class DraftsService {
     @Autowired
     private DraftStoreClient client;
 
-    @Autowired
-    private UserService userService;
-
     public void saveDraft(String jwt, JsonNode data) {
         String secret = keyFactory.createEncryptionKey(jwt);
         Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);

@@ -26,7 +26,7 @@ public class SubmissionService {
     private TransformationService transformationService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
         UserDetails userDetails = userService.getUserDetails(jwt);
