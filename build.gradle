@@ -130,7 +130,7 @@ def versions = [
         commonsIO: '2.5',
         commonsLang3: '3.0',
         hmctsHttpProxy: '1.1.0',
-        hmctsJavaLogging: '2.0.2',
+        hmctsJavaLogging: '2.1.1',
         hmctsNotify: '3.8.0-RELEASE',
         serviceTokenGenerator: '0.6.0',
         jackson: '2.9.5',
@@ -172,9 +172,11 @@ dependencies {
     }
 
     compile group: 'uk.gov.hmcts.reform', name: 'http-proxy-spring-boot-autoconfigure', version: versions.hmctsHttpProxy
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: versions.hmctsJavaLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.hmctsJavaLogging
+
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.hmctsJavaLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.hmctsJavaLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.hmctsJavaLogging
+
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: versions.hmctsNotify
     compile group: 'com.puppycrawl.tools', name: 'checkstyle', version:  versions.puppyCrawl
 
