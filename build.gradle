@@ -174,7 +174,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'http-proxy-spring-boot-autoconfigure', version: versions.hmctsHttpProxy
 
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-spring', version: versions.hmctsJavaLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: '2.1.1'
+    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-httpcomponents', version: versions.hmctsJavaLogging
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: versions.hmctsJavaLogging
 
     compile group: 'uk.gov.service.notify', name: 'notifications-java-client', version: versions.hmctsNotify
