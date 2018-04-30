@@ -86,7 +86,7 @@ public class DraftStoreClient {
     }
 
     private List<Draft> findDivorceDraft(String jwt, DraftList draftList, List<Draft> divorcesDrafts) {
-        if (draftList != null && !draftList.getData().isEmpty()) {
+        if (draftList != null && draftList.getData() !=null && !draftList.getData().isEmpty()) {
             divorcesDrafts.addAll(draftList.getData().stream()
                     .filter(draft -> draft.getType().equalsIgnoreCase(documentType))
                     .collect(Collectors.toList()));
