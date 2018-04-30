@@ -48,7 +48,8 @@ public class CollectionMemberTest {
 
     @Test
     public void shouldMarshalJsonStringToObject() throws Exception {
-        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {});
+        ObjectReader objectReader = objectMapper.readerFor(new TypeReference<CollectionMember<Document>>() {
+        });
 
         assertEquals(collectionMember, objectReader.readValue(json));
     }
@@ -59,6 +60,6 @@ public class CollectionMemberTest {
             .writer(new SimpleDateFormat("yyyy-MM-dd"))
             .withDefaultPrettyPrinter();
 
-        assertEquals(jsonNullDocumentFieldsRemoved, objectWriter.writeValueAsString(collectionMember));
+        assertEquals(jsonNullDocumentFieldsRemoved.trim(), objectWriter.writeValueAsString(collectionMember));
     }
 }

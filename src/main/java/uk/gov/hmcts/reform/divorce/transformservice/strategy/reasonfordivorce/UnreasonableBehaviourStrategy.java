@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce;
 
-import static org.apache.commons.lang3.StringUtils.join;
-
 import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+
+import static org.apache.commons.lang3.StringUtils.join;
 
 @Component
 public class UnreasonableBehaviourStrategy implements ReasonForDivorceStrategy {

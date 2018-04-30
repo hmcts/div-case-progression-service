@@ -20,7 +20,7 @@ public class PdfToCoreCaseDataMapperTest {
     private PdfToCoreCaseDataMapper mapper;
 
     @Test
-    public void mapperIsMapping(){
+    public void mapperIsMapping() {
         CoreCaseData coreCaseData = new CoreCaseData();
 
         PdfFile pdfFile = PdfFile.builder().url("OneUrl").fileName("OneName").build();

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -6,8 +6,8 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public @Data
-class PdfFile {
+@Data
+public class PdfFile {
     private String url;
     private String fileName;
 }

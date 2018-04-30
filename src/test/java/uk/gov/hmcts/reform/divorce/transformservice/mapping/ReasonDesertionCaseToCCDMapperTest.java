@@ -27,10 +27,13 @@ public class ReasonDesertionCaseToCCDMapperTest {
     @Test
     public void shouldMapAllAndTransformAllFieldsForReasonDesertionScenario() throws URISyntaxException, IOException {
 
-        CoreCaseData expectedCoreCaseData = (CoreCaseData)DivorceCaseToCCDMapperTestUtil.jsonToPOJO("fixtures/ccdmapping/reasondesertion.json", AddressesCaseToCCDMapperTest.class, CoreCaseData.class);
+        CoreCaseData expectedCoreCaseData = (CoreCaseData) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("fixtures/ccdmapping/reasondesertion.json", AddressesCaseToCCDMapperTest.class,
+                CoreCaseData.class);
         expectedCoreCaseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
-        DivorceSession divorceSession = (DivorceSession)DivorceCaseToCCDMapperTestUtil.jsonToPOJO(
-                "divorce-payload-json/reason-desertion.json", ReasonDesertionCaseToCCDMapperTest.class, DivorceSession.class);
+        DivorceSession divorceSession = (DivorceSession) DivorceCaseToCCDMapperTestUtil.jsonToObject(
+            "divorce-payload-json/reason-desertion.json", ReasonDesertionCaseToCCDMapperTest.class,
+            DivorceSession.class);
 
         CoreCaseData actualCoreCaseData = mapper.divorceCaseDataToCourtCaseData(divorceSession);
 

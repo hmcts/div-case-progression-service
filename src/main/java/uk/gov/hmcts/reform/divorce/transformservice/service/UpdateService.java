@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.transformservice.client.CcdEventClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CaseEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -35,13 +37,18 @@ public class UpdateService {
     @Autowired
     private PetitionValidatorService petitionValidatorService;
 
+    @Autowired
+    private UserService userService;
+
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
 
-        CreateEvent createEvent = updateCcdEventClient.startEvent(jwt, caseId,
-                divorceEventSessionData.getEventId());
+        UserDetails userDetails = userService.getUserDetails(jwt);
 
-        CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(jwt, caseId,
-                transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+        CreateEvent createEvent = updateCcdEventClient.startEvent(userDetails, jwt, caseId,
+            divorceEventSessionData.getEventId());
+
+        CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(userDetails, jwt, caseId,
+            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);
@@ -54,11 +61,11 @@ public class UpdateService {
         return caseEvent.getCaseId();
     }
 
-    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest) {
+    public CoreCaseData addPdf(final CreateEvent caseDetailsRequest, String authorization) {
 
         petitionValidatorService.validateFieldsForIssued(caseDetailsRequest);
 
-        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest);
+        PdfFile pdfFile = pdfService.generatePdf(caseDetailsRequest, authorization);
 
         return pdfToCoreCaseDataMapper.toCoreCaseData(pdfFile, caseDetailsRequest.getCaseDetails().getCaseData());
     }

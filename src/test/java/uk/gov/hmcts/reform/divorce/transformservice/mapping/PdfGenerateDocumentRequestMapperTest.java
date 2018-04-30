@@ -25,10 +25,10 @@ public class PdfGenerateDocumentRequestMapperTest {
     private PdfGenerateDocumentRequestMapper mapper;
 
     @Test
-    public void mapperIsMapping(){
+    public void mapperIsMapping() {
 
-        CreateEvent caseDetailsWrap = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
+        final CreateEvent caseDetailsWrap = new CreateEvent();
+        final CaseDetails caseDetails = new CaseDetails();
         CoreCaseData caseData = new CoreCaseData();
         caseData.setD8PetitionerFirstName("PFname");
         caseData.setD8PetitionerLastName("PLname");

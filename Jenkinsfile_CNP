@@ -1,0 +1,53 @@
+#!groovy
+
+properties([
+    [
+        $class: 'GithubProjectProperty',
+        displayName: 'Divorce Case Progression Service',
+        projectUrlStr: 'https://github.com/hmcts/div-case-progression-service'
+    ],
+    pipelineTriggers([
+        [$class: 'GitHubPushTrigger']
+    ])
+])
+
+@Library("Infrastructure")
+
+def type = "java"
+def product = "div"
+def component = "cps"
+
+def channel = '#div-dev'
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [ $class: 'AzureKeyVaultSecret',
+      secretType: 'Secret',
+      name: secretName,
+      version: '',
+      envVariable: envVar
+    ]
+}
+
+List<LinkedHashMap<String, Object>> secrets = [
+    secret("ccd-submission-s2s-auth-secret", "CPS_IDAM_AUTH_SECRET"),
+    secret("div-doc-s2s-auth-secret", "DGS_IDAM_AUTH_SECRET"),
+    secret("draft-store-api-encryption-key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
+
+withPipeline(type , product, component) {
+    loadVaultSecrets(secrets)
+
+    before('functionalTest:aat') {
+        env.ITEST_ENVIRONMENT = "aat"
+    }
+
+    before('functionalTest:preview') {
+        env.ITEST_ENVIRONMENT = "preview"
+    }
+
+    after('checkout') {
+        echo '${product}-${component} checked out'
+    }
+
+    enableSlackNotifications(channel)
+}

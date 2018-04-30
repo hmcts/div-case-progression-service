@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = CaseProgressionApplication.class)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class HealthCheckServerNotFoundFunctionalTest {
     /*
         No Wiremock here to test the health page is still available when there is no response from an upstream service
@@ -24,13 +26,13 @@ public class HealthCheckServerNotFoundFunctionalTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void shouldReturnStatusDownWhenDependenciesAreUnavailable() throws Exception {
+    public void shouldReturnStatusDownWhenDependenciesAreUnavailable() {
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
-        assertThat(JsonPath.read(body,"$.status").toString()).isEqualTo("DOWN");
-        assertThat(JsonPath.read(body,"$.caseDataStoreApi.status").toString()).isEqualTo("DOWN");
-        assertThat(JsonPath.read(body,"$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
-        assertThat(JsonPath.read(body,"$.draftStoreApi.status").toString()).isEqualTo("DOWN");
-        assertThat(JsonPath.read(body,"$.diskSpace.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 }

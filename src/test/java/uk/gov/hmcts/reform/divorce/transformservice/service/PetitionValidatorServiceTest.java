@@ -12,32 +12,27 @@ import java.util.List;
 
 public class PetitionValidatorServiceTest {
 
-
     private PetitionValidatorService underTest = new PetitionValidatorService();
 
     @Test(expected = InvalidPetitionException.class)
-    public void shouldThrowExceptionOnDocumentTypeNotSet(){
-
+    public void shouldThrowExceptionOnDocumentTypeNotSet() {
         CreateEvent createEvent = buildCreateEvent(null);
-
         underTest.validateFieldsForIssued(createEvent);
     }
 
     @Test(expected = InvalidPetitionException.class)
-    public void shouldThrowExceptionOnDocumentTypeEmpty(){
-
+    public void shouldThrowExceptionOnDocumentTypeEmpty() {
         CreateEvent createEvent = buildCreateEvent("");
-
         underTest.validateFieldsForIssued(createEvent);
     }
 
     private CreateEvent buildCreateEvent(String documentTypeValue) {
-        CreateEvent createEvent = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
-        CoreCaseData caseData = new CoreCaseData();
-        List<CollectionMember<Document>> documentUploaded = new ArrayList<>();
-        CollectionMember<Document> collectionMember = new CollectionMember<>();
-        Document aDocument = new Document();
+        final CreateEvent createEvent = new CreateEvent();
+        final CaseDetails caseDetails = new CaseDetails();
+        final CoreCaseData caseData = new CoreCaseData();
+        final List<CollectionMember<Document>> documentUploaded = new ArrayList<>();
+        final CollectionMember<Document> collectionMember = new CollectionMember<>();
+        final Document aDocument = new Document();
         aDocument.setDocumentType(documentTypeValue);
         aDocument.setDocumentFileName("aFile");
         collectionMember.setValue(aDocument);

@@ -16,17 +16,17 @@ public class PdfGeneratorService implements PdfService {
     private PdfGeneratorClient pdfGeneratorClient;
 
     @Override
-    public PdfFile generatePdf(CreateEvent caseDetails) {
+    public PdfFile generatePdf(CreateEvent caseDetails, String authorization) {
         try {
-            PdfFile pdfFile = pdfGeneratorClient.generatePdf(caseDetails);
+            PdfFile pdfFile = pdfGeneratorClient.generatePdf(caseDetails, authorization);
 
-            if(pdfFile != null){
+            if (pdfFile != null) {
                 pdfFile.setFileName(String.format(FILE_NAME_FORMAT, caseDetails.getCaseDetails().getCaseId()));
             }
 
             return pdfFile;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new PdfGeneratorException(e.getMessage(), e);
         }
     }

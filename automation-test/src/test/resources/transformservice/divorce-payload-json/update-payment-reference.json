@@ -1,0 +1,15 @@
+{
+    "eventData" : {
+        "payment" : {
+            "PaymentChannel" : null,
+            "PaymentTransactionId" : "111222333",
+            "PaymentReference" : "111222333",
+            "PaymentDate" : null,
+            "PaymentAmount" : null,
+            "PaymentStatus" : null,
+            "PaymentFeeId" : null,
+            "PaymentSiteId" : null
+          }
+    },
+    "eventId" : "paymentReferenceGenerated"
+}

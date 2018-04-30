@@ -21,9 +21,8 @@ public class AuthorizationHeaderService {
 
         String serviceToken = serviceTokenGenerator.generate();
 
-        String authorizationToken = userToken.startsWith(AUTHORIZATION_SCHEME) ?
-            userToken : 
-            AUTHORIZATION_SCHEME.concat(userToken);
+        String authorizationToken =
+            userToken.startsWith(AUTHORIZATION_SCHEME) ? userToken : AUTHORIZATION_SCHEME.concat(userToken);
 
         headers.add("Authorization", authorizationToken);
 

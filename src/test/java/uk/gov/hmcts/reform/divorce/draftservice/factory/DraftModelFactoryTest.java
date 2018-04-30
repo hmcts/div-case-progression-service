@@ -14,7 +14,9 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -32,14 +34,13 @@ public class DraftModelFactoryTest {
 
     @Mock
     private Draft draft;
+    @Autowired
+    private DraftModelFactory underTest;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Autowired
-    private DraftModelFactory underTest;
 
     @Test
     public void createDraftShouldCreateADivorceDraft() {

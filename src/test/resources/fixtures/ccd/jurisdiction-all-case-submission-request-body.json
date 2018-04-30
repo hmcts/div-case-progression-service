@@ -67,7 +67,7 @@
         "value" : {
           "DocumentType" : "other",
           "DocumentLink" : {
-            "document_url" : "https://api-gateway.test.dm.reform.hmcts.net/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936"
+            "document_url" : "http://localhost:5006/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936"
           },
           "DocumentDateAdded" : "2017-12-11",
           "DocumentComment" : "",
@@ -80,7 +80,7 @@
         "value" : {
           "DocumentType": "other",
           "DocumentLink" : {
-            "document_url" : "https://api-gateway.test.dm.reform.hmcts.net/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683"
+            "document_url" : "http://localhost:5006/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683"
           },
           "DocumentDateAdded": "2017-12-11",
           "DocumentComment": "",

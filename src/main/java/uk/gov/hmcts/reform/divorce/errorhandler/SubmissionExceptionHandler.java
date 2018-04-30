@@ -17,35 +17,40 @@ import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableE
 import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdSubmissionController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
+
 @ControllerAdvice(basePackageClasses = {CcdSubmissionController.class, DraftsController.class})
 public class SubmissionExceptionHandler {
 
-    private static final String EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}, Exception response body: {2}";
+    private static final String EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}, "
+        + "Exception response body: {2}";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
     private static final String GENERIC_EXCEPTION_MESSAGE = "Request Id : {0} and Exception message : {1}";
     private static final String ERROR = "error";
 
     private static final Logger log = LoggerFactory
-            .getLogger(SubmissionExceptionHandler.class);
+        .getLogger(SubmissionExceptionHandler.class);
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Object> handleClientException(
-            HttpClientErrorException clientErrorException,
-            HttpServletRequest request) {
+        HttpClientErrorException clientErrorException,
+        HttpServletRequest request) {
 
         if (isDraftsRequest(request)) {
             return handleDraftsAPIClientError(clientErrorException, request);
         }
 
-        final String errorMessage = MessageFormat.format(EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), clientErrorException.getMessage(),
-                clientErrorException.getResponseBodyAsString());
+        final String errorMessage = MessageFormat.format(EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY),
+            clientErrorException.getMessage(),
+            clientErrorException.getResponseBodyAsString());
+
         log.error(errorMessage);
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
 
@@ -53,71 +58,71 @@ public class SubmissionExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleConstraintViolationException(
-            ConstraintViolationException constraintViolationException,
-            HttpServletRequest request) {
+        ConstraintViolationException constraintViolationException,
+        HttpServletRequest request) {
 
         ConstraintViolation violation =
-                constraintViolationException.getConstraintViolations().iterator().next();
+            constraintViolationException.getConstraintViolations().iterator().next();
         String property = violation.getPropertyPath().toString();
         String message = violation.getMessage();
 
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY),
-                constraintViolationException.getMessage());
+        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE,
+            request.getHeader(REQUEST_ID_HEADER_KEY),
+            constraintViolationException.getMessage());
         log.error(errorMessage);
 
-        String errorMessageToReturn= String.format("%s %s", property, message);
+        String errorMessageToReturn = String.format("%s %s", property, message);
+
         log.error(errorMessageToReturn);
 
         return ResponseEntity.badRequest().body(errorMessageToReturn);
     }
 
-    @ExceptionHandler(JwtParsingException.class)
-    public ResponseEntity<CCDResponse> handleJwtParsingException(
-            JwtParsingException jwtException,
-            HttpServletRequest request) {
-
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), jwtException.getMessage());
-        log.error(errorMessage);
-        return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
-    }
-
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<CCDResponse> handleAllException(
-            HttpServerErrorException ex,
-            HttpServletRequest request) {
+        HttpServerErrorException ex,
+        HttpServletRequest request) {
 
-        final String errorMessage = MessageFormat.format(EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), ex.getMessage(), ex.getResponseBodyAsString());
+        final String errorMessage = MessageFormat.format(EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY),
+            ex.getMessage(), ex.getResponseBodyAsString());
+
         log.error(errorMessage);
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
     }
 
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<CCDResponse> handleResourceAccessException(
-            ResourceAccessException resourceAccessException,
-            HttpServletRequest request) {
+        ResourceAccessException resourceAccessException,
+        HttpServletRequest request) {
 
         final String resourceExceptionMessage = "Request Id : {0} and ResourceAccessException message : {1}";
-        final String errorMessage = MessageFormat.format(resourceExceptionMessage, request.getHeader(REQUEST_ID_HEADER_KEY), resourceAccessException.getMessage());
+        final String errorMessage = MessageFormat.format(resourceExceptionMessage,
+            request.getHeader(REQUEST_ID_HEADER_KEY), resourceAccessException.getMessage());
+
         log.error(errorMessage);
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
     }
 
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<CCDResponse> handleDateTimeParseException(
-            DateTimeParseException dateTimeParseException,
-            HttpServletRequest request) {
+        DateTimeParseException dateTimeParseException,
+        HttpServletRequest request) {
 
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), dateTimeParseException.getMessage());
+        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE,
+            request.getHeader(REQUEST_ID_HEADER_KEY), dateTimeParseException.getMessage());
+
         log.error(errorMessage);
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
     }
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<CCDResponse> handleFeignException(
-            FeignException feignException,
-            HttpServletRequest request) {
+        FeignException feignException,
+        HttpServletRequest request) {
 
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE, request.getHeader(REQUEST_ID_HEADER_KEY), feignException.getMessage());
+        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE,
+            request.getHeader(REQUEST_ID_HEADER_KEY), feignException.getMessage());
+
         log.error(errorMessage);
         return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
     }
@@ -131,13 +136,17 @@ public class SubmissionExceptionHandler {
         return request.getRequestURI().toLowerCase().contains("draftsapi");
     }
 
-    private ResponseEntity<Object> handleDraftsAPIClientError(HttpClientErrorException clientErrorException, HttpServletRequest request) {
+    private ResponseEntity<Object> handleDraftsAPIClientError(HttpClientErrorException clientErrorException,
+                                                              HttpServletRequest request) {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        requestAttributes.setAttribute("javax.servlet.error.status_code", clientErrorException.getRawStatusCode(), RequestAttributes.SCOPE_REQUEST);
-        requestAttributes.setAttribute("javax.servlet.error.error_code", clientErrorException.getStatusText(), RequestAttributes.SCOPE_REQUEST);
-        requestAttributes.setAttribute("javax.servlet.error.request_uri", request.getRequestURI(), RequestAttributes.SCOPE_REQUEST);
+        requestAttributes.setAttribute("javax.servlet.error.status_code", clientErrorException.getRawStatusCode(),
+            RequestAttributes.SCOPE_REQUEST);
+        requestAttributes.setAttribute("javax.servlet.error.error_code", clientErrorException.getStatusText(),
+            RequestAttributes.SCOPE_REQUEST);
+        requestAttributes.setAttribute("javax.servlet.error.request_uri", request.getRequestURI(),
+            RequestAttributes.SCOPE_REQUEST);
 
-        Map<String, Object> errorAttributes = new GlobalErrorAttributes().getErrorAttributes(requestAttributes, false);
+        Map<String, Object> errorAttributes = new GlobalErrorAttributes().getErrorAttributes(requestAttributes,false);
 
         return new ResponseEntity<>(errorAttributes, clientErrorException.getStatusCode());
     }

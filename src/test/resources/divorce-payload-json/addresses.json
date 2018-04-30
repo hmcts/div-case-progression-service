@@ -101,7 +101,7 @@
       "lastModifiedBy" : 12661,
       "modifiedOn" : "2017-12-11",
       "fileName" : "govuklogo.png",
-      "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
+      "fileUrl" : "http://localhost:5006/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
       "mimeType" : "image/png",
       "status" : "OK"
     },

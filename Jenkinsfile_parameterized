@@ -1,0 +1,31 @@
+#!groovy
+@Library(value="Infrastructure") _
+
+properties([
+        parameters([
+                string(name: 'PRODUCT_NAME', defaultValue: 'div', description: 'Divorce'),
+                string(name: 'APP', defaultValue: 'case-progression', description: 'Divorce Case Progression Service'),
+                string(name: 'TYPE', defaultValue: 'java', description: ''),
+                string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be built and deployed'),
+                choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
+    ])
+])
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [ $class: 'AzureKeyVaultSecret',
+      secretType: 'Secret',
+      name: secretName,
+      version: '',
+      envVariable: envVar
+    ]
+}
+
+List<LinkedHashMap<String, Object>> secrets = [
+    secret("ccd-submission-s2s-auth-secret", "CPS_IDAM_AUTH_SECRET"),
+    secret("div-doc-s2s-auth-secret", "DGS_IDAM_AUTH_SECRET"),
+    secret("draft-store-api-encryption-key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+]
+
+withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+    loadVaultSecrets(secrets)
+}

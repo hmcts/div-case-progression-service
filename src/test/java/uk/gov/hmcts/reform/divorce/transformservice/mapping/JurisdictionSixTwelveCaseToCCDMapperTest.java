@@ -27,10 +27,14 @@ public class JurisdictionSixTwelveCaseToCCDMapperTest {
     @Test
     public void shouldMapAllAndTransformAllFieldsForJurisdiction612Scenario() throws URISyntaxException, IOException {
 
-        CoreCaseData expectedCoreCaseData = (CoreCaseData)DivorceCaseToCCDMapperTestUtil.jsonToPOJO("fixtures/ccdmapping/jurisdiction612.json", AddressesCaseToCCDMapperTest.class, CoreCaseData.class);
+        CoreCaseData expectedCoreCaseData = (CoreCaseData) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("fixtures/ccdmapping/jurisdiction612.json", AddressesCaseToCCDMapperTest.class,
+                CoreCaseData.class);
         expectedCoreCaseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
-        DivorceSession divorceSession = (DivorceSession)DivorceCaseToCCDMapperTestUtil.jsonToPOJO(
-                "divorce-payload-json/jurisdiction-6-12.json", JurisdictionSixTwelveCaseToCCDMapperTest.class, DivorceSession.class);
+
+        DivorceSession divorceSession = (DivorceSession) DivorceCaseToCCDMapperTestUtil.jsonToObject(
+            "divorce-payload-json/jurisdiction-6-12.json",
+            JurisdictionSixTwelveCaseToCCDMapperTest.class, DivorceSession.class);
 
         CoreCaseData actualCoreCaseData = mapper.divorceCaseDataToCourtCaseData(divorceSession);
 

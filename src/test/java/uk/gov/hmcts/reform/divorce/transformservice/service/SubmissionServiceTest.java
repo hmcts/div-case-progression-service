@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
@@ -14,7 +16,13 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionServiceTest {
@@ -28,31 +36,38 @@ public class SubmissionServiceTest {
     @Mock
     private DraftsService draftsService;
 
+    @Mock
+    private UserService userService;
+
+
     @InjectMocks
     private SubmissionService submissionService;
 
     @Test
     public void submitReturnsCaseId() throws Exception {
-        DivorceSession divorceSession = new DivorceSession();
-        CaseDataContent caseDataContent = mock(CaseDataContent.class);
+        final DivorceSession divorceSession = new DivorceSession();
+        final CaseDataContent caseDataContent = mock(CaseDataContent.class);
         String jwt = "_jwt";
         String token = "_token";
-        String eventSummary = "Create case";
+        final String eventSummary = "Create case";
         int caseId = 2893;
+        String userId = "60";
+        UserDetails userDetails = UserDetails.builder().id(userId).build();
         CreateEvent createEvent = new CreateEvent();
         createEvent.setToken(token);
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(caseId);
 
-        when(ccdClient.createCase(jwt)).thenReturn(createEvent);
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
+        when(ccdClient.createCase(userDetails, jwt)).thenReturn(createEvent);
         when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
-        when(ccdClient.submitCase(jwt, caseDataContent)).thenReturn(submitEvent);
+        when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
 
         assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
 
-        verify(ccdClient).createCase(jwt);
+        verify(ccdClient).createCase(userDetails, jwt);
         verify(transformationService).transform(divorceSession, createEvent, eventSummary);
-        verify(ccdClient).submitCase(jwt, caseDataContent);
+        verify(ccdClient).submitCase(userDetails, jwt, caseDataContent);
         verifyNoMoreInteractions(ccdClient, transformationService);
     }
 
@@ -64,7 +79,7 @@ public class SubmissionServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1);
 
-        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCase(any(), anyString(), any())).thenReturn(submitEvent);
 
         submissionService.submit(divorceSession, jwt);
 
@@ -79,7 +94,7 @@ public class SubmissionServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1);
 
-        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCase(any(), anyString(), any())).thenReturn(submitEvent);
         doThrow(Exception.class).when(draftsService).deleteDraft(jwt);
 
         try {

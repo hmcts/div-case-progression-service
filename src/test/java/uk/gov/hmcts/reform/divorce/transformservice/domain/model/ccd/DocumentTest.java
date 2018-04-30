@@ -25,12 +25,12 @@ public class DocumentTest {
     @Before
     public void setUp() throws Exception {
         json = FileUtils.readFileToString(
-                new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/Document.json").toURI()),
-                Charset.defaultCharset());
+            new File(UploadedFileTest.class.getResource("/fixtures/model/ccd/Document.json").toURI()),
+            Charset.defaultCharset());
 
         jsonWithNullFieldsIgnored = FileUtils.readFileToString(new File(UploadedFileTest.class
-                        .getResource("/fixtures/model/ccd/DocumentNullFieldsIgnored.json").toURI()),
-                Charset.defaultCharset());
+                .getResource("/fixtures/model/ccd/DocumentNullFieldsIgnored.json").toURI()),
+            Charset.defaultCharset());
 
         document = new Document();
         document.setDocumentType("marriageCert");
@@ -51,9 +51,9 @@ public class DocumentTest {
     @Test
     public void shouldUnmarshalObjectToJsonString() throws Exception {
         ObjectWriter objectWriter = objectMapper
-                .writer(new SimpleDateFormat("yyyy-MM-dd"))
-                .withDefaultPrettyPrinter();
+            .writer(new SimpleDateFormat("yyyy-MM-dd"))
+            .withDefaultPrettyPrinter();
 
-        assertEquals(jsonWithNullFieldsIgnored, objectWriter.writeValueAsString(document));
+        assertEquals(jsonWithNullFieldsIgnored.trim(), objectWriter.writeValueAsString(document));
     }
 }

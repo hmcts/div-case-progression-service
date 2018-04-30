@@ -5,9 +5,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocumentRequest;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.divorce.common.AuthorizationHeaderService;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocumentRequest;
 
 import java.util.Collections;
 
@@ -15,6 +15,7 @@ import java.util.Collections;
 @Component
 public class DefaultTransformationHttpEntityFactory implements TransformationHttpEntityFactory {
 
+    public static final String AUTHORIZATION = "Authorization";
     private final AuthorizationHeaderService authorizationHeaderService;
 
     @Autowired
@@ -31,7 +32,8 @@ public class DefaultTransformationHttpEntityFactory implements TransformationHtt
     }
 
     @Override
-    public HttpEntity<CaseDataContent> createRequestEntityForSubmitCase(String userToken, CaseDataContent caseDataContent) {
+    public HttpEntity<CaseDataContent> createRequestEntityForSubmitCase(String userToken,
+                                                                        CaseDataContent caseDataContent) {
         HttpHeaders headers = authorizationHeaderService.generateAuthorizationHeaders(userToken);
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
@@ -47,9 +49,12 @@ public class DefaultTransformationHttpEntityFactory implements TransformationHtt
     }
 
     @Override
-    public HttpEntity<PdfGenerateDocumentRequest> createRequestEntityForPdfGeneratorGet(PdfGenerateDocumentRequest pdfGenerateDocumentRequest) {
+    public HttpEntity<PdfGenerateDocumentRequest> createRequestEntityForPdfGeneratorGet(
+        PdfGenerateDocumentRequest pdfGenerateDocumentRequest, String authorization) {
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set(AUTHORIZATION, authorization);
 
         return new HttpEntity<>(pdfGenerateDocumentRequest, headers);
     }

@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce;
 
-import static org.apache.commons.lang3.StringUtils.join;
-
 import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+
+import static org.apache.commons.lang3.StringUtils.join;
 
 @Component
 public class AdulteryStrategy implements ReasonForDivorceStrategy {
@@ -22,7 +21,8 @@ public class AdulteryStrategy implements ReasonForDivorceStrategy {
         }
 
         if (divorceSession.getReasonForDivorceAdulteryKnowWhen().equals(YES)) {
-            derivedStatementOfCase = join(derivedStatementOfCase, divorceSession.getReasonForDivorceAdulteryWhenDetails(), LINE_SEPARATOR);
+            derivedStatementOfCase = join(derivedStatementOfCase,
+                divorceSession.getReasonForDivorceAdulteryWhenDetails(), LINE_SEPARATOR);
         }
 
         return join(derivedStatementOfCase, divorceSession.getReasonForDivorceAdulteryDetails());

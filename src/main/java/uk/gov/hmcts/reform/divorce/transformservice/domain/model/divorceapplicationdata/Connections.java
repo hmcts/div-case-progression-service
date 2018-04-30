@@ -2,29 +2,29 @@ package uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplica
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public @Data class Connections {
+@Data
+public class Connections {
     @JsonProperty("A")
-    private String a;
-    
+    private String connectionA;
+
     @JsonProperty("B")
-    private String b;
-    
+    private String connectionB;
+
     @JsonProperty("C")
-    private String c;
-    
+    private String connectionC;
+
     @JsonProperty("D")
-    private String d;
-    
+    private String connectionD;
+
     @JsonProperty("E")
-    private String e;
-    
+    private String connectionE;
+
     @JsonProperty("F")
-    private String f;
-    
+    private String connectionF;
+
     @JsonProperty("G")
-	private String g;
+    private String connectionG;
 }

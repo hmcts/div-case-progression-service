@@ -11,18 +11,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
-import uk.gov.hmcts.reform.divorce.common.JwtFactory;
 
-import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EncryptionKeyFactoryTest {
 
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
-    private static final long USER_ID = 123;
+    private static final String USER_ID = "123";
 
     @Value("${draft.store.api.encryption.key.template}")
     private String encryptionKeyTemplate;
@@ -33,26 +30,16 @@ public class EncryptionKeyFactoryTest {
     @Autowired
     private EncryptionKeyFactory underTest;
 
-    @MockBean
-    private JwtFactory jwtFactory;
-
-    @Mock
-    private Jwt jwt;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
-        given(jwtFactory.create(JWT)).willReturn(jwt);
-
-        given(jwt.getId()).willReturn(USER_ID);
     }
 
     @Test
     public void createEncryptionKeyShouldCreateAnEncryptionKeyUsingTheTemplateACommonSecretAndTheUserId() {
         assertEquals(
-                Base64.encodeBase64String(
-                        String.format(encryptionKeyTemplate, encryptionKeyPrefix, USER_ID).getBytes()),
-                underTest.createEncryptionKey(JWT));
+            Base64.encodeBase64String(
+                String.format(encryptionKeyTemplate, encryptionKeyPrefix, USER_ID).getBytes()),
+            underTest.createEncryptionKey(USER_ID));
     }
 }
