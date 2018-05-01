@@ -48,11 +48,11 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
     @Override
     public String getCreateCaseUrl(String userId, YesNoAnswer helpWithFeesAnswer) {
 
-        String createCaseCcdEventKey = helpWithFeesAnswer == YesNoAnswer.YES ?
-                CREATE_CASE_EVENT_KEY_WITH_HELP_WITH_FEES : CREATE_CASE_EVENT_KEY_WITHOUT_HELP_WITH_FEES;
+        String createCaseCcdEventKey = helpWithFeesAnswer == YesNoAnswer.YES
+                ? CREATE_CASE_EVENT_KEY_WITH_HELP_WITH_FEES : CREATE_CASE_EVENT_KEY_WITHOUT_HELP_WITH_FEES;
 
-
-        return String.format(CREATE_CASE_URL_FORMAT, ccdBaseUrl, userId, jurisdictionId, caseTypeId, createCaseCcdEventKey);
+        return String.format(CREATE_CASE_URL_FORMAT, ccdBaseUrl, userId, jurisdictionId, caseTypeId,
+                createCaseCcdEventKey);
     }
 
     @Override

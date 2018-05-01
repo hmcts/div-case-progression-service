@@ -19,7 +19,7 @@ public class BaseCcdClientConfigurationTest {
     private static final String CASEWORKER_DIVORCE = "caseworker-divorce";
     private static final String CITIZEN_DIVORCE = "citizen, divorce";
     private static final String USER_ID = "99";
-    private static final long CASE_ID = 1234567812345678l;
+    private static final long CASE_ID = 1234567812345678L;
     private static final String EVENT_ID = "paymentMade";
     private static final String CCD_BASE_URL = "ccdBaseUrl";
     private static final String CASE_TYPE_ID = "caseTypeId";
@@ -29,7 +29,8 @@ public class BaseCcdClientConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        ccdClientConfiguration = new BaseCcdClientConfiguration(CASEWORKER_DIVORCE, JURISDICTION_ID, CASE_TYPE_ID, CCD_BASE_URL);
+        ccdClientConfiguration = new BaseCcdClientConfiguration(CASEWORKER_DIVORCE, JURISDICTION_ID, CASE_TYPE_ID,
+                CCD_BASE_URL);
     }
 
     @Test
@@ -38,7 +39,8 @@ public class BaseCcdClientConfigurationTest {
         // given
         YesNoAnswer helpWithFees = YesNoAnswer.NO;
 
-        String expectedUrl = "ccdBaseUrl/citizens/99/jurisdictions/jurisdictionId/case-types/caseTypeId/event-triggers/create/token?ignore-warning=true";
+        String expectedUrl = "ccdBaseUrl/citizens/99/jurisdictions/jurisdictionId/case-types/caseTypeId/"
+                + "event-triggers/create/token?ignore-warning=true";
 
         // when
         String url = ccdClientConfiguration.getCreateCaseUrl(USER_ID, helpWithFees);
@@ -53,7 +55,8 @@ public class BaseCcdClientConfigurationTest {
         // given
         YesNoAnswer helpWithFees = YesNoAnswer.YES;
 
-        String expectedUrl = "ccdBaseUrl/citizens/99/jurisdictions/jurisdictionId/case-types/caseTypeId/event-triggers/hwfCreate/token?ignore-warning=true";
+        String expectedUrl = "ccdBaseUrl/citizens/99/jurisdictions/jurisdictionId/case-types/caseTypeId/"
+                + "event-triggers/hwfCreate/token?ignore-warning=true";
 
         // when
         String url = ccdClientConfiguration.getCreateCaseUrl(USER_ID, helpWithFees);
@@ -68,7 +71,8 @@ public class BaseCcdClientConfigurationTest {
         UserDetails userDetails = UserDetails.builder().id(USER_ID).roles(Collections.emptyList()).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/event-triggers/{eventId}/token?ignore-warning=true")
+                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
+                        + "event-triggers/{eventId}/token?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID, EVENT_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, CASE_ID, EVENT_ID));
@@ -81,7 +85,8 @@ public class BaseCcdClientConfigurationTest {
                 .id(USER_ID).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/caseworkers/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/event-triggers/{eventId}/token?ignore-warning=true")
+                "{ccdBaseUrl}/caseworkers/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
+                        + "event-triggers/{eventId}/token?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID, EVENT_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, CASE_ID, EVENT_ID));
@@ -93,7 +98,8 @@ public class BaseCcdClientConfigurationTest {
         UserDetails userDetails = UserDetails.builder().id(USER_ID).roles(Collections.emptyList()).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/events?ignore-warning=true")
+                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
+                        + "events?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, CASE_ID));
@@ -106,7 +112,8 @@ public class BaseCcdClientConfigurationTest {
                 .id(USER_ID).roles(Collections.singletonList(CASEWORKER_DIVORCE)).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/caseworkers/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/events?ignore-warning=true")
+                "{ccdBaseUrl}/caseworkers/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/"
+                        + "{caseId}/events?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, CASE_ID));
@@ -118,7 +125,8 @@ public class BaseCcdClientConfigurationTest {
         UserDetails userDetails = UserDetails.builder().id(USER_ID).roles(Collections.emptyList()).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/event-triggers/{eventId}/token?ignore-warning=true")
+                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
+                        + "event-triggers/{eventId}/token?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID, EVENT_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getStartEventUrl(userDetails, CASE_ID, EVENT_ID));
@@ -130,7 +138,8 @@ public class BaseCcdClientConfigurationTest {
         UserDetails userDetails = UserDetails.builder().id(USER_ID).roles(Collections.emptyList()).build();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
-                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/events?ignore-warning=true")
+                "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases/{caseId}/"
+                        + "events?ignore-warning=true")
                 .buildAndExpand(CCD_BASE_URL, USER_ID, JURISDICTION_ID, CASE_TYPE_ID, CASE_ID);
 
         assertEquals(uri.toString(), ccdClientConfiguration.getCreateCaseEventUrl(userDetails, CASE_ID));

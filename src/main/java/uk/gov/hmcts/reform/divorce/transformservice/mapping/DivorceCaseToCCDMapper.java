@@ -249,7 +249,8 @@ public abstract class DivorceCaseToCCDMapper {
 
     @AfterMapping
     protected void mapHelpWithFeesNeedHelp(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
-        result.setD8HelpWithFeesNeedHelp(translateToStringYesNo(getYesNoAnswer(divorceSession.getHelpWithFeesNeedHelp())));
+        result.setD8HelpWithFeesNeedHelp(
+                translateToStringYesNo(getYesNoAnswer(divorceSession.getHelpWithFeesNeedHelp())));
     }
 
     private static String getYesNoAnswer(YesNoAnswer yesNoAnswer) {

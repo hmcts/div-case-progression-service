@@ -28,7 +28,8 @@ public class SubmitCcdClient implements CcdClient {
 
         HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(encodedJwt);
 
-        String url = ccdClientConfiguration.getCreateCaseUrl(userDetails.getId(), divorceSessionData.getHelpWithFeesNeedHelp());
+        String url = ccdClientConfiguration.getCreateCaseUrl(
+                userDetails.getId(), divorceSessionData.getHelpWithFeesNeedHelp());
         log.info("Formatted url create case {} ", url);
         return restTemplate.exchange(url, HttpMethod.GET, httpEntity, CreateEvent.class).getBody();
     }
