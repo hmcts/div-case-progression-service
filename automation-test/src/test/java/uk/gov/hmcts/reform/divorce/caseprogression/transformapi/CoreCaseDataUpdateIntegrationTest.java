@@ -19,7 +19,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
     private static final String URL_SEPARATOR = "/";
     private static final String VALIDATION_EXCEPTION = "Request Id : null and Exception message : 422 , Exception response body: {\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.ValidationException\"";
     private static final String CASE_VALIDATION_EXCEPTION = "Request Id : null and Exception message : 422 , Exception response body: {\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.CaseValidationException\"";
-    private static final String UNAUTHORISED_JWT_EXCEPTION = "Request Id : null and Exception message : 403 reading IdamApiClient#retrieveUserDetails(String)";
+    private static final String UNAUTHORISED_JWT_EXCEPTION = "Request Id : null and Exception message : status 403 reading IdamApiClient#retrieveUserDetails(String)";
     private static final String BAD_REQUEST_EXCEPTION = "Request Id : null and Exception message : 400";
     private static final String RESOURCE_NOT_FOUND_EXCEPTION = "Request Id : null and Exception message : 404 , Exception response body: {\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.ResourceNotFoundException\"";
 
