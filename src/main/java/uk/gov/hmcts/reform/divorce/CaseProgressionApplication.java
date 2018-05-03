@@ -10,12 +10,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuthHealthIndicator;
 import uk.gov.hmcts.reform.divorce.health.CustomHealthAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {ServiceAuthHealthIndicator.class})
 public class CaseProgressionApplication {
 
     @Value("${http.request.read.timeout}")
