@@ -37,14 +37,6 @@ List<LinkedHashMap<String, Object>> secrets = [
 withPipeline(type , product, component) {
     loadVaultSecrets(secrets)
 
-    before('functionalTest:aat') {
-        env.ITEST_ENVIRONMENT = "aat"
-    }
-
-    before('functionalTest:preview') {
-        env.ITEST_ENVIRONMENT = "preview"
-    }
-
     after('checkout') {
         echo '${product}-${component} checked out'
     }
