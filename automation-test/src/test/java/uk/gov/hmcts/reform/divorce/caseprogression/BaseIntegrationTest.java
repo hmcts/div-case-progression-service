@@ -74,6 +74,14 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
                 .andReturn();
     }
 
+    public Response getFromRestServiceAsCitizen(String uri) {
+
+        return SerenityRest.given()
+            .config(RestAssuredConfig.config()
+                .sslConfig(new SSLConfig().allowAllHostnames()))
+            .headers(headers(getIdamTestUser(), true)).get(uri).andReturn();
+    }
+
     public Response getFromRestService(String url) {
         return SerenityRest.given()
                 .config(RestAssuredConfig.config()

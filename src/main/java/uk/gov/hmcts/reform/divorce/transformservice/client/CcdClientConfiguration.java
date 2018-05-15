@@ -9,4 +9,7 @@ public interface CcdClientConfiguration {
     String getStartEventUrl(String jwtId, Long caseId, String eventId);
 
     String getCreateCaseEventUrl(String jwtId, Long caseId);
+
+    String getCases(Long jwtId, String queryParams);
+
 }

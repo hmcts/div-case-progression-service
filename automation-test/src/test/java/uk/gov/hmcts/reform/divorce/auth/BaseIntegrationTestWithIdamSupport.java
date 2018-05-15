@@ -15,7 +15,7 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
     private String invalidToken;
 
     @Autowired
-    private IdamUserSupport idamUserSupport;
+    protected IdamUserSupport idamUserSupport;
 
     @Autowired
     private ServiceAuthSupport serviceAuthSupport;

@@ -29,6 +29,9 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
     private static final String CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT =
         "%s/caseworkers/%d/jurisdictions/%s/case-types/%s/cases/%d/events?ignore-warning=true";
 
+    private static final String RETRIEVE_CASE_IDS_URL_FORMAT =
+        "%s/citizens/%d/jurisdictions/%s/case-types/%s/cases?queryParameters=%s";
+
     @Value("${ccd.caseworker.role}")
     private String caseworkerRole = "caseworker-divorce";
 
@@ -69,6 +72,11 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
         String url =
             isCaseWorkerUser(jwt.getData()) ? CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT : CREATE_CASE_EVENT_URL_FORMAT;
         return String.format(url, ccdBaseUrl, jwt.getId(), jurisdictionId, caseTypeId, caseId);
+    }
+
+    @Override
+    public String getCases(Long jwtId, String queryParams) {
+        return String.format(RETRIEVE_CASE_IDS_URL_FORMAT, ccdBaseUrl, jwtId, jurisdictionId, caseTypeId, queryParams);
     }
 
     private boolean isCaseWorkerUser(String group) {

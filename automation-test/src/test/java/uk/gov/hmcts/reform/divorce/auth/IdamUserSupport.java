@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Service
+@Data
 public class IdamUserSupport {
 
     private static final String idamCaseworkerUser = "CaseWorkerTest";

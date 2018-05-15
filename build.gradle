@@ -163,6 +163,7 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'org.apache.camel', name: 'camel-spring-boot-starter', version: '2.21.0'
 
     compile (group: 'uk.gov.hmcts.reform', name:'service-auth-provider-client', version: versions.serviceTokenGenerator){
         exclude group: 'io.reactivex', module: 'rxnetty'
