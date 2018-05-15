@@ -44,7 +44,7 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         Response ccdResponse = submitCase("submit-complete-case.json");
         long caseId = assertAndGetCaseId(ccdResponse);
 
-        Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
+        Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId); 
         assertGeneratedDocumentExists(ccdSubmitResponse, caseId);
     }
 
