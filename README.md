@@ -2,7 +2,6 @@
 
 ## A restful service used to transform a divorce frontend session to a general core case data format
 
-
 ## Introduction
 * This API provides below endpoints
   * JSON Transformation
