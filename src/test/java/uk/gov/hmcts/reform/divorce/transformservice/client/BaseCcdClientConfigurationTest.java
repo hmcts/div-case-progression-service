@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 public class BaseCcdClientConfigurationTest {
 
     private static final String CASEWORKER_DIVORCE = "caseworker-divorce";
-    private static final String CITIZEN_DIVORCE = "citizen, divorce";
     private static final String USER_ID = "99";
     private static final long CASE_ID = 1234567812345678L;
     private static final String EVENT_ID = "paymentMade";
