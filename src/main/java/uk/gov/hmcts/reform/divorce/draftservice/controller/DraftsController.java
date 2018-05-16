@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.transformservice.service.PetitionService;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
@@ -37,12 +38,14 @@ public class DraftsController {
     private DraftsService service;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private PetitionService petitionService;
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Saves a divorce case draft")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Draft saved")
-        })
+    })
     public ResponseEntity<Void> saveDraft(
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt,
@@ -69,22 +72,17 @@ public class DraftsController {
     public ResponseEntity<JsonNode> retrieveDraft(
         @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
         final String jwt) {
-        log.debug("Received request to retrieve a divorce session draft");
-        JsonNode draft = service.getDraft(jwt);
-        if (draft != null) {
-            return ResponseEntity.ok(draft);
-        }
-        return ResponseEntity.notFound().build();
+        return petitionService.retrieveDraft(service, jwt);
     }
 
     @DeleteMapping
     @ApiOperation(value = "Deletes a divorce case draft")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "The divorce case draft has been deleted successfully")
-        })
-    public ResponseEntity<Void> deleteDraft(@RequestHeader("Authorization")
-                                                @ApiParam(value = "JWT authorisation token issued by IDAM",
-                                                    required = true) final String jwt) {
+    })
+    public ResponseEntity<Void> deleteDraft(
+        @RequestHeader("Authorization")
+        @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
         log.debug("Received request to delete a divorce session draft");
         service.deleteDraft(jwt);
         return ResponseEntity.noContent().build();

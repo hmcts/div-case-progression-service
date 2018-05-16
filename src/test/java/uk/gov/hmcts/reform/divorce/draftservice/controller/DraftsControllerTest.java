@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableException;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.transformservice.service.PetitionService;
 
 import java.io.File;
 
@@ -45,6 +46,8 @@ public class DraftsControllerTest {
 
     private static final String DRAFTS_URL = "/draftsapi/version/1";
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
+    @MockBean
+    public PetitionService petitionService;
     @MockBean
     public DraftsService service;
     @MockBean
