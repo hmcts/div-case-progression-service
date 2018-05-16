@@ -49,7 +49,7 @@ public class DraftsControllerTest {
     @MockBean
     public PetitionService petitionService;
     @MockBean
-    public DraftsService service;
+    public DraftsService draftsService;
     @MockBean
     public EmailService emailService;
     @Autowired
@@ -116,7 +116,7 @@ public class DraftsControllerTest {
 
     @Test
     public void shouldReturnOKAndTheSavedSessionWhenRetrievingADraft() throws Exception {
-        when(service.getDraft(JWT)).thenReturn(requestContent);
+        when(draftsService.getDraft(JWT)).thenReturn(requestContent);
 
         mvc.perform(get(DRAFTS_URL)
             .header("Authorization", JWT)
@@ -147,7 +147,7 @@ public class DraftsControllerTest {
         HttpClientErrorException httpClientErrorException =
             new HttpClientErrorException(HttpStatus.NOT_FOUND, "Not found");
 
-        doThrow(httpClientErrorException).when(service).saveDraft(anyString(), any());
+        doThrow(httpClientErrorException).when(draftsService).saveDraft(anyString(), any());
 
         mvc.perform(put(DRAFTS_URL)
             .content(requestContent.toString())
@@ -162,7 +162,7 @@ public class DraftsControllerTest {
 
     @Test
     public void shouldReturn503WhenServiceThrowsDraftStoreUnavailableException() throws Exception {
-        doThrow(DraftStoreUnavailableException.class).when(service).saveDraft(anyString(), any());
+        doThrow(DraftStoreUnavailableException.class).when(draftsService).saveDraft(anyString(), any());
 
         mvc.perform(put(DRAFTS_URL)
             .content(requestContent.toString())

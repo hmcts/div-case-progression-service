@@ -35,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 public class DraftsController {
 
     @Autowired
-    private DraftsService service;
+    private DraftsService draftsService;
     @Autowired
     private EmailService emailService;
     @Autowired
@@ -56,7 +56,7 @@ public class DraftsController {
         @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
         @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
-        service.saveDraft(jwt, data);
+        draftsService.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
             emailService.sendSaveDraftConfirmationEmail(notificationEmail);
         }
@@ -72,7 +72,7 @@ public class DraftsController {
     public ResponseEntity<JsonNode> retrieveDraft(
         @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
         final String jwt) {
-        return petitionService.retrieveDraft(service, jwt);
+        return petitionService.retrieveDraft(jwt);
     }
 
     @DeleteMapping
@@ -82,9 +82,10 @@ public class DraftsController {
     })
     public ResponseEntity<Void> deleteDraft(
         @RequestHeader("Authorization")
-        @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
+        @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
+        final String jwt) {
         log.debug("Received request to delete a divorce session draft");
-        service.deleteDraft(jwt);
+        draftsService.deleteDraft(jwt);
         return ResponseEntity.noContent().build();
     }
 }
