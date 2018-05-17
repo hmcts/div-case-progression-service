@@ -116,7 +116,7 @@ public class DraftsControllerTest {
 
     @Test
     public void shouldReturnOKAndTheSavedSessionWhenRetrievingADraft() throws Exception {
-        when(draftsService.getDraft(JWT)).thenReturn(requestContent);
+        when(petitionService.retrieveDraft(JWT)).thenReturn(requestContent);
 
         mvc.perform(get(DRAFTS_URL)
             .header("Authorization", JWT)

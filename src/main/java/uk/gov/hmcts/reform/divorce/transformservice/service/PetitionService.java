@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class PetitionService {
@@ -14,12 +16,8 @@ public class PetitionService {
     @Autowired
     private DraftsService draftsService;
 
-    public ResponseEntity<JsonNode> retrieveDraft(String jwt) {
+    public JsonNode retrieveDraft(String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
-        JsonNode draft = draftsService.getDraft(jwt);
-        if (draft != null) {
-            return ResponseEntity.ok(draft);
-        }
-        return ResponseEntity.notFound().build();
+        return Optional.ofNullable(draftsService.getDraft(jwt)).orElse(null);
     }
 }
