@@ -17,6 +17,9 @@
 *.ipr
 **/out/
 
+### Visual Studio Code ###
+.vscode
+
 .DS_store
 **/target/
 bin/
