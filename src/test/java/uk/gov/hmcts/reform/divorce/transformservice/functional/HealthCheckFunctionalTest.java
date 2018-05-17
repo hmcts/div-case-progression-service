@@ -72,6 +72,10 @@ public class HealthCheckFunctionalTest {
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(WireMockSpring.options().port(4007)
         .bindAddress("localhost"));
 
+    @ClassRule
+    public static WireMockClassRule validationServer = new WireMockClassRule(WireMockSpring.options().port(4008)
+        .bindAddress("localhost"));
+
     @Value("${ccd.caseDataStore.health.path}")
     private String ccdHealthPath;
     @Value("${auth.provider.health.path}")
@@ -80,6 +84,8 @@ public class HealthCheckFunctionalTest {
     private String draftStoreApiHealthPath;
     @Value("${pdf.generator.healthPath}")
     private String pdfGeneratorHealthPath;
+    @Value("${div.validation.service.health.path}")
+    private String validationServiceHealthPath;
     @Value("${service.service-auth-provider.health.context-path}")
     private String serviceAuthHealthContextPath;
     @Autowired
@@ -91,6 +97,7 @@ public class HealthCheckFunctionalTest {
         authServer.verify(getRequestedFor(urlPathEqualTo("/health")));
         draftStoreServer.verify(getRequestedFor(urlPathEqualTo("/health")));
         pdfGeneratorServer.verify(getRequestedFor(urlPathEqualTo(pdfGeneratorHealthPath)));
+        validationServer.verify(getRequestedFor(urlPathEqualTo(validationServiceHealthPath)));
     }
 
     @Test
@@ -99,15 +106,20 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
         mockServiceAuthFeignHealthCheck();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
+
+        System.out.println("BODY is");
+        System.out.println(body);
 
         assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -117,6 +129,7 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthDown();
         stubDraftStoreApiHealthDown();
         stubPDFGeneratorHealthDown();
+        stubValidationServiceHealthDown();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -125,6 +138,7 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -134,6 +148,7 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -142,6 +157,7 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -152,6 +168,7 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthDown();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -160,6 +177,7 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -169,6 +187,7 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthDown();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -177,6 +196,7 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -186,6 +206,7 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthDown();
+        stubValidationServiceHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -194,15 +215,37 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
+    }
+
+    @Test
+    public void shouldReturnStatusDownWhenValidationServiceIsDown() throws Exception {
+        stubAuthHealthUp();
+        stubCcdHealthUp();
+        stubDraftStoreApiHealthUp();
+        stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthDown();
+
+        String body = this.restTemplate.getForObject("/status/health", String.class);
+
+        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
     private void stubCcdHealthUp() throws Exception {
-        stubServiceResponse(ccdServer, ccdHealthPath, 200, "/fixtures/ccd/healthcheck-up.json");
+        stubServiceResponse(ccdServer, ccdHealthPath, 200, 
+            "/fixtures/ccd/healthcheck-up.json");
     }
 
     private void stubCcdHealthDown() throws Exception {
-        stubServiceResponse(ccdServer, ccdHealthPath, 503, "/fixtures/ccd/healthcheck-down.json");
+        stubServiceResponse(ccdServer, ccdHealthPath, 503, 
+            "/fixtures/ccd/healthcheck-down.json");
     }
 
     private void stubAuthHealthUp() throws Exception {
@@ -217,7 +260,7 @@ public class HealthCheckFunctionalTest {
 
     private void stubDraftStoreApiHealthUp() throws Exception {
         stubServiceResponse(draftStoreServer, draftStoreApiHealthPath, 200,
-            "/fixtures/service-auth/healthcheck-up.json");
+            "/fixtures/draft-store/healthcheck-up.json");
     }
 
     private void stubDraftStoreApiHealthDown() throws Exception {
@@ -233,6 +276,16 @@ public class HealthCheckFunctionalTest {
     private void stubPDFGeneratorHealthDown() throws Exception {
         stubServiceResponse(pdfGeneratorServer, pdfGeneratorHealthPath, 503,
             "/fixtures/pdf-generator/healthcheck-down.json");
+    }
+
+    private void stubValidationServiceHealthUp() throws Exception {
+        stubServiceResponse(validationServer, validationServiceHealthPath, 200,
+            "/fixtures/validation-service/healthcheck-up.json");
+    }
+
+    private void stubValidationServiceHealthDown() throws Exception {
+        stubServiceResponse(validationServer, validationServiceHealthPath, 503,
+            "/fixtures/validation-service/healthcheck-down.json");
     }
 
     private void stubServiceResponse(WireMockClassRule server, String healthPath, int statusCode, String fixturePath)
