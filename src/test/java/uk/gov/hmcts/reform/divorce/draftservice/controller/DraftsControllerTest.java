@@ -157,7 +157,6 @@ public class DraftsControllerTest {
             .andExpect(jsonPath("$.status", is(404)))
             .andExpect(jsonPath("$.error", is("Not Found")))
             .andExpect(jsonPath("path", is("/draftsapi/version/1")));
-
     }
 
     @Test
@@ -169,7 +168,6 @@ public class DraftsControllerTest {
             .header("Authorization", JWT)
             .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isServiceUnavailable());
-
     }
 
 }

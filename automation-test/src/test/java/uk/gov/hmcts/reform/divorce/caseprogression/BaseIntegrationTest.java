@@ -81,14 +81,12 @@ public abstract class  BaseIntegrationTest extends BaseIntegrationTestWithIdamSu
             .headers(headers(getIdamTestUser(), true)).get(uri).andReturn();
     }
 
-
     public Response getFromRestService(String url) {
         return SerenityRest.given()
                 .config(RestAssuredConfig.config()
                         .sslConfig(new SSLConfig().allowAllHostnames()))
                 .headers(headers(getIdamTestCaseWorkerUser(), true)).get(url).andReturn();
     }
-
 
     private Map<String, Object> headers() {
         return headers(getIdamTestUser());

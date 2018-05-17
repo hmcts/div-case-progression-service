@@ -10,8 +10,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataCon
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocumentRequest;
 
 import java.util.Collections;
-import java.util.List;
-
 
 @Component
 public class DefaultTransformationHttpEntityFactory implements TransformationHttpEntityFactory {

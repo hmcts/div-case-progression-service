@@ -71,6 +71,7 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
         saveDivorceDraft(draft);
 
         Response response = deleteDivorceDraft();
+
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
         assertThereAreNoDrafts();
     }

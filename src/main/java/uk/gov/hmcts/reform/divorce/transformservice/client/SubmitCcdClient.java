@@ -20,10 +20,13 @@ public class SubmitCcdClient implements CcdClient {
 
     @Autowired
     private CcdClientConfiguration ccdClientConfiguration;
+
     @Autowired
     private RestTemplate restTemplate;
+
     @Autowired
     private TransformationHttpEntityFactory httpEntityFactory;
+
     @Autowired
     private JwtFactory jwtFactory;
 
