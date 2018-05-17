@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.util.Optional;
 
@@ -25,8 +27,12 @@ public class DraftsService {
     @Autowired
     private DraftStoreClient client;
 
+    @Autowired
+    private UserService userService;
+
     public void saveDraft(String jwt, JsonNode data) {
-        String secret = keyFactory.createEncryptionKey(jwt);
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        String secret = keyFactory.createEncryptionKey(userDetails.getId());
         Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
         if (divorceDraft.isPresent()) {
             log.debug("Updating the existing divorce session draft");
@@ -46,7 +52,8 @@ public class DraftsService {
 
     public JsonNode getDraft(String jwt) {
         log.debug("Retrieving a divorce session draft");
-        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(jwt));
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(userDetails.getId()));
         if (divorceDraft.isPresent()) {
             log.debug("Returning the saved divorce session draft");
             return divorceDraft.get().getDocument();
@@ -57,7 +64,8 @@ public class DraftsService {
 
     public void deleteDraft(String jwt) {
         log.debug("Deleting the divorce session draft");
-        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(jwt));
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(userDetails.getId()));
         divorceDraft.ifPresent(draft -> client.deleteDraft(jwt, draft.getId()));
     }
 

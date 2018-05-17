@@ -11,8 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import uk.gov.hmcts.reform.divorce.common.JwtFactory;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.Jwt;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
@@ -36,9 +35,6 @@ public class SubmitCcdClientTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
-    private JwtFactory jwtFactory;
-
     @InjectMocks
     private SubmitCcdClient ccdClient;
 
@@ -46,9 +42,8 @@ public class SubmitCcdClientTest {
     @SuppressWarnings("unchecked")
     public void createCaseReturnsCreateEvent() {
         String encodedJwt = "_jwt";
-        Jwt jwt = mock(Jwt.class);
-        long id = 60;
-
+        String id = "60";
+        final UserDetails userDetails = UserDetails.builder().id(id).build();
         HttpEntity<String> httpEntity = mock(HttpEntity.class);
         ResponseEntity<CreateEvent> responseEntity = mock(ResponseEntity.class);
 
@@ -62,59 +57,54 @@ public class SubmitCcdClientTest {
         String urlString = uri.toUriString();
 
         when(httpEntityFactory.createRequestEntityForCcdGet(encodedJwt)).thenReturn(httpEntity);
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-        when(jwt.getId()).thenReturn(id);
         when(ccdClientConfiguration.getCreateCaseUrl(eq(id))).thenReturn(urlString);
 
         when(restTemplate.exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class)))
             .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(createEvent);
 
-        assertEquals(createEvent, ccdClient.createCase(encodedJwt));
+        assertEquals(createEvent, ccdClient.createCase(userDetails, encodedJwt));
 
         verify(httpEntityFactory).createRequestEntityForCcdGet(encodedJwt);
-        verify(jwtFactory).create(encodedJwt);
-        verify(jwt).getId();
         verify(ccdClientConfiguration).getCreateCaseUrl(eq(id));
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class));
         verify(responseEntity).getBody();
 
-        verifyNoMoreInteractions(httpEntityFactory, jwtFactory, jwt, restTemplate, responseEntity);
+        verifyNoMoreInteractions(httpEntityFactory, restTemplate, responseEntity);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void submitCaseReturnsSubmitEvent()  {
+        String userId = "60";
         String encodedJwt = "_jwt";
         CaseDataContent coreCaseData = mock(CaseDataContent.class);
         HttpEntity<CaseDataContent> httpEntity = mock(HttpEntity.class);
-        Jwt jwt = mock(Jwt.class);
+        final UserDetails userDetails = UserDetails.builder().id(userId).build();
         ResponseEntity<SubmitEvent> responseEntity = mock(ResponseEntity.class);
         SubmitEvent submitEvent = new SubmitEvent();
 
         UriComponents uri = UriComponentsBuilder.fromUriString(
             "{ccdBaseUrl}/citizens/{id}/jurisdictions/{jurisdictionId}/case-types/{caseTypeId}/cases?"
                 + "ignore-warning=true")
-            .buildAndExpand("CCD_BASE_URL", jwt.getId(), "JID", "CTID");
+            .buildAndExpand("CCD_BASE_URL", userId, "JID", "CTID");
 
         String urlString = uri.toUriString();
 
         when(httpEntityFactory.createRequestEntityForSubmitCase(encodedJwt, coreCaseData)).thenReturn(httpEntity);
-        when(jwtFactory.create(encodedJwt)).thenReturn(jwt);
-        when(ccdClientConfiguration.getSubmitCaseUrl(eq(jwt.getId()))).thenReturn(urlString);
+        when(ccdClientConfiguration.getSubmitCaseUrl(eq(userId))).thenReturn(urlString);
 
         when(restTemplate.exchange(eq(urlString), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class)))
             .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(submitEvent);
 
-        assertEquals(submitEvent, ccdClient.submitCase(encodedJwt, coreCaseData));
+        assertEquals(submitEvent, ccdClient.submitCase(userDetails, encodedJwt, coreCaseData));
 
         verify(httpEntityFactory).createRequestEntityForSubmitCase(encodedJwt, coreCaseData);
-        verify(jwtFactory).create(encodedJwt);
-        verify(ccdClientConfiguration).getSubmitCaseUrl(eq(jwt.getId()));
+        verify(ccdClientConfiguration).getSubmitCaseUrl(eq(userId));
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.POST), eq(httpEntity), eq(SubmitEvent.class));
         verify(responseEntity).getBody();
 
-        verifyNoMoreInteractions(httpEntityFactory, jwtFactory, restTemplate, responseEntity);
+        verifyNoMoreInteractions(httpEntityFactory, restTemplate, responseEntity);
     }
 }

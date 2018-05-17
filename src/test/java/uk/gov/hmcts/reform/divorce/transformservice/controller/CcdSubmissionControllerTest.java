@@ -18,7 +18,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-import uk.gov.hmcts.reform.divorce.errorhandler.JwtParsingException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
@@ -97,15 +96,6 @@ public class CcdSubmissionControllerTest {
         HttpClientErrorException exception = mock(HttpClientErrorException.class);
         when(exception.getMessage()).thenReturn(errorMessage);
         when(exception.getResponseBodyAsString()).thenReturn("exception body");
-
-        testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
-    }
-
-    @Test
-    public void shouldReturnErrorInResponseBodyWhenJwtParsingExceptionIsThrown() throws Exception {
-        final String errorMessage = "error-message JwtParsingException";
-        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
-        RuntimeException exception = mock(JwtParsingException.class);
 
         testExceptionIsHandledCorrectly(errorMessage, genericExceptionMessage, exception);
     }
