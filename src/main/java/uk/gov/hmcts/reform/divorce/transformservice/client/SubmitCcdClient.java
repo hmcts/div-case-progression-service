@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 
+import java.util.List;
+
 @Component
 @Slf4j
 public class SubmitCcdClient implements CcdClient {
@@ -48,5 +50,14 @@ public class SubmitCcdClient implements CcdClient {
         String url = ccdClientConfiguration.getSubmitCaseUrl(jwt.getId());
         log.info("Formatted url submit case {} ", url);
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, SubmitEvent.class).getBody();
+    }
+
+    @Override
+    public List<CaseDataContent> getCase(String userToken, String queryParams) {
+        HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGetCaseDataContent(userToken);
+        Jwt jwt = jwtFactory.create(userToken);
+        String url = ccdClientConfiguration.getCases(jwt.getId(), queryParams);
+        log.info("Formatted url submit case {} ", url);
+        return restTemplate.exchange(url, HttpMethod.GET, httpEntity, List.class).getBody();
     }
 }

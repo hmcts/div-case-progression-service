@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import uk.gov.hmcts.reform.divorce.TestContextConfiguration;
 import uk.gov.hmcts.reform.divorce.auth.BaseIntegrationTestWithIdamSupport;
+import uk.gov.hmcts.reform.divorce.auth.config.ServiceContextConfiguration;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.Draft;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.DraftStoreClient;
 
@@ -22,6 +25,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
+@ContextConfiguration(classes = {TestContextConfiguration.class, ServiceContextConfiguration.class})
 public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
 
     @Value("${drafts.api.url}")

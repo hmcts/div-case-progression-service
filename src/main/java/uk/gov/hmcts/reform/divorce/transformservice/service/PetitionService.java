@@ -32,14 +32,14 @@ public class PetitionService {
         return Optional.ofNullable(draftsService.getDraft(jwt)).orElse(null);
     }
 
-    // Checks draft store then if not found checks CCD
-
+    // Checks draft store for case and if not found checks CCD
     public JsonNode retrieveDraft(String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
         return Optional.ofNullable(draftsService.getDraft(jwt)).orElse(null);
 
         // 2) call RetrieveService and get "status"
         // return retrieveCaseFromCCD();
+
             /* retrieveFromDraftStore()
         |
         | \

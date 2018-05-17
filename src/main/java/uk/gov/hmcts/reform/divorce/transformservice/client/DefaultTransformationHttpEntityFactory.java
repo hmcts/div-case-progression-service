@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataCon
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocumentRequest;
 
 import java.util.Collections;
+import java.util.List;
 
 
 @Component
@@ -25,6 +26,14 @@ public class DefaultTransformationHttpEntityFactory implements TransformationHtt
 
     @Override
     public HttpEntity<String> createRequestEntityForCcdGet(String encodedJwt) {
+        HttpHeaders headers = authorizationHeaderService.generateAuthorizationHeaders(encodedJwt);
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        return new HttpEntity<>(headers);
+    }
+
+    @Override
+    public HttpEntity<String> createRequestEntityForCcdGetCaseDataContent(String encodedJwt) {
         HttpHeaders headers = authorizationHeaderService.generateAuthorizationHeaders(encodedJwt);
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSupport {
+public abstract class  BaseIntegrationTest extends BaseIntegrationTestWithIdamSupport {
 
     @Value("${ccd.caseDataStore.baseUrl}")
     private String ccdBaseUrl;
@@ -73,6 +73,14 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
                 .post(url)
                 .andReturn();
     }
+
+    public Response getFromRestServiceAsCitizen(String uri) {
+        return SerenityRest.given()
+            .config(RestAssuredConfig.config()
+                .sslConfig(new SSLConfig().allowAllHostnames()))
+            .headers(headers(getIdamTestUser(), true)).get(uri).andReturn();
+    }
+
 
     public Response getFromRestService(String url) {
         return SerenityRest.given()

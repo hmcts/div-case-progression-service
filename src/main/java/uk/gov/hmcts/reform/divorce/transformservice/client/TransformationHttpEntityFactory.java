@@ -7,6 +7,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfGenerateDocume
 public interface TransformationHttpEntityFactory {
     HttpEntity<String> createRequestEntityForCcdGet(String encodedJwt);
 
+    HttpEntity<String> createRequestEntityForCcdGetCaseDataContent(String encodedJwt);
+
     HttpEntity<CaseDataContent> createRequestEntityForSubmitCase(String encodedJwt, CaseDataContent caseDataContent);
 
     HttpEntity<Object> createRequestEntityForHealthCheck();
