@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class YesNoAnswerTest {
 
@@ -33,5 +35,29 @@ public class YesNoAnswerTest {
 
         // then
         assertEquals(YesNoAnswer.NO, yesNoAnswer);
+    }
+
+    @Test
+    public void fromInput_throws_exception_for_unrecognized_input() {
+
+        // given
+        String maybe = "maybe";
+
+        IllegalArgumentException exception = null;
+
+        // when
+        try {
+            objectMapper.convertValue(maybe, YesNoAnswer.class);
+        } catch (IllegalArgumentException e) {
+            exception = e;
+        }
+
+        // then
+        assertNotNull(exception);
+        String exceptionMessage = exception.getMessage();
+
+        for (YesNoAnswer answer : YesNoAnswer.values()) {
+            assertTrue(exceptionMessage.contains(answer.name()));
+        }
     }
 }
