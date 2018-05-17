@@ -16,6 +16,8 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +37,7 @@ public class DraftsServiceTest {
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
     private static final String SECRET = "secret";
     private static final String DRAFT_ID = "1";
+    private static final String USER_ID = "60";
 
     @Mock
     private DraftModelFactory modelFactory;
@@ -60,6 +63,9 @@ public class DraftsServiceTest {
     @Mock
     private Draft draft;
 
+    @Mock
+    private UserService userService;
+
     private JsonNode requestContent;
 
 
@@ -79,11 +85,13 @@ public class DraftsServiceTest {
         when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
         when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
 
-        when(keyFactory.createEncryptionKey(JWT)).thenReturn(SECRET);
+        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
 
 
         when(draft.getId()).thenReturn(DRAFT_ID);
         when(draft.getDocument()).thenReturn(requestContent);
+
+        when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
     }
 
     @Test

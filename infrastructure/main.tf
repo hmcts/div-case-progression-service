@@ -51,6 +51,8 @@ module "div-case-progression" {
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATE_VARS = "${var.uk_gov_notify_email_template_vars}"
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
+        IDAM_API_BASEURL = "${var.idam_api_baseurl}"
+        IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
     }
 }
 
