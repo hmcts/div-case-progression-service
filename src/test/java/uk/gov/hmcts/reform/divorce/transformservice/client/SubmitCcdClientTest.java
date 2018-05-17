@@ -15,6 +15,8 @@ import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.YesNoAnswer;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -56,17 +58,21 @@ public class SubmitCcdClientTest {
 
         String urlString = uri.toUriString();
 
+        DivorceSession mockDivorceSession = mock(DivorceSession.class);
+        YesNoAnswer expectedHelpWithFeesAnswer = YesNoAnswer.YES;
+        when(mockDivorceSession.getHelpWithFeesNeedHelp()).thenReturn(expectedHelpWithFeesAnswer);
+
         when(httpEntityFactory.createRequestEntityForCcdGet(encodedJwt)).thenReturn(httpEntity);
-        when(ccdClientConfiguration.getCreateCaseUrl(eq(id))).thenReturn(urlString);
+        when(ccdClientConfiguration.getCreateCaseUrl(id, expectedHelpWithFeesAnswer)).thenReturn(urlString);
 
         when(restTemplate.exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class)))
             .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(createEvent);
 
-        assertEquals(createEvent, ccdClient.createCase(userDetails, encodedJwt));
+        assertEquals(createEvent, ccdClient.createCase(userDetails, encodedJwt, mockDivorceSession));
 
         verify(httpEntityFactory).createRequestEntityForCcdGet(encodedJwt);
-        verify(ccdClientConfiguration).getCreateCaseUrl(eq(id));
+        verify(ccdClientConfiguration).getCreateCaseUrl(eq(id), eq(expectedHelpWithFeesAnswer));
         verify(restTemplate).exchange(eq(urlString), eq(HttpMethod.GET), eq(httpEntity), eq(CreateEvent.class));
         verify(responseEntity).getBody();
 
