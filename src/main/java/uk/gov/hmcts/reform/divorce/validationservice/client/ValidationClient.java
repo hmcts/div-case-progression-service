@@ -5,5 +5,5 @@ import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
 
 public interface ValidationClient {
     
-    public ValidationResponse validate(ValidationRequest request);
+    ValidationResponse validate(ValidationRequest request);
 }
