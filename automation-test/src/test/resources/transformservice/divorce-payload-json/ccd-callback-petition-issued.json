@@ -4,6 +4,7 @@
     "id": 999999999,
     "state": "awaitingAdminCheck",
     "case_data": {
+      "D8legalProcess": "Divorce",
       "D8ScreenHasMarriageBroken": "YES",
       "D8ScreenHasRespondentAddress": "YES",
       "D8ScreenHasMarriageCert": "YES",
