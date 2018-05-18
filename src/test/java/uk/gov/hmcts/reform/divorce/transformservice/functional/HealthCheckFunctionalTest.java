@@ -1,10 +1,24 @@
 package uk.gov.hmcts.reform.divorce.transformservice.functional;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.cloud.netflix.feign.encoding.HttpEncoding.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+
+import java.io.File;
+import java.nio.charset.Charset;
+
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.jayway.jsonpath.JsonPath;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ServerList;
+
 import org.apache.commons.io.FileUtils;
+import org.junit.Before;
 import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -23,19 +37,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-
-import java.io.File;
-import java.nio.charset.Charset;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.matching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.cloud.netflix.feign.encoding.HttpEncoding.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -91,6 +94,11 @@ public class HealthCheckFunctionalTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Before
+    public void setUp() {
+        mockServiceAuthFeignHealthCheck();
+    }
+
     @After
     public void tearDown() {
         ccdServer.verify(getRequestedFor(urlPathEqualTo("/status/health")));
@@ -107,12 +115,9 @@ public class HealthCheckFunctionalTest {
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
         stubValidationServiceHealthUp();
-        mockServiceAuthFeignHealthCheck();
+        
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
-
-        System.out.println("BODY is");
-        System.out.println(body);
 
         assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
