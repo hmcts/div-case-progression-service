@@ -92,6 +92,8 @@ Start the docker container
 docker-compose up
 ```
 
+NOTE: You'll need to start Div-Validation-Service manually until it gets published to docker.
+
 Create the citizen and caseworker-divorce roles in CCD
 ```
 ./scripts/ccd-add-role.sh citizen PUBLIC

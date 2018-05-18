@@ -31,8 +31,6 @@ public class ValidationClientImpl implements ValidationClient {
     
     @Override
     public ValidationResponse validate(ValidationRequest request) {
-        System.out.println("ValidationService Url is");
-        System.out.println(validationServiceUrl);
         ObjectMapper objectMapper = new ObjectMapper();
         
         HttpEntity<ValidationRequest> requestEntity = httpEntityFactory.createRequestEntityForValidation(request);
