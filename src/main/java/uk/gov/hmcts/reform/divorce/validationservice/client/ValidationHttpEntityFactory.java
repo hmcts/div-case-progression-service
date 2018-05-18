@@ -6,5 +6,5 @@ import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 
 public interface ValidationHttpEntityFactory {
     
-    public HttpEntity<ValidationRequest> createRequestEntityForValidation(ValidationRequest request);
+    HttpEntity<ValidationRequest> createRequestEntityForValidation(ValidationRequest request);
 }
