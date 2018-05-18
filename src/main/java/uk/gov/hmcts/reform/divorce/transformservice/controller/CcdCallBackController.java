@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
-import java.util.ArrayList;
-
-import javax.ws.rs.core.MediaType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +14,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
 import uk.gov.hmcts.reform.divorce.validationservice.service.ValidationService;
+
+import java.util.ArrayList;
+import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(path = "/caseprogression")
@@ -47,9 +47,15 @@ public class CcdCallBackController {
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
-        ValidationResponse validationResponse = validationService.validateCoreCaseData(caseDetailsRequest.getCaseDetails().getCaseData());
+        ValidationResponse validationResponse = validationService.validateCoreCaseData(
+            caseDetailsRequest.getCaseDetails().getCaseData()
+        );
         if (isNotValidCoreCaseData(validationResponse)) {
-            return ResponseEntity.ok(new CCDCallbackResponse(caseDetailsRequest.getCaseDetails().getCaseData(), validationResponse.getErrors(), validationResponse.getWarnings()));
+            return ResponseEntity.ok(new CCDCallbackResponse(
+                caseDetailsRequest.getCaseDetails().getCaseData(), 
+                validationResponse.getErrors(), 
+                validationResponse.getWarnings()
+            ));
         }
         CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest, authorizationToken);
         return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));

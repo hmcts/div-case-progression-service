@@ -1,11 +1,12 @@
 package uk.gov.hmcts.reform.divorce.validationservice.client;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 
 @Component
@@ -20,5 +21,5 @@ public class DefaultValidationHttpEntityFactory implements ValidationHttpEntityF
         log.debug("Validation headers are:", headers);
 
         return new HttpEntity<>(request, headers);
-    };
+    }
 }

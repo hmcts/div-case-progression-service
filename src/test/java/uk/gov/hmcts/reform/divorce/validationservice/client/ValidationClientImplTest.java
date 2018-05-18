@@ -1,12 +1,5 @@
 package uk.gov.hmcts.reform.divorce.validationservice.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +13,13 @@ import org.springframework.web.client.RestTemplate;
 
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -57,7 +57,9 @@ public class ValidationClientImplTest {
         assertEquals(validationResponse, validationClient.validate(validationRequest));
 
         verify(httpEntityFactory).createRequestEntityForValidation(eq(validationRequest));
-        verify(restTemplate).exchange(eq(validateUrl), eq(HttpMethod.POST), eq(httpEntity), eq(ValidationResponse.class));
+        verify(restTemplate).exchange(
+            eq(validateUrl), eq(HttpMethod.POST), eq(httpEntity), eq(ValidationResponse.class)
+        );
 
         verifyNoMoreInteractions(httpEntityFactory, restTemplate);
     }

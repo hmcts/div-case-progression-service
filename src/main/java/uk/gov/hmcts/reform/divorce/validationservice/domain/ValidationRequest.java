@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.divorce.validationservice.domain;
 
-import java.util.Map;
-
 import lombok.Data;
+
+import java.util.Map;
 
 @Data
 public class ValidationRequest {

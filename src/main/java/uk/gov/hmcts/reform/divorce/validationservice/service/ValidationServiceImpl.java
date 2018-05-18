@@ -1,18 +1,19 @@
 package uk.gov.hmcts.reform.divorce.validationservice.service;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.validationservice.client.ValidationClient;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
+
+import java.util.Map;
 
 @Component
 @Slf4j
