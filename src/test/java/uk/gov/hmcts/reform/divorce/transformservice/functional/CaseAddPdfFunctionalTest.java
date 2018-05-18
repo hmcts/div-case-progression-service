@@ -227,7 +227,7 @@ public class CaseAddPdfFunctionalTest {
         String validateRequestBody =
             loadResourceAsString("/fixtures/validation-service/" + validationRequestJson);
 
-            validationServer.verify(postRequestedFor(urlEqualTo(VALIDATION_SERVICE_ENDPOINT))
+        validationServer.verify(postRequestedFor(urlEqualTo(VALIDATION_SERVICE_ENDPOINT))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
             .withRequestBody(equalToJson(validateRequestBody)));
     }

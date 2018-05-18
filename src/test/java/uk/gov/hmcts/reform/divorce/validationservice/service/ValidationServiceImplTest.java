@@ -1,15 +1,5 @@
 package uk.gov.hmcts.reform.divorce.validationservice.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,6 +13,16 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.validationservice.client.ValidationClientImpl;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationServiceImplTest {

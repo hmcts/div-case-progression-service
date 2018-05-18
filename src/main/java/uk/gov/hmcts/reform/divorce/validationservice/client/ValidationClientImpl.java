@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.divorce.validationservice.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,7 +12,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
 
@@ -44,7 +45,9 @@ public class ValidationClientImpl implements ValidationClient {
             log.error("Unable to parse request entity:", exception);
         }
 
-        ValidationResponse response = restTemplate.exchange(validateUrl, HttpMethod.POST, requestEntity, ValidationResponse.class).getBody();
+        ValidationResponse response = restTemplate.exchange(
+            validateUrl, HttpMethod.POST, requestEntity, ValidationResponse.class
+        ).getBody();
 
         try {
             log.debug("Validation response is:", objectMapper.writeValueAsString(response));

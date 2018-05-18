@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.divorce.validationservice.client;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationRequest;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultValidationHttpEntityFactoryTest {
