@@ -42,6 +42,21 @@ public class EmailService {
         }
     }
 
+    public void sendSubmissionConfirmationEmail(String destinationEmailAddress) {
+        String referenceId = UUID.randomUUID().toString();
+        EmailToSend emailToSend = new EmailToSend(destinationEmailAddress,
+            emailTemplates.get(EmailTemplateNames.APPLIC_SUBMISSION.name()),
+            emailTemplateVars.get(EmailTemplateNames.APPLIC_SUBMISSION.name()),
+            referenceId);
+        try {
+            log.debug("Attempting to send submission confirmation email. Reference ID: {}", referenceId);
+            sendEmail(emailToSend);
+            log.info("Sending email success. Reference ID: {}", referenceId);
+        } catch (NotificationClientException e) {
+            log.warn("Failed to send email. Reference ID: {}. Reason:", referenceId, e);
+        }
+    }
+
     private void sendEmail(EmailToSend emailToSend) throws NotificationClientException {
         emailClient.sendEmail(
             emailToSend.getTemplateId(),
