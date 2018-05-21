@@ -78,18 +78,6 @@ public class SubmissionExceptionHandler {
         return ResponseEntity.badRequest().body(errorMessageToReturn);
     }
 
-    @ExceptionHandler(JwtParsingException.class)
-    public ResponseEntity<CCDResponse> handleJwtParsingException(
-        JwtParsingException jwtException,
-        HttpServletRequest request) {
-
-        final String errorMessage = MessageFormat.format(GENERIC_EXCEPTION_MESSAGE,
-            request.getHeader(REQUEST_ID_HEADER_KEY), jwtException.getMessage());
-
-        log.error(errorMessage);
-        return ResponseEntity.ok(new CCDResponse(0, errorMessage, ERROR));
-    }
-
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<CCDResponse> handleAllException(
         HttpServerErrorException ex,

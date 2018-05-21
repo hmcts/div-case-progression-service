@@ -19,7 +19,7 @@ import static uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil.
 public class CoreCaseDataSubmitIntegrationTest extends BaseIntegrationTest {
 
     private static final String CASE_VALIDATION_EXCEPTION = "Request Id : null and Exception message : 422 , Exception response body: {\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.CaseValidationException\"";
-    private static final String UNAUTHORISED_JWT_EXCEPTION = "Request Id : null and Exception message : 403";
+    private static final String UNAUTHORISED_JWT_EXCEPTION = "Request Id : null and Exception message : status 403 reading IdamApiClient#retrieveUserDetails(String)";
 
     /**
      * Verify case id with address json.

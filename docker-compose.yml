@@ -358,6 +358,7 @@ services:
       - AUTH_PROVIDER_SERVICE_CLIENT_BASEURL=http://service-auth-provider-api:8080
       - DRAFT_STORE_API_BASEURL=http://draft-store-api:8800
       - PDF_GENERATOR_BASE_URL=http://div-document-generator:4015
+      - IDAM_API_BASEURL=http://idam-api:8080
     ports:
       - 4003:4003
     depends_on:
