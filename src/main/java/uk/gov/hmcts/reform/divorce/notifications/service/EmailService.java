@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.EmailClient;
 import uk.gov.hmcts.reform.divorce.notifications.domain.EmailTemplateNames;
 import uk.gov.hmcts.reform.divorce.notifications.domain.EmailToSend;
-import uk.gov.service.notify.NotificationClient;
-import uk.gov.service.notify.NotificationClientApi;
 import uk.gov.service.notify.NotificationClientException;
 
 import java.util.Map;
