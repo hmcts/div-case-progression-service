@@ -77,7 +77,7 @@ public class IdamUserSupport {
                 + "https://www-test.divorce.reform.hmcts.net/authorize")
             .body()
             .path("access-token");
-        System.out.println(String.format("Generated token [%s] for username [%s] and password [%s]", token, username, password));
+        System.out.println(String.format("Calling %s. Generated token [%s] for username [%s] and password [%s]", idamUserBaseUrl, token, username, password));
         return "Bearer " + token;
     }
 }
