@@ -45,7 +45,7 @@ public class CcdSubmissionController {
         @RequestBody @ApiParam(value = "The divorce session.", required = true) DivorceSession divorceSession,
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
-        log.warn(String.format("CcdSubmissionController#submitCase Received JWT [%s]", jwt));
+        System.out.println(String.format("CcdSubmissionController#submitCase Received JWT [%s]", jwt));
         return ResponseEntity.ok(new CCDResponse(submissionService.submit(divorceSession, jwt), null, STATUS));
     }
 
@@ -62,7 +62,7 @@ public class CcdSubmissionController {
         @PathVariable("caseId") @ApiParam("Unique identifier of the session that was submitted to CCD") Long caseId,
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
-        log.warn(String.format("CcdSubmissionController#updateCase Received JWT [%s]", jwt));
+        System.out.println(String.format("CcdSubmissionController#updateCase Received JWT [%s]", jwt));
         return ResponseEntity.ok(new CCDResponse(updateService.update(caseId, divorceEventSession, jwt),
             null, STATUS));
     }

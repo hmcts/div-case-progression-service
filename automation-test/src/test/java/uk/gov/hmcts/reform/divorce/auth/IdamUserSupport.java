@@ -77,7 +77,7 @@ public class IdamUserSupport {
                 + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
             .body()
             .path("access-token");
-        log.warn(String.format("Generated token [%s] for username [%s] and password [%s]", token, username, password));
+        System.out.println(String.format("Generated token [%s] for username [%s] and password [%s]", token, username, password));
         return "Bearer " + token;
     }
 }
