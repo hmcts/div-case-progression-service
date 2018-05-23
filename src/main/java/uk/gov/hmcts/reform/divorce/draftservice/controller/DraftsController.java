@@ -53,6 +53,7 @@ public class DraftsController {
         @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
         @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
+        log.warn(String.format("DraftsController#saveDraft Received JWT [%s]", jwt));
         service.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
             emailService.sendSaveDraftConfirmationEmail(notificationEmail);
@@ -70,6 +71,7 @@ public class DraftsController {
         @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
         final String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
+        log.warn(String.format("DraftsController#retrieveDraft Received JWT [%s]", jwt));
         JsonNode draft = service.getDraft(jwt);
         if (draft != null) {
             return ResponseEntity.ok(draft);
@@ -86,6 +88,7 @@ public class DraftsController {
                                                 @ApiParam(value = "JWT authorisation token issued by IDAM",
                                                     required = true) final String jwt) {
         log.debug("Received request to delete a divorce session draft");
+        log.warn(String.format("DraftsController#deleteDraft Received JWT [%s]", jwt));
         service.deleteDraft(jwt);
         return ResponseEntity.noContent().build();
     }

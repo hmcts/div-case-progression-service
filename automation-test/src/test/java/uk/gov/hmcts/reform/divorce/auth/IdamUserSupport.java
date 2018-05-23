@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class IdamUserSupport {
 
     private static final String idamCaseworkerUser = "CaseWorkerTest";
@@ -75,7 +77,7 @@ public class IdamUserSupport {
                 + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
             .body()
             .path("access-token");
-
+        log.warn(String.format("Generated token [%s] for username [%s] and password [%s]", token, username, password));
         return "Bearer " + token;
     }
 }
