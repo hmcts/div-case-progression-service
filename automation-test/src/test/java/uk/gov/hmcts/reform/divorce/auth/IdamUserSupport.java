@@ -15,6 +15,9 @@ public class IdamUserSupport {
 
     private static final String idamCaseworkerPassword = "password";
 
+    @Value("${env}")
+    private String environment;
+
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
@@ -68,10 +71,13 @@ public class IdamUserSupport {
 
     private String generateUserTokenWithNoRoles(String username, String password) {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        final String redirectUri = environment.equalsIgnoreCase("saat") == true
+            ? "https://ccd-case-management-web-saat.service.core-compute-saat.internal/oauth2redirect"
+            : "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect";
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
+                + redirectUri)
             .body()
             .path("access-token");
 
