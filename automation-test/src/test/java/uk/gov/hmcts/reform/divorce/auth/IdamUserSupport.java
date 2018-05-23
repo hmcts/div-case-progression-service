@@ -74,7 +74,7 @@ public class IdamUserSupport {
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
+                + "https://www-test.divorce.reform.hmcts.net/authorize")
             .body()
             .path("access-token");
         System.out.println(String.format("Generated token [%s] for username [%s] and password [%s]", token, username, password));
