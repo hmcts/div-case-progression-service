@@ -76,6 +76,8 @@ public class DraftStoreClient {
 
 
     private DraftList getAllDrafts(String jwt, String after) {
+        System.out.println("JWT token " + jwt);
+
         Response response = SerenityRest.given()
                 .headers(getHeaders(jwt))
                 .when()
