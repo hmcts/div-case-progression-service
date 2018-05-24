@@ -29,7 +29,7 @@ List<LinkedHashMap<String, Object>> secrets = [
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
     loadVaultSecrets(secrets)
 
-    before('functionalTest:aat') {
+    before('functionalTest:saat') {
         env.ITEST_ENVIRONMENT = "saat"
     }
 }
