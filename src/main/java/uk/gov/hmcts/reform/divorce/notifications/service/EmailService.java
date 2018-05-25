@@ -33,7 +33,7 @@ public class EmailService {
     }
 
     public void sendRejectionNotificationEmail(String destinationAddress) {
-        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.REJECTION.name());
+        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.APPLIC_REJECTION.name());
         sendEmail(emailToSend, "rejection notification");
     }
 
