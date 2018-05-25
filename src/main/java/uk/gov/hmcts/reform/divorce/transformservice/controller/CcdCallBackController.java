@@ -64,7 +64,7 @@ public class CcdCallBackController {
         String petitionerEmail = caseDetailsRequest.getCaseDetails().getCaseData().getD8PetitionerEmail();
 
         if (StringUtils.isNotBlank(petitionerEmail)) {
-            emailService.sendSubmissionConfirmationEmail(petitionerEmail);
+            emailService.sendSubmissionNotificationEmail(petitionerEmail);
         }
 
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));

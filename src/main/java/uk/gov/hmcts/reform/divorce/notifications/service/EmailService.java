@@ -30,9 +30,9 @@ public class EmailService {
         sendEmail(emailToSend, "draft saved confirmation");
     }
 
-    public void sendSubmissionConfirmationEmail(String destinationAddress) {
+    public void sendSubmissionNotificationEmail(String destinationAddress) {
         EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.APPLIC_SUBMISSION.name());
-        sendEmail(emailToSend, "submission confirmation");
+        sendEmail(emailToSend, "submission notification");
     }
 
     private EmailToSend generateEmail(String destinationAddress,
