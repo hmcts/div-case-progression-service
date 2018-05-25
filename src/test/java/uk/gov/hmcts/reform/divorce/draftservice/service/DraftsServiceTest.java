@@ -22,10 +22,11 @@ import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Ignore
@@ -86,7 +87,8 @@ public class DraftsServiceTest {
 
         when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
-        underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory, mockDraftStoreClient,
+        underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
+                mockDraftStoreClient,
                 mockDraftModelFactory);
     }
 
