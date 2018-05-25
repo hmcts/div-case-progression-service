@@ -26,41 +26,37 @@ public class EmailService {
     private Map<String, Map<String, String>> emailTemplateVars;
 
     public void sendSaveDraftConfirmationEmail(String destinationAddress) {
-        String referenceId = UUID.randomUUID().toString();
-        EmailToSend emailToSend = new EmailToSend(destinationAddress,
-            emailTemplates.get(EmailTemplateNames.SAVE_DRAFT.name()),
-            emailTemplateVars.get(EmailTemplateNames.SAVE_DRAFT.name()),
-            referenceId);
-        try {
-            log.debug("Attempting to send email. Reference ID: {}", referenceId);
-            sendEmail(emailToSend);
-            log.info("Sending email success. Reference ID: {}", referenceId);
-        } catch (NotificationClientException e) {
-            log.warn("Failed to send email. Reference ID: {}. Reason:", referenceId, e);
-        }
+        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.SAVE_DRAFT.name());
+        sendEmail(emailToSend, "draft saved confirmation");
     }
 
-    public void sendSubmissionConfirmationEmail(String destinationEmailAddress) {
-        String referenceId = UUID.randomUUID().toString();
-        EmailToSend emailToSend = new EmailToSend(destinationEmailAddress,
-            emailTemplates.get(EmailTemplateNames.APPLIC_SUBMISSION.name()),
-            emailTemplateVars.get(EmailTemplateNames.APPLIC_SUBMISSION.name()),
-            referenceId);
-        try {
-            log.debug("Attempting to send submission confirmation email. Reference ID: {}", referenceId);
-            sendEmail(emailToSend);
-            log.info("Sending email success. Reference ID: {}", referenceId);
-        } catch (NotificationClientException e) {
-            log.warn("Failed to send email. Reference ID: {}. Reason:", referenceId, e);
-        }
+    public void sendSubmissionConfirmationEmail(String destinationAddress) {
+        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.APPLIC_SUBMISSION.name());
+        sendEmail(emailToSend, "submission confirmation");
     }
 
-    private void sendEmail(EmailToSend emailToSend) throws NotificationClientException {
-        emailClient.sendEmail(
-            emailToSend.getTemplateId(),
-            emailToSend.getEmailAddress(),
-            emailToSend.getTemplateFields(),
-            emailToSend.getReferenceId()
-        );
+    private EmailToSend generateEmail(String destinationAddress,
+                                      String templateName) {
+        String              referenceId    = UUID.randomUUID().toString();
+        String              templateId     = emailTemplates.get(templateName);
+        Map<String, String> templateFields = emailTemplateVars.get(templateName);
+
+        return new EmailToSend(destinationAddress, templateId, templateFields, referenceId);
+    }
+
+    private void sendEmail(EmailToSend emailToSend,
+                           String      emailDescription) {
+        try {
+            log.debug("Attempting to send {} email. Reference ID: {}", emailDescription, emailToSend.getReferenceId());
+            emailClient.sendEmail(
+                emailToSend.getTemplateId(),
+                emailToSend.getEmailAddress(),
+                emailToSend.getTemplateFields(),
+                emailToSend.getReferenceId()
+            );
+            log.info("Sending email success. Reference ID: {}", emailToSend.getReferenceId());
+        } catch (NotificationClientException e) {
+            log.warn("Failed to send email. Reference ID: {}. Reason:", emailToSend.getReferenceId(), e);
+        }
     }
 }
