@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceEventSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDResponse;
@@ -29,8 +27,6 @@ import javax.ws.rs.core.MediaType;
 public class CcdSubmissionController {
 
     private static final String STATUS = "success";
-    @Autowired
-    private EmailService emailService;
     @Autowired
     private SubmissionService submissionService;
     @Autowired
@@ -48,13 +44,7 @@ public class CcdSubmissionController {
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
 
-        long caseId = submissionService.submit(divorceSession, jwt);
-
-        if (StringUtils.isNotBlank(divorceSession.getPetitionerEmail())) {
-            emailService.sendSubmissionConfirmationEmail(divorceSession.getPetitionerEmail());
-        }
-
-        return ResponseEntity.ok(new CCDResponse(caseId, null, STATUS));
+        return ResponseEntity.ok(new CCDResponse(submissionService.submit(divorceSession, jwt), null, STATUS));
     }
 
     @PostMapping(path = "/version/1/updateCase/{caseId}", consumes = MediaType.APPLICATION_JSON,
