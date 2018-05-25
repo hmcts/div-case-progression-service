@@ -76,6 +76,9 @@ public class CaseSubmissionFunctionalTest {
     private static final String SERVICE_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaXZvcmNlX2NjZF9zdWJtaXNzaW9uIiwiZX"
         + "hwIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
 
+    private static final String HWF_APPLICATION_SUBMITTED_EVENT_ID = "hwfCreate";
+    private static final String CREATE = "create";
+
     @ClassRule
     public static WireMockClassRule authTokenServer = new WireMockClassRule(WireMockSpring.options().port(4502)
         .bindAddress("localhost"));
@@ -106,7 +109,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitHowNameChangedCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/how-name-changed.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/how-name-changed-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -121,7 +124,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/how-name-changed-case-submission-request-body.json");
     }
 
@@ -129,7 +132,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitJurisdictionSixTwelveCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/jurisdiction-6-12.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/jurisdiction-6-12-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -144,7 +147,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/jurisdiction-6-12-case-submission-request-body.json");
     }
 
@@ -152,7 +155,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitReasonAdulteryCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/reason-adultery.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/reason-adultery-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -167,7 +170,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/reason-adultery-case-submission-request-body.json");
     }
 
@@ -175,7 +178,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitReasonDesertionCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/reason-desertion.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/reason-desertion-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -190,7 +193,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/reason-desertion-case-submission-request-body.json");
     }
 
@@ -198,7 +201,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitReasonSeparationCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/reason-separation.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/reason-separation-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -213,15 +216,15 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/reason-separation-case-submission-request-body.json");
     }
 
     @Test
-    public void submitReasonUnresaonableBehaviourCaseId() throws Exception {
+    public void submitReasonUnreasonableBehaviourCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/reason-unreasonable-behaviour.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/reason-unreasonable-behaviour-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -236,7 +239,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/reason-unreasonable-behaviour-case-submission-request-body.json");
     }
 
@@ -244,7 +247,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitSameSexCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/same-sex.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(CREATE);
         caseSubmissionStub("/fixtures/ccd/same-sex-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -259,7 +262,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/same-sex-case-submission-request-body.json");
     }
 
@@ -267,7 +270,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitJurisdictionAllCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/jurisdiction-all.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(CREATE);
         caseSubmissionStub("/fixtures/ccd/jurisdiction-all-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -282,7 +285,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/jurisdiction-all-case-submission-request-body.json");
     }
 
@@ -290,7 +293,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitAddressesReturnsCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/addresses.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/address-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -305,7 +308,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/address-case-submission-request-body.json");
     }
 
@@ -313,7 +316,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitPaymentReturnsCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/payment.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/payment-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -328,7 +331,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/payment-case-submission-request-body.json");
     }
 
@@ -336,7 +339,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitD8DocumentReturnsCaseId() throws Exception {
         loadDivorceSessionData("/divorce-payload-json/d8-document.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         caseSubmissionStub("/fixtures/ccd/d8-document-case-submission-request-body.json");
 
         HttpHeaders headers = setHttpHeaders();
@@ -351,7 +354,7 @@ public class CaseSubmissionFunctionalTest {
         assertThat(body.getCaseId()).isEqualTo(83287);
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(HWF_APPLICATION_SUBMITTED_EVENT_ID);
         verifyCaseSubmissionStub("/fixtures/ccd/d8-document-case-submission-request-body.json");
     }
 
@@ -381,7 +384,7 @@ public class CaseSubmissionFunctionalTest {
     public void submitHandlesCcdCaseSubmissionFailed() throws Exception {
         loadDivorceSessionData("/fixtures/divorce/submit-request-body.json");
         serviceTokenStub();
-        caseCreationStub();
+        caseCreationStub(CREATE);
         caseSubmissionFailedStub();
 
         HttpHeaders headers = setHttpHeaders();
@@ -397,7 +400,7 @@ public class CaseSubmissionFunctionalTest {
             + "Exception response body: ");
 
         verifyServiceTokenStub();
-        verifyCaseCreationStub();
+        verifyCaseCreationStub(CREATE);
         verifyCaseSubmissionFailedStub();
     }
 
@@ -540,11 +543,9 @@ public class CaseSubmissionFunctionalTest {
     }
 
 
-    private void caseCreationStub() throws Exception {
+    private void caseCreationStub(String eventTypeId) throws Exception {
         String caseCreationResponseBody = FileUtils.readFileToString(new File(getClass()
             .getResource("/fixtures/ccd/case-creation-200-response.json").toURI()), Charset.defaultCharset());
-
-        String eventTypeId = "create";
 
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
@@ -571,8 +572,7 @@ public class CaseSubmissionFunctionalTest {
                 .withBody(idamResponseBody)));
     }
 
-    private void verifyCaseCreationStub() {
-        String eventTypeId = "create";
+    private void verifyCaseCreationStub(String eventTypeId) {
 
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
@@ -622,7 +622,7 @@ public class CaseSubmissionFunctionalTest {
     }
 
     private void caseCreationProcessCouldNotBeStartedStub() {
-        String eventTypeId = "create";
+        String eventTypeId = CREATE;
 
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
@@ -637,7 +637,7 @@ public class CaseSubmissionFunctionalTest {
     }
 
     private void verifyCaseCreationProcessCouldNotBeStartedStub() {
-        String eventTypeId = "create";
+        String eventTypeId = CREATE;
 
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");

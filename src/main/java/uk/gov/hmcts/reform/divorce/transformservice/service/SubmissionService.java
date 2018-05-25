@@ -30,7 +30,7 @@ public class SubmissionService {
 
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        CreateEvent createEvent = ccdClient.createCase(userDetails, jwt);
+        CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
 
         SubmitEvent submitEvent = ccdClient.submitCase(userDetails, jwt,
             transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));

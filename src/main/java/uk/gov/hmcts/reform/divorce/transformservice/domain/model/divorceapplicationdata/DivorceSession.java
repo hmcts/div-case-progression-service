@@ -25,7 +25,7 @@ public class DivorceSession {
     @ApiModelProperty(value = "Has petitioner got access to a printer?", allowableValues = "Yes, No")
     private String screenHasPrinter;
     @ApiModelProperty(value = "Does petitioner need help with fees?", allowableValues = "Yes, No")
-    private String helpWithFeesNeedHelp;
+    private YesNoAnswer helpWithFeesNeedHelp;
     @ApiModelProperty(value = "Has petitioner applied for Help With Fees?", allowableValues = "Yes, No")
     private String helpWithFeesAppliedForFees;
     @ApiModelProperty(
