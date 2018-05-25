@@ -61,7 +61,8 @@ public class DraftsService {
     public void deleteDraft(String jwt) {
         log.debug("Deleting the divorce session draft");
         UserDetails userDetails = userService.getUserDetails(jwt);
-        DraftsResponse draftsResponse = draftsRetrievalService.getDivorceDraft(jwt, encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
+        DraftsResponse draftsResponse = draftsRetrievalService.getDivorceDraft(jwt,
+                encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
         if (draftsResponse.isDraft()) {
             draftStoreClient.deleteDraft(jwt, draftsResponse.getDraftId());
         }

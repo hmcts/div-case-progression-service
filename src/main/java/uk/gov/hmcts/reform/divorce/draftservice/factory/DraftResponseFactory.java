@@ -9,11 +9,6 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * TODO: write about the class
- *
- * @author wjtlopez
- */
 @Component
 public class DraftResponseFactory {
 
@@ -24,7 +19,7 @@ public class DraftResponseFactory {
     public static DraftsResponse buildDraftResponseFromCaseData(List<LinkedHashMap> listOfCases) {
 
         if (listOfCases == null || listOfCases.isEmpty()) {
-            return DraftsResponse.EMPTY_RESPONSE();
+            return DraftsResponse.emptyResponse();
         }
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);

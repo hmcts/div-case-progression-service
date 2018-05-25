@@ -11,11 +11,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataCon
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * TODO: write about the class
- *
- * @author wjtlopez
- */
 @Component
 public class RetrieveCcdClient {
 

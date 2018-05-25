@@ -4,17 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * TODO: write about the class
- *
- * @author wjtlopez
- */
+
 @Data
 public class DraftsResponse {
 
-    public static DraftsResponse EMPTY_RESPONSE() {
+    public static DraftsResponse emptyResponse() {
         return new DraftsResponse(false, null, StringUtils.EMPTY);
     }
+
     private final boolean isDraft;
 
     private final String draftId;

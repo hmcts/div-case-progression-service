@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.draftservice.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
@@ -24,23 +25,30 @@ import java.util.Optional;
 @Slf4j
 class DraftsRetrievalService {
 
-    @Autowired
-    private DraftModelFactory modelFactory;
+    private final DraftModelFactory modelFactory;
+    private final EncryptionKeyFactory keyFactory;
+    private final DraftStoreClient client;
+    private final UserService userService;
+    private final RetrieveCcdClient retrieveCcdClient;
+    private final DraftResponseFactory draftResponseFactory;
+    private final boolean checkCcdEnabled;
 
     @Autowired
-    private EncryptionKeyFactory keyFactory;
-
-    @Autowired
-    private DraftStoreClient client;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RetrieveCcdClient retrieveCcdClient;
-
-    @Autowired
-    private DraftResponseFactory draftResponseFactory;
+    public DraftsRetrievalService(DraftModelFactory modelFactory,
+                                  EncryptionKeyFactory keyFactory,
+                                  DraftStoreClient client,
+                                  UserService userService,
+                                  RetrieveCcdClient retrieveCcdClient,
+                                  DraftResponseFactory draftResponseFactory,
+                                  @Value("${draft.api.ccd.check}") boolean checkCcdEnabled) {
+        this.modelFactory = modelFactory;
+        this.keyFactory = keyFactory;
+        this.client = client;
+        this.userService = userService;
+        this.retrieveCcdClient = retrieveCcdClient;
+        this.draftResponseFactory = draftResponseFactory;
+        this.checkCcdEnabled = checkCcdEnabled;
+    }
 
     protected JsonNode getDraft(String jwt) {
         log.debug("Retrieving a divorce session draft");
@@ -52,7 +60,8 @@ class DraftsRetrievalService {
             log.debug("There is no saved divorce session draft or case in ccd");
             return null;
         } else {
-            log.debug(String.format("Returning the %s", draftsResponse.isDraft() ? "saved draft data" : "existing case details awaiting payment"));
+            log.debug(String.format("Returning the %s", draftsResponse.isDraft() ? "saved draft data" :
+                    "existing case details awaiting payment"));
             return draftResponseData;
         }
     }
@@ -65,10 +74,12 @@ class DraftsRetrievalService {
 
         if (divorceDraft.isPresent()) {
             return draftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
-        } else {
+        } else if (checkCcdEnabled) {
             List<LinkedHashMap> listOfCases = retrieveCcdClient.getCase(userService.getUserDetails(jwt).getId(), jwt);
             return draftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
         }
+
+        return null;
     }
 
     private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {
