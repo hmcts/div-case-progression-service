@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class UploadedFileTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
