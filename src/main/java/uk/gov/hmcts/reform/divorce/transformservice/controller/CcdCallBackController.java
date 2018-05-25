@@ -51,13 +51,13 @@ public class CcdCallBackController {
     @PostMapping(path = "/petition-rejected",
         consumes = MediaType.APPLICATION_JSON,
         produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Generate and dispatch a notification email to the petition when the application is rejected")
+    @ApiOperation(value = "Generate and dispatch a notification email to the petitioner when the application is rejected")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A pdf of the petition has been generated and added to the case",
+        @ApiResponse(code = 200, message = "A rejection email has been generated and dispatched",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
     })
-    public ResponseEntity<CCDCallbackResponse> petitionIssued(
+    public ResponseEntity<CCDCallbackResponse> petitionRejected(
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
@@ -67,7 +67,6 @@ public class CcdCallBackController {
             emailService.sendRejectionNotificationEmail(petitionerEmail);
         }
 
-        CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest, authorizationToken);
-        return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));
+        return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
     }
 }
