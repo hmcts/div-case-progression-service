@@ -40,7 +40,7 @@ class DraftsRetrievalService {
                                   UserService userService,
                                   RetrieveCcdClient retrieveCcdClient,
                                   DraftResponseFactory draftResponseFactory,
-                                  @Value("${draft.api.ccd.check}") boolean checkCcdEnabled) {
+                                  @Value("${draft.api.ccd.check.enabled}") boolean checkCcdEnabled) {
         this.modelFactory = modelFactory;
         this.keyFactory = keyFactory;
         this.client = client;
