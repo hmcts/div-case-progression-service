@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.service;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class DivorceToCcdTransformationServiceTest {
         String eventId = "event-id";
         String eventSummary = "event-summary";
 
-        DivorceSession divorceSession = mock(DivorceSession.class);
+        DivorceSession divorceSession = new DivorceSession();
+        divorceSession.setReasonForDivorceBehaviourDetails(ImmutableList.of("Hello"));
         CaseDetails caseDetails = new CaseDetails();
 
         CreateEvent createEvent = new CreateEvent(token, eventId, caseDetails);

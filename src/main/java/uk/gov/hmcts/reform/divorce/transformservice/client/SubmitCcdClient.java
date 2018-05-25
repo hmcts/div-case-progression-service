@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataCon
 
 @Component
 @Slf4j
-public class SubmitCcdClient implements CcdClient {
+public class SubmitCcdClient {
 
     @Autowired
     private CcdClientConfiguration ccdClientConfiguration;
@@ -22,7 +22,6 @@ public class SubmitCcdClient implements CcdClient {
     @Autowired
     private TransformationHttpEntityFactory httpEntityFactory;
 
-    @Override
     public CreateEvent createCase(UserDetails userDetails, String encodedJwt) {
 
         HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(encodedJwt);
@@ -32,7 +31,6 @@ public class SubmitCcdClient implements CcdClient {
         return restTemplate.exchange(url, HttpMethod.GET, httpEntity, CreateEvent.class).getBody();
     }
 
-    @Override
     public SubmitEvent submitCase(UserDetails userDetails, String userToken, CaseDataContent caseDataContent) {
 
         HttpEntity<CaseDataContent> httpEntity = httpEntityFactory.createRequestEntityForSubmitCase(userToken,

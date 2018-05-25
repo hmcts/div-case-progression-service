@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
@@ -20,16 +19,12 @@ import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Optional;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftsServiceTest {
@@ -40,168 +35,108 @@ public class DraftsServiceTest {
     private static final String USER_ID = "60";
 
     @Mock
-    private DraftModelFactory modelFactory;
-
-    @Mock
-    private EncryptionKeyFactory keyFactory;
-
-    @Mock
-    private DraftStoreClient client;
-
-    @InjectMocks
-    private DraftsService underTest;
-
-    @Mock
     private DraftList draftList;
+
+    @Mock
+    private DraftStoreClient mockDraftStoreClient;
 
     @Mock
     private CreateDraft createDraft;
 
     @Mock
+    private DraftModelFactory mockDraftModelFactory;
+
+    @Mock
+    private EncryptionKeyFactory mockEncryptionKeyFactory;
+
+    @Mock
     private UpdateDraft updateDraft;
+
+    @Mock
+    private DraftsRetrievalService mockDraftsRetrievalService;
 
     @Mock
     private Draft draft;
 
     @Mock
-    private UserService userService;
+    private UserService mockUserService;
 
     private JsonNode requestContent;
 
+    private DraftsService underTest;
 
     @Before
     public void setUp() throws Exception {
+
         String requestContentAsString = FileUtils.readFileToString(
-            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
-            Charset.defaultCharset());
+                new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
+                Charset.defaultCharset());
 
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(requestContentAsString);
 
-        when(client.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
 
-        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
-
-        when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
-        when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
-
-        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
-
+        when(mockEncryptionKeyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
 
         when(draft.getId()).thenReturn(DRAFT_ID);
         when(draft.getDocument()).thenReturn(requestContent);
 
-        when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
+        when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
+
+        underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory, mockDraftStoreClient,
+                mockDraftModelFactory);
     }
 
     @Test
     public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExist() {
+        when(mockDraftsRetrievalService.getDivorceDraft(JWT, SECRET))
+                .thenReturn(Optional.empty());
+
         when(draftList.getData()).thenReturn(Collections.emptyList());
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(client)
-            .createDraft(JWT, SECRET, createDraft);
-        verify(client, times(0))
-            .updateDraft(any(), any(), any(), any());
+        verify(mockDraftStoreClient)
+                .createDraft(JWT, SECRET, createDraft);
+        verify(mockDraftStoreClient, times(0))
+                .updateDraft(any(), any(), any(), any());
     }
 
     @Test
     public void saveDraftShouldOverrideTheExistingDraftIfADivorceDraftExists() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
+
+        when(mockDraftsRetrievalService.getDivorceDraft(JWT, SECRET))
+                .thenReturn(Optional.of(draft));
+        when(mockDraftModelFactory.isDivorceDraft(draft)).thenReturn(true);
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(client)
-            .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
-        verify(client, times(0))
-            .createDraft(any(), any(), any());
-    }
-
-    @Test
-    public void saveDraftShouldCreateANewDraftWhenADraftExistsButItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
-
-        underTest.saveDraft(JWT, requestContent);
-
-        verify(client)
-            .createDraft(JWT, SECRET, createDraft);
-        verify(client, times(0))
-            .updateDraft(any(), any(), any(), any());
-    }
-
-    @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() throws IOException {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
-
-        JsonNode draftsContent = underTest.getDraft(JWT);
-
-        assertEquals(requestContent, draftsContent);
-
-    }
-
-    @Test
-    public void getDraftShouldReturnNullWhenTheDraftDoesNotExist() {
-        when(draftList.getData()).thenReturn(Collections.emptyList());
-
-        JsonNode draftsContent = underTest.getDraft(JWT);
-
-        assertNull(draftsContent);
-    }
-
-    @Test
-    public void getDraftShouldReturnNullWhenADraftExistsButItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
-
-        JsonNode draftsContent = underTest.getDraft(JWT);
-
-        assertNull(draftsContent);
-    }
-
-    @Test
-    public void getDraftShouldGetADivorceDraftFromTheSecondPageOfDrafts() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
-        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors("10"));
-
-        underTest.getDraft(JWT);
-
-        verify(client).getAll(JWT, SECRET, "10");
+        verify(mockDraftStoreClient)
+                .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
+        verify(mockDraftStoreClient, times(0))
+                .createDraft(any(), any(), any());
     }
 
     @Test
     public void deleteDraftShouldDeleteTheDraftIfADivorceDraftExists() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
+        when(mockDraftsRetrievalService.getDivorceDraft(JWT, SECRET))
+                .thenReturn(Optional.of(draft));
+        when(mockDraftModelFactory.isDivorceDraft(draft)).thenReturn(true);
 
         underTest.deleteDraft(JWT);
 
-        verify(client).deleteDraft(JWT, DRAFT_ID);
+        verify(mockDraftStoreClient).deleteDraft(JWT, DRAFT_ID);
     }
 
     @Test
     public void deleteDraftShouldNotDeleteAnythingIfThereAreNoDrafts() {
-        when(draftList.getData()).thenReturn(Collections.emptyList());
+        when(mockDraftsRetrievalService.getDivorceDraft(JWT, SECRET))
+                .thenReturn(Optional.empty());
 
         underTest.deleteDraft(JWT);
 
-        verify(client, times(0))
-            .deleteDraft(any(), any());
+        verify(mockDraftStoreClient, times(0))
+                .deleteDraft(any(), any());
     }
-
-    @Test
-    public void deleteDraftShouldNotDeleteTheDraftIfItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
-
-        underTest.deleteDraft(JWT);
-
-        verify(client, times(0))
-            .deleteDraft(any(), any());
-    }
-
 }

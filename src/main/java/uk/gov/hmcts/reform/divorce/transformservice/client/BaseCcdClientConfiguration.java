@@ -17,12 +17,16 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
             + "token?ignore-warning=true";
     private static final String CREATE_CASE_EVENT_URL_FORMAT =
         "%s/citizens/%s/jurisdictions/%s/case-types/%s/cases/%d/events?ignore-warning=true";
+    private static final String RETRIEVE_CASE_URL_FORMAT =
+            "%s/citizens/%s/jurisdictions/%s/case-types/%s/cases";
+
     //update caseworker urls
     private static final String START_CASE_EVENT_URL_CASEWORKER_FORMAT =
         "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/%d/event-triggers/%s/"
             + "token?ignore-warning=true";
     private static final String CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT =
         "%s/caseworkers/%s/jurisdictions/%s/case-types/%s/cases/%d/events?ignore-warning=true";
+
 
     @Value("${ccd.caseworker.role}")
     private String caseworkerRole = "caseworker-divorce";
@@ -59,6 +63,11 @@ public class BaseCcdClientConfiguration implements CcdClientConfiguration {
         String url = isCaseWorkerUser(userDetails)
             ? CREATE_CASE_EVENT_URL_CASEWORKER_FORMAT : CREATE_CASE_EVENT_URL_FORMAT;
         return String.format(url, ccdBaseUrl, userDetails.getId(), jurisdictionId, caseTypeId, caseId);
+    }
+
+    @Override
+    public String getRetrieveCaseUrl(String userId) {
+        return String.format(RETRIEVE_CASE_URL_FORMAT, ccdBaseUrl, userId, jurisdictionId, caseTypeId);
     }
 
     private boolean isCaseWorkerUser(UserDetails userDetails) {

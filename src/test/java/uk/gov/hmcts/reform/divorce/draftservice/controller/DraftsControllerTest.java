@@ -46,9 +46,9 @@ public class DraftsControllerTest {
     private static final String DRAFTS_URL = "/draftsapi/version/1";
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
     @MockBean
-    public DraftsService service;
+    private DraftsService service;
     @MockBean
-    public EmailService emailService;
+    private EmailService emailService;
     @Autowired
     private WebApplicationContext applicationContext;
     private MockMvc mvc;

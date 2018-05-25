@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
-import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.client.SubmitCcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
@@ -16,19 +16,13 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionServiceTest {
 
     @Mock
-    private CcdClient ccdClient;
+    private SubmitCcdClient ccdClient;
 
     @Mock
     private TransformationService transformationService;
@@ -38,7 +32,6 @@ public class SubmissionServiceTest {
 
     @Mock
     private UserService userService;
-
 
     @InjectMocks
     private SubmissionService submissionService;

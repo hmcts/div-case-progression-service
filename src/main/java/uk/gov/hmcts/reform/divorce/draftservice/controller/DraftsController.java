@@ -1,25 +1,14 @@
 package uk.gov.hmcts.reform.divorce.draftservice.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 
@@ -34,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 public class DraftsController {
 
     @Autowired
-    private DraftsService service;
+    private DraftsService draftsService;
     @Autowired
     private EmailService emailService;
 
@@ -53,7 +42,7 @@ public class DraftsController {
         @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
         @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
-        service.saveDraft(jwt, data);
+        draftsService.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
             emailService.sendSaveDraftConfirmationEmail(notificationEmail);
         }
@@ -70,7 +59,7 @@ public class DraftsController {
         @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
         final String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
-        JsonNode draft = service.getDraft(jwt);
+        JsonNode draft = draftsService.getDraft(jwt);
         if (draft != null) {
             return ResponseEntity.ok(draft);
         }
@@ -86,7 +75,7 @@ public class DraftsController {
                                                 @ApiParam(value = "JWT authorisation token issued by IDAM",
                                                     required = true) final String jwt) {
         log.debug("Received request to delete a divorce session draft");
-        service.deleteDraft(jwt);
+        draftsService.deleteDraft(jwt);
         return ResponseEntity.noContent().build();
     }
 }
