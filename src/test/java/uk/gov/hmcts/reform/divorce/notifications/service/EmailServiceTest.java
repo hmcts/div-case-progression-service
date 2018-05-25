@@ -61,4 +61,30 @@ public class EmailServiceTest {
         }
 
     }
+
+    @Test
+    public void sendRejectNotificationEmailShouldCallTheEmailClientToSendAnEmail()
+        throws NotificationClientException {
+        emailService.sendRejectionNotificationEmail(EMAIL_ADDRESS);
+
+        verify(mockClient).sendEmail(
+            eq(emailTemplates.get(EmailTemplateNames.APPLIC_REJECTION.name())),
+            eq(EMAIL_ADDRESS),
+            eq(emailTemplateVars.get(EmailTemplateNames.APPLIC_REJECTION.name())),
+            anyString());
+    }
+
+    @Test
+    public void sendRejectNotificationEmailShouldNotPropagateNotificationClientException()
+        throws NotificationClientException {
+        doThrow(new NotificationClientException(new Exception("Exception inception")))
+            .when(mockClient).sendEmail(anyString(), anyString(), eq(null), anyString());
+
+        try {
+            emailService.sendRejectionNotificationEmail(EMAIL_ADDRESS);
+        } catch (Exception e) {
+            fail();
+        }
+
+    }
 }
