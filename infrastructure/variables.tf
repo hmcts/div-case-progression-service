@@ -66,10 +66,6 @@ variable "logging_level_uk_gov_hmcts_ccd" {
     type = "string"
 }
 
-variable "draft_store_api_baseurl" {
-    type = "string"
-}
-
 variable "uk_gov_notify_email_templates" {
     type = "string"
 }
