@@ -49,7 +49,7 @@ module "div-case-progression" {
         PDF_GENERATOR_HEALTHURL = "${local.pdf_generator_base_url}/health"
         DRAFT_STORE_API_ENCRYPTION_KEY = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
         DRAFT_STORE_API_BASEURL = "${local.draftstore_api_baseurl}"
-        DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
+        DRAFT_STORE_API_HEALTH_URI = "${local.draftstore_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk-gov-notify-api-key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATE_VARS = "${var.uk_gov_notify_email_template_vars}"
