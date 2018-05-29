@@ -38,7 +38,10 @@ public class DraftResponseFactory {
         }
 
         List<LinkedHashMap> awaitingPaymentCases = listOfCases.stream()
-                .filter(caseData -> caseData.get("status").toString().equalsIgnoreCase("awaitingpayment"))
+                .filter(caseData -> {
+                    Object status = caseData.get("status");
+                    return status == null ? false : status.toString().equalsIgnoreCase("awaitingpayment");
+                })
                 .collect(toList());
 
         if (awaitingPaymentCases.isEmpty()) {
