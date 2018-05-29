@@ -16,7 +16,6 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-@Ignore
 public class UploadedFileTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 

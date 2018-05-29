@@ -66,7 +66,7 @@ public class DraftsControllerTest {
 
     @Test
     public void shouldReturnNoContentWhenSavingADraftByExplicitCallWithValidEmailProvided() throws Exception {
-        String notificationEmail = "simulate-delivered@notifications.draftsService.gov.uk";
+        String notificationEmail = "simulate-delivered@notifications.service.gov.uk";
         mvc.perform(put(DRAFTS_URL + "?notificationEmail=" + notificationEmail)
             .content(requestContent.toString())
             .header("Authorization", JWT)
