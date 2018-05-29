@@ -47,7 +47,7 @@ class DraftsRetrievalService {
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
         } else if (checkCcdEnabled) {
             log.debug("Checking CCD for an existing case as draft not found");
-            List<LinkedHashMap> listOfCases = retrieveCcdClient.getCase(userId, jwt);
+            List<LinkedHashMap> listOfCases = retrieveCcdClient.getCases(userId, jwt);
             DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
             return draftsResponse;
         }

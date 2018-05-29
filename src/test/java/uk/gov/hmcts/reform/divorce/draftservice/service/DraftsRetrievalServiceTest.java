@@ -111,7 +111,7 @@ public class DraftsRetrievalServiceTest {
         List<LinkedHashMap> listOfCases = new ArrayList<>();
         listOfCases.add(ccdResponseData);
         when(mockRetrieveCcdClient
-                .getCase(USER_ID, JWT))
+                .getCases(USER_ID, JWT))
                 .thenReturn(listOfCases);
 
         // when
