@@ -98,7 +98,6 @@ public class DraftResponseFactoryTest {
     public void buildDraftResponseFromCaseData_should_return_draft_response_when_case_exists_in_awaiting_payment() {
 
         // given
-        List<LinkedHashMap> listOfCases = new ArrayList<>();
 
         LinkedHashMap caseData1 = new LinkedHashMap();
         caseData1.put(CASE_STATUS, NOT_AWAITING_PAYMENT_STATUS);
@@ -115,6 +114,7 @@ public class DraftResponseFactoryTest {
 
         caseData2.put("case_data", caseDetails);
 
+        List<LinkedHashMap> listOfCases = new ArrayList<>();
         listOfCases.add(caseData1);
         listOfCases.add(caseData2);
 
