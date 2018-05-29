@@ -5,14 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
-import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
-
-import java.util.Optional;
 
 
 @Service
@@ -41,7 +38,7 @@ public class DraftsService {
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
         String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
-        DraftsResponse draftsResponse = draftsRetrievalService.getDivorceDraft(jwt, secret);
+        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
         if (draftsResponse.isDraft()) {
             log.debug("Updating the existing divorce session draft");
             draftStoreClient.updateDraft(
@@ -61,7 +58,8 @@ public class DraftsService {
     public void deleteDraft(String jwt) {
         log.debug("Deleting the divorce session draft");
         UserDetails userDetails = userService.getUserDetails(jwt);
-        DraftsResponse draftsResponse = draftsRetrievalService.getDivorceDraft(jwt,
+        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt,
+                userDetails.getId(),
                 encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
         if (draftsResponse.isDraft()) {
             draftStoreClient.deleteDraft(jwt, draftsResponse.getDraftId());
@@ -69,6 +67,13 @@ public class DraftsService {
     }
 
     public JsonNode getDraft(String jwt) {
-        return draftsRetrievalService.getDraft(jwt);
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
+        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
+
+        if (draftsResponse != null) {
+            return draftsResponse.getData();
+        }
+        return null;
     }
 }

@@ -1,39 +1,33 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
+import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
-import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
-import uk.gov.hmcts.reform.divorce.idam.services.UserService;
+import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class DraftsRetrievalServiceTest {
 
     private static final String JWT = "Bearer hgsdja87wegqeuf...";
@@ -42,103 +36,151 @@ public class DraftsRetrievalServiceTest {
     private static final String USER_ID = "60";
 
     @Mock
-    private DraftModelFactory modelFactory;
+    private DraftModelFactory mockModelFactory;
+    @Mock
+    private RetrieveCcdClient mockRetrieveCcdClient;
 
     @Mock
-    private EncryptionKeyFactory keyFactory;
-
-    @Mock
-    private DraftStoreClient client;
-
-    @InjectMocks
-    private DraftsRetrievalService underTest;
-
+    private DraftStoreClient mockDraftStoreClient;
     @Mock
     private DraftList draftList;
-
     @Mock
     private CreateDraft createDraft;
-
     @Mock
     private UpdateDraft updateDraft;
+    @Mock
+    private Draft mockDraft;
+
+    private DraftResponseFactory draftResponseFactory;
 
     @Mock
-    private Draft draft;
+    private JsonNode mockData;
 
-    @Mock
-    private UserService userService;
-
-    private JsonNode requestContent;
-
+    private DraftsRetrievalService underTest;
 
     @Before
     public void setUp() throws Exception {
-        String requestContentAsString = FileUtils.readFileToString(
-            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
-            Charset.defaultCharset());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        requestContent = objectMapper.readTree(requestContentAsString);
 
-        when(client.getAll(JWT, SECRET)).thenReturn(draftList);
+        boolean checkCcdEnabled = true;
+        underTest = new DraftsRetrievalService(mockModelFactory,
+                mockDraftStoreClient,
+                mockRetrieveCcdClient,
+                checkCcdEnabled);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
-        when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
-        when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
-
-        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
-
-
-        when(draft.getId()).thenReturn(DRAFT_ID);
-        when(draft.getDocument()).thenReturn(requestContent);
-
-        when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
-    }
-
-
-
-    @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() throws IOException {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
-
-        JsonNode draftsContent = underTest.getDraft(JWT);
-
-        assertEquals(requestContent, draftsContent);
-
+        when(mockModelFactory.createDraft(mockData)).thenReturn(createDraft);
+        when(mockModelFactory.updateDraft(mockData)).thenReturn(updateDraft);
     }
 
     @Test
-    public void getDraftShouldReturnNullWhenTheDraftDoesNotExist() {
+    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() {
+
+        // given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockDraft.getId()).thenReturn(DRAFT_ID);
+        when(mockDraft.getDocument()).thenReturn(mockData);
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(true);
+
+        // when
+        DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
+
+        // then
+        assertEquals(mockData, draftsResponse.getData());
+        assertEquals(true, draftsResponse.isDraft());
+        assertEquals(DRAFT_ID, draftsResponse.getDraftId());
+    }
+
+    @Test
+    public void getDraftShouldReturnResponseWhenDraftNotFoundButCaseIsFound() {
+
+        // given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(null);
+
+        LinkedHashMap caseData = new LinkedHashMap();
+        String courts = "courtsXYZz";
+        caseData.put("D8DivorceUnit", courts);
+
+        LinkedHashMap ccdResponseData = new LinkedHashMap();
+        Long caseId = 123L;
+        ccdResponseData.put("id", caseId);
+        ccdResponseData.put("case_data", caseData);
+
+        List<LinkedHashMap> listOfCases = new ArrayList<>();
+        listOfCases.add(ccdResponseData);
+        when(mockRetrieveCcdClient
+                .getCase(USER_ID, JWT))
+                .thenReturn(listOfCases);
+
+        // when
+        DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertEquals(courts, data.get("courts").asText());
+        assertEquals(caseId, (Long) data.get("case_id").asLong());
+    }
+
+    @Test
+    public void getDraftShouldReturnNullWhenTheDraftDoesNotExistAndCCdCheckDisabled() {
+
+        // given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
         when(draftList.getData()).thenReturn(Collections.emptyList());
 
-        JsonNode draftsContent = underTest.getDraft(JWT);
+        boolean checkCcdEnabled = false;
+        underTest = new DraftsRetrievalService(mockModelFactory,
+                mockDraftStoreClient,
+                mockRetrieveCcdClient,
+                checkCcdEnabled);
 
-        assertNull(draftsContent);
+        // when
+        DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
+
+        // then
+        assertNull(draftsResponse);
+        verifyZeroInteractions(mockRetrieveCcdClient);
     }
 
     @Test
     public void getDraftShouldReturnNullWhenADraftExistsButItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
 
-        JsonNode draftsContent = underTest.getDraft(JWT);
+        // given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(false);
 
-        assertNull(draftsContent);
+        boolean checkCcdEnabled = false;
+        underTest = new DraftsRetrievalService(mockModelFactory,
+                mockDraftStoreClient,
+                mockRetrieveCcdClient,
+                checkCcdEnabled);
+
+        // when
+        DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
+
+        // then
+        assertNull(draftsResponse);
+        verify(mockModelFactory).isDivorceDraft(mockDraft);
     }
 
     @Test
     public void getDraftShouldGetADivorceDraftFromTheSecondPageOfDrafts() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
+
+        // given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(false);
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors("10"));
 
-        underTest.getDraft(JWT);
+        // when
+        underTest.getDraft(JWT, USER_ID, SECRET);
 
-        verify(client).getAll(JWT, SECRET, "10");
+        // then
+        verify(mockDraftStoreClient).getAll(JWT, SECRET, "10");
     }
-
-
-
 }
