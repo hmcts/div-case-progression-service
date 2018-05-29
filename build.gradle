@@ -143,7 +143,9 @@ def versions = [
         serviceTokenGenerator: '0.6.0',
         springfoxSwagger: '2.6.1',
         springCloudWiremock: '1.2.4.RELEASE',
-        uniRest: '1.4.9'
+        uniRest: '1.4.9',
+        serenity: '1.5.2',
+        serenityCucumber: '1.1.3'
 ]
 
 dependencies {
@@ -183,6 +185,13 @@ dependencies {
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude(module: 'commons-logging')
     }
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.3'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
+    testCompile group: 'net.serenity-bdd', name: 'serenity-cucumber', version: versions.serenityCucumber
+
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
 }
 

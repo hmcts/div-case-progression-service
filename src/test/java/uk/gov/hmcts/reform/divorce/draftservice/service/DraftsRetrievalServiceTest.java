@@ -106,7 +106,7 @@ public class DraftsRetrievalServiceTest {
         LinkedHashMap ccdResponseData = new LinkedHashMap();
         Long caseId = 123L;
         ccdResponseData.put("id", caseId);
-        ccdResponseData.put("status", "awaitingPayment");
+        ccdResponseData.put("state", "awaitingPayment");
         ccdResponseData.put("case_data", caseData);
 
         List<LinkedHashMap> listOfCases = new ArrayList<>();

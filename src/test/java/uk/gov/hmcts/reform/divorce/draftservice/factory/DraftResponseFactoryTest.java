@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 public class DraftResponseFactoryTest {
 
     private static final String NOT_AWAITING_PAYMENT_STATUS = "notAwaitingPayment";
-    private static final String CASE_STATUS = "status";
+    private static final String CASE_STATUS = "state";
 
     @Test
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_no_cases_in_awaiting_payment() {

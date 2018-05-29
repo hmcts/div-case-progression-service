@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.divorce.auth.BaseIntegrationTestWithIdamSupport;
+import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.Draft;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.DraftStoreClient;
+import uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
+public class DraftsAPIIntegrationTest extends BaseIntegrationTest {
 
     @Value("${drafts.api.url}")
     private String draftsApiUrl;
@@ -69,6 +71,27 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
         Response response = deleteDivorceDraft();
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
         assertThereAreNoDrafts();
+    }
+
+    @Test
+    public void should_return_case_data_if_draft_does_not_exist_but_case_exists_in_ccd() throws Exception {
+
+        // given
+        Response caseSubmissionResponse = submitCase("addresses.json");
+
+        // when
+        Response draftResponse = getDivorceDraft();
+
+        // then
+        Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
+        Long draftResponseCaseId = new Long(draftResponse.getBody().path("case_id").toString());
+        Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
+        String courts = draftResponse.getBody().path("courts").toString();
+
+        assertEquals(caseId, draftResponseCaseId);
+        assertEquals("eastMidlands", courts);
+        assertEquals(true, submissionStarted);
+
     }
 
     @After

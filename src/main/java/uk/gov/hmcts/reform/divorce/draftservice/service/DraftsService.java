@@ -39,19 +39,19 @@ public class DraftsService {
         UserDetails userDetails = userService.getUserDetails(jwt);
         String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
-        if (draftsResponse.isDraft()) {
+        if (draftsResponse == null) {
+            log.debug("Creating a new divorce session draft");
+            draftStoreClient.createDraft(
+                    jwt,
+                    secret,
+                    draftModelFactory.createDraft(data));
+        } else {
             log.debug("Updating the existing divorce session draft");
             draftStoreClient.updateDraft(
                     jwt,
                     draftsResponse.getDraftId(),
                     secret,
                     draftModelFactory.updateDraft(data));
-        } else {
-            log.debug("Creating a new divorce session draft");
-            draftStoreClient.createDraft(
-                    jwt,
-                    secret,
-                    draftModelFactory.createDraft(data));
         }
     }
 
