@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.ProxySpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;

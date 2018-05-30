@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.draftservice.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 public class DraftsController {
 
     @Autowired
-    private DraftsService service;
+    private DraftsService draftsService;
     @Autowired
     private EmailService emailService;
 
@@ -53,7 +54,7 @@ public class DraftsController {
         @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
         @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
-        service.saveDraft(jwt, data);
+        draftsService.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
             emailService.sendSaveDraftConfirmationEmail(notificationEmail);
         }
@@ -70,7 +71,7 @@ public class DraftsController {
         @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
         final String jwt) {
         log.debug("Received request to retrieve a divorce session draft");
-        JsonNode draft = service.getDraft(jwt);
+        JsonNode draft = draftsService.getDraft(jwt);
         if (draft != null) {
             return ResponseEntity.ok(draft);
         }
@@ -86,7 +87,7 @@ public class DraftsController {
                                                 @ApiParam(value = "JWT authorisation token issued by IDAM",
                                                     required = true) final String jwt) {
         log.debug("Received request to delete a divorce session draft");
-        service.deleteDraft(jwt);
+        draftsService.deleteDraft(jwt);
         return ResponseEntity.noContent().build();
     }
 }
