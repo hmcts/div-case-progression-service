@@ -30,6 +30,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -98,7 +99,7 @@ public class DraftsServiceTest {
     @Test
     public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExist() {
 
-        DraftsResponse draftsResponse = DraftsResponse.emptyResponse();
+        DraftsResponse draftsResponse = null;
 
         when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
                 .thenReturn(draftsResponse);
@@ -135,6 +136,24 @@ public class DraftsServiceTest {
                 .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
         verify(mockDraftStoreClient, times(0))
                 .createDraft(any(), any(), any());
+    }
+
+    @Test
+    public void saveDraft_should_do_nothing_if_draft_response_is_not_a_draft() {
+
+        // given
+        DraftsResponse draftsResponse = DraftsResponse.builder()
+                .isDraft(false)
+                .build();
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+
+        // when
+        underTest.saveDraft(JWT, requestContent);
+
+        // then
+        verifyZeroInteractions(mockDraftStoreClient);
     }
 
     @Test

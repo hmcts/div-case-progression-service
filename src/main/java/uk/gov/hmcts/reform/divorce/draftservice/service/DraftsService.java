@@ -45,7 +45,7 @@ public class DraftsService {
                     jwt,
                     secret,
                     draftModelFactory.createDraft(data));
-        } else {
+        } else if (draftsResponse.isDraft()) {
             log.debug("Updating the existing divorce session draft");
             draftStoreClient.updateDraft(
                     jwt,
