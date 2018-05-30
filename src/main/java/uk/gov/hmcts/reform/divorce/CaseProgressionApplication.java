@@ -29,11 +29,6 @@ public class CaseProgressionApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CaseProgressionApplication.class, args);
-        System.setProperty("http.proxyHost", "proxyout.reform.hmcts.net");
-        System.setProperty("http.proxyPort", "8080");
-        //System.setProperty("http.nonProxyHosts", "http://localhost");
-        System.setProperty("https.proxyHost", "proxyout.reform.hmcts.net");
-        System.setProperty("https.proxyPort", "8080");
     }
 
     private List<HttpMessageConverter<?>> getMessageConverters() {
