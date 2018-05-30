@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
 public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
+public class DraftsAPIIntegrationTest extends BaseIntegrationTest {
 
     @Value("${drafts.api.url}")
     private String draftsApiUrl;
@@ -44,7 +45,9 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
         draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
+        Response draftStoreResponse = draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
 
+        assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
         String draft = "{\"message\": \"Hello World!\"}";
         saveDivorceDraft(draft);
 
