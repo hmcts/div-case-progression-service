@@ -39,7 +39,7 @@ public class DraftsService {
         UserDetails userDetails = userService.getUserDetails(jwt);
         String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
-        if (draftsResponse == null) {
+        if (draftsResponse == null || !draftsResponse.isDraft()) {
             log.debug("Creating a new divorce session draft");
             draftStoreClient.createDraft(
                     jwt,

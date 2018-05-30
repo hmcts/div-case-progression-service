@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
+import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
@@ -97,9 +98,29 @@ public class DraftsServiceTest {
     }
 
     @Test
-    public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExist() {
+    public void saveDraftShouldCreateANewDraftIfTheDraftReturnedIsNull() {
 
         DraftsResponse draftsResponse = null;
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
+
+        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+                .createDraft(JWT, SECRET, createDraft);
+        verify(mockDraftStoreClient, times(0))
+                .updateDraft(any(), any(), any(), any());
+    }
+
+    @Test
+    public void saveDraftShouldCreateANewDraftIfTheDraftReturnedIsNotADraft() {
+
+        DraftsResponse draftsResponse = DraftsResponse.builder().isDraft(false).build();
 
         when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
                 .thenReturn(draftsResponse);
@@ -136,24 +157,6 @@ public class DraftsServiceTest {
                 .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
         verify(mockDraftStoreClient, times(0))
                 .createDraft(any(), any(), any());
-    }
-
-    @Test
-    public void saveDraft_should_do_nothing_if_draft_response_is_not_a_draft() {
-
-        // given
-        DraftsResponse draftsResponse = DraftsResponse.builder()
-                .isDraft(false)
-                .build();
-
-        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
-                .thenReturn(draftsResponse);
-
-        // when
-        underTest.saveDraft(JWT, requestContent);
-
-        // then
-        verifyZeroInteractions(mockDraftStoreClient);
     }
 
     @Test
