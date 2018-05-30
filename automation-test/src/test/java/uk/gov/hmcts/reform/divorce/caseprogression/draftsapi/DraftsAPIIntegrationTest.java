@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
 public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
-public class DraftsAPIIntegrationTest extends BaseIntegrationTest {
 
     @Value("${drafts.api.url}")
     private String draftsApiUrl;
@@ -124,4 +123,5 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTest {
     private void assertThereAreNoDrafts() {
         assertEquals(0, draftStoreClient.getDivorceDrafts(getIdamTestUser()).size());
     }
+
 }
