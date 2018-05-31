@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class DraftResponseFactory {
 
-    private static final String CASE_ID = "case_id";
+    private static final String CASE_ID = "caseId";
     private static final String COURTS = "courts";
     private static final String SUBMISSION_STARTED = "submissionStarted";
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";

@@ -123,7 +123,7 @@ public class DraftsRetrievalServiceTest {
         assertEquals(false, draftsResponse.isDraft());
         assertEquals(true, data.get("submissionStarted").asBoolean());
         assertEquals(courts, data.get("courts").asText());
-        assertEquals(caseId, (Long) data.get("case_id").asLong());
+        assertEquals(caseId, (Long) data.get("caseId").asLong());
     }
 
     @Test
