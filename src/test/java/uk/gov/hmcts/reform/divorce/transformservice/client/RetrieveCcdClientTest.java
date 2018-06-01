@@ -11,8 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertSame;
 import static org.mockito.BDDMockito.given;
@@ -56,7 +56,7 @@ public class RetrieveCcdClientTest {
         given(mockRestTemplate.exchange(expectedUrl, HttpMethod.GET, mockHttpEntity, List.class))
                 .willReturn(mockResponseEntity);
         // when
-        List<LinkedHashMap> listOfCases = underTest.getCases(USER_ID, JWT);
+        List<Map> listOfCases = underTest.getCases(USER_ID, JWT);
 
         // then
         assertSame(listOfCases, expectedListOfCases);

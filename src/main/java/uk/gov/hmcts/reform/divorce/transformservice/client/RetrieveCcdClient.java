@@ -5,11 +5,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class RetrieveCcdClient {
@@ -27,7 +25,7 @@ public class RetrieveCcdClient {
         this.httpEntityFactory = httpEntityFactory;
     }
 
-    public List<LinkedHashMap> getCases(String userId, String jwt) {
+    public List<Map> getCases(String userId, String jwt) {
         String url = ccdClientConfiguration.getRetrieveCaseUrl(userId);
         HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(jwt);
 
