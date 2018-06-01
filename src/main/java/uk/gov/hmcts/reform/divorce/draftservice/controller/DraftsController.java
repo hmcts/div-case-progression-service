@@ -66,7 +66,7 @@ public class DraftsController {
         // check if already in CCD
         UserDetails userDetails = userService.getUserDetails(jwt);
         String userID = userDetails.getId();
-        List<Map> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
+        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
 
         if (casesInCCD.isEmpty()){
             service.saveDraft(jwt, data);
