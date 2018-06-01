@@ -56,7 +56,7 @@ public class RetrieveCcdClientTest {
         given(mockRestTemplate.exchange(expectedUrl, HttpMethod.GET, mockHttpEntity, List.class))
                 .willReturn(mockResponseEntity);
         // when
-        List<Map> listOfCases = underTest.getCases(USER_ID, JWT);
+        List<Map<String, Object>> listOfCases = underTest.getCases(USER_ID, JWT);
 
         // then
         assertSame(listOfCases, expectedListOfCases);
