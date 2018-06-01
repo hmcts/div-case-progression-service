@@ -24,11 +24,11 @@ public class AwaitingPaymentCaseRetriever {
         this.retrieveCcdClient = retrieveCcdClient;
     }
 
-    public List<Map> getCases(String userId, String jwt) {
+    public List<Map<String, Object>> getCases(String userId, String jwt) {
 
-        List<Map> cases = retrieveCcdClient.getCases(userId, jwt);
+        List<Map<String, Object>> cases = retrieveCcdClient.getCases(userId, jwt);
 
-        List<Map> awaitingPaymentCases = cases.stream()
+        List<Map<String, Object>> awaitingPaymentCases = cases.stream()
                 .filter(caseData -> {
                     Object status = caseData.get(CASE_STATE);
                     return status == null ? false : status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
