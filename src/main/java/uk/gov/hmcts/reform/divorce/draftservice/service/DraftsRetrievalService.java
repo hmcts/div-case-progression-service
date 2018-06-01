@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,17 +23,17 @@ class DraftsRetrievalService {
 
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
-    private final RetrieveCcdClient retrieveCcdClient;
+    private final AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
     private final boolean checkCcdEnabled;
 
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  RetrieveCcdClient retrieveCcdClient,
+                                  AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever,
                                   @Value("${draft.api.ccd.check.enabled}") boolean checkCcdEnabled) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
-        this.retrieveCcdClient = retrieveCcdClient;
+        this.awaitingPaymentCaseRetriever = awaitingPaymentCaseRetriever;
         this.checkCcdEnabled = checkCcdEnabled;
     }
 
@@ -47,9 +48,7 @@ class DraftsRetrievalService {
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
         } else if (checkCcdEnabled) {
             log.debug("Checking CCD for an existing case as draft not found");
-            List<LinkedHashMap> listOfCases = retrieveCcdClient.getCases(userId, jwt);
-            DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
-            return draftsResponse;
+            return DraftResponseFactory.buildDraftResponseFromCaseData(awaitingPaymentCaseRetriever.getCases(userId, jwt));
         }
 
         return null;

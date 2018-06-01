@@ -18,8 +18,10 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -38,10 +40,9 @@ public class DraftsRetrievalServiceTest {
     @Mock
     private DraftModelFactory mockModelFactory;
     @Mock
-    private RetrieveCcdClient mockRetrieveCcdClient;
-
-    @Mock
     private DraftStoreClient mockDraftStoreClient;
+    @Mock
+    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
     @Mock
     private DraftList draftList;
     @Mock
@@ -61,11 +62,10 @@ public class DraftsRetrievalServiceTest {
     @Before
     public void setUp() throws Exception {
 
-
         boolean checkCcdEnabled = true;
         underTest = new DraftsRetrievalService(mockModelFactory,
                 mockDraftStoreClient,
-                mockRetrieveCcdClient,
+                mockAwaitingPaymentCaseRetriever,
                 checkCcdEnabled);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
@@ -99,19 +99,19 @@ public class DraftsRetrievalServiceTest {
         // given
         when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(null);
 
-        LinkedHashMap caseData = new LinkedHashMap();
+        Map<String, Object> caseData = new HashMap();
         String courts = "courtsXYZz";
         caseData.put("D8DivorceUnit", courts);
 
-        LinkedHashMap ccdResponseData = new LinkedHashMap();
+        Map<String, Object> ccdResponseData = new HashMap();
         Long caseId = 123L;
         ccdResponseData.put("id", caseId);
         ccdResponseData.put("state", "awaitingPayment");
         ccdResponseData.put("case_data", caseData);
 
-        List<LinkedHashMap> listOfCases = new ArrayList<>();
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(ccdResponseData);
-        when(mockRetrieveCcdClient
+        when(mockAwaitingPaymentCaseRetriever
                 .getCases(USER_ID, JWT))
                 .thenReturn(listOfCases);
 
@@ -136,7 +136,7 @@ public class DraftsRetrievalServiceTest {
         boolean checkCcdEnabled = false;
         underTest = new DraftsRetrievalService(mockModelFactory,
                 mockDraftStoreClient,
-                mockRetrieveCcdClient,
+                mockAwaitingPaymentCaseRetriever,
                 checkCcdEnabled);
 
         // when
@@ -144,7 +144,7 @@ public class DraftsRetrievalServiceTest {
 
         // then
         assertNull(draftsResponse);
-        verifyZeroInteractions(mockRetrieveCcdClient);
+        verifyZeroInteractions(mockAwaitingPaymentCaseRetriever);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class DraftsRetrievalServiceTest {
         boolean checkCcdEnabled = false;
         underTest = new DraftsRetrievalService(mockModelFactory,
                 mockDraftStoreClient,
-                mockRetrieveCcdClient,
+                mockAwaitingPaymentCaseRetriever,
                 checkCcdEnabled);
 
         // when

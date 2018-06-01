@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,26 +31,14 @@ public class DraftResponseFactory {
                 .build();
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<LinkedHashMap> listOfCases) {
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesAwaitingPayment) {
 
-        if (listOfCases == null || listOfCases.isEmpty()) {
+        if (listOfCasesAwaitingPayment == null || listOfCasesAwaitingPayment.isEmpty()) {
             log.debug("No case found to build draft response");
             return DraftsResponse.emptyResponse();
         }
 
-        List<LinkedHashMap> awaitingPaymentCases = listOfCases.stream()
-                .filter(caseData -> {
-                    Object status = caseData.get("state");
-                    return status == null ? false : status.toString().equalsIgnoreCase("awaitingpayment");
-                })
-                .collect(toList());
-
-        if (awaitingPaymentCases.isEmpty()) {
-            log.debug("No case found awaiting payment to build draft response");
-            return DraftsResponse.emptyResponse();
-        }
-
-        if (awaitingPaymentCases.size() > 1) {
+        if (listOfCasesAwaitingPayment.size() > 1) {
             log.debug("Multiple cases found awaiting payment. Building empty draft response");
             return DraftsResponse.emptyResponse();
         }
@@ -57,9 +46,9 @@ public class DraftResponseFactory {
         log.debug("Building draft response from existing case in CCD awaiting payment");
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
-        LinkedHashMap caseDetails = awaitingPaymentCases.get(0);
+        Map caseDetails = listOfCasesAwaitingPayment.get(0);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
-        LinkedHashMap caseData = (LinkedHashMap) caseDetails.get(CASE_DATA);
+        Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
 
