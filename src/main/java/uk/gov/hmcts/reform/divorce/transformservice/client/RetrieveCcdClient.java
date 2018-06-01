@@ -25,7 +25,7 @@ public class RetrieveCcdClient {
         this.httpEntityFactory = httpEntityFactory;
     }
 
-    public List<Map> getCases(String userId, String jwt) {
+    public List<Map<String, Object>> getCases(String userId, String jwt) {
         String url = ccdClientConfiguration.getRetrieveCaseUrl(userId);
         HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(jwt);
 

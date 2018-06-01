@@ -36,13 +36,13 @@ public class AwaitingPaymentCaseRetrieverTest {
     public void getCases_should_return_empty_list_if_no_cases_found() {
 
         // given
-        List<Map> cases = Collections.emptyList();
+        List<Map<String, Object>> cases = Collections.emptyList();
         given(mockRetrieveCcdClient
                 .getCases(USER_ID, JWT))
                 .willReturn(cases);
 
         // when
-        List<Map> casesRetrieved = underTest.getCases(USER_ID, JWT);
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
 
         // then
         assertEquals(0, casesRetrieved.size());
@@ -52,10 +52,10 @@ public class AwaitingPaymentCaseRetrieverTest {
     public void getCases_should_return_empty_list_if_no_cases_found_in_awaiting_payment() {
 
         // given
-        LinkedHashMap caseData = new LinkedHashMap();
+        Map<String, Object> caseData = new HashMap<>();
         caseData.put("state", "notAwaitingPayment");
 
-        List<Map> cases = new ArrayList<>();
+        List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);
 
         given(mockRetrieveCcdClient
@@ -63,7 +63,7 @@ public class AwaitingPaymentCaseRetrieverTest {
                 .willReturn(cases);
 
         // when
-        List<Map> casesRetrieved = underTest.getCases(USER_ID, JWT);
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
 
         // then
         assertEquals(0, casesRetrieved.size());
@@ -73,13 +73,13 @@ public class AwaitingPaymentCaseRetrieverTest {
     public void getCases_should_return_cases_found_in_awaiting_payment() {
 
         // given
-        Map caseData = new HashMap();
+        Map<String, Object> caseData = new HashMap();
         caseData.put("state", "notAwaitingPayment");
 
-        Map caseData2 = new HashMap();
+        Map<String, Object> caseData2 = new HashMap();
         caseData2.put("state", "awaitingPayment");
 
-        List<Map> cases = new ArrayList<>();
+        List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);
         cases.add(caseData2);
 
@@ -88,7 +88,7 @@ public class AwaitingPaymentCaseRetrieverTest {
                 .willReturn(cases);
 
         // when
-        List<Map> casesRetrieved = underTest.getCases(USER_ID, JWT);
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
 
         // then
         assertEquals(1, casesRetrieved.size());
@@ -98,16 +98,16 @@ public class AwaitingPaymentCaseRetrieverTest {
     public void getCases_should_return_cases_found_in_awaiting_payment_irrespective_of_state_case_sensitivity() {
 
         // given
-        Map caseData = new HashMap();
+        Map<String, Object> caseData = new HashMap();
         caseData.put("state", "notAwaitingPayment");
 
-        Map caseData2 = new HashMap();
+        Map<String, Object> caseData2 = new HashMap();
         caseData2.put("state", "awaitingpayment");
 
-        Map caseData3 = new HashMap();
+        Map<String, Object> caseData3 = new HashMap();
         caseData3.put("state", "AWAITINGPAYMENT");
 
-        List<Map> cases = new ArrayList<>();
+        List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);
         cases.add(caseData2);
         cases.add(caseData3);
@@ -117,7 +117,7 @@ public class AwaitingPaymentCaseRetrieverTest {
                 .willReturn(cases);
 
         // when
-        List<Map> casesRetrieved = underTest.getCases(USER_ID, JWT);
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
 
         // then
         assertEquals(2, casesRetrieved.size());
