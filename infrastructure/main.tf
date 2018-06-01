@@ -56,6 +56,7 @@ module "div-case-progression" {
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        IDAM_SECRET = "${data.vault_generic_secret.idam_secret.data["value"]}"
     }
 }
 
@@ -91,6 +92,10 @@ data "vault_generic_secret" "uk-gov-notify-api-key" {
     path = "secret/${var.vault_env}/divorce/notify/api_key"
 }
 
+data "vault_generic_secret" "idam_secret" {
+    path = "secret/${var.vault_env}/ccidam/idam-api/oauth2/client-secrets/divorce"
+}
+
 resource "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
     name      = "ccd-submission-s2s-auth-secret"
     value     = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
@@ -106,5 +111,11 @@ resource "azurerm_key_vault_secret" "div-doc-s2s-auth-secret" {
 resource "azurerm_key_vault_secret" "draft-store-api-encryption-key" {
     name      = "draft-store-api-encryption-key"
     value     = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
+    vault_uri = "${module.key-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "idam_secret" {
+    name      = "idam_secret"
+    value     = "${data.vault_generic_secret.idam_secret.data["value"]}"
     vault_uri = "${module.key-vault.key_vault_uri}"
 }

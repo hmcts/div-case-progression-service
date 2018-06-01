@@ -31,7 +31,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 List<LinkedHashMap<String, Object>> secrets = [
     secret("ccd-submission-s2s-auth-secret", "CPS_IDAM_AUTH_SECRET"),
     secret("div-doc-s2s-auth-secret", "DGS_IDAM_AUTH_SECRET"),
-    secret("draft-store-api-encryption-key", 'DRAFT_STORE_API_ENCRYPTION_KEY')
+    secret("draft-store-api-encryption-key", 'DRAFT_STORE_API_ENCRYPTION_KEY'),
+    secret("idam-secret", 'IDAM_SECRET')
 ]
 
 withPipeline(type , product, component) {
@@ -44,7 +45,7 @@ withPipeline(type , product, component) {
     after('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
-    
+
     before('functionalTest:preview') {
         env.ITEST_ENVIRONMENT = "preview"
     }

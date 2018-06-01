@@ -11,12 +11,15 @@ import java.util.UUID;
 @Service
 public class IdamUserSupport {
 
-    private static final String idamCaseworkerUser = "CaseWorkerTest";
-
-    private static final String idamCaseworkerPassword = "password";
+    private static final String IDAM_CASEWORKER_USER = "CaseWorkerTest";
+    private static final String IDAM_CASEWORKER_PASSWORD = "password";
+    private static final String REDIRECT_URI = "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
+
+    @Value("${auth.idam.secret}")
+    private String idamSecret;
 
     private String idamUsername;
 
@@ -29,7 +32,7 @@ public class IdamUserSupport {
     public synchronized String getIdamTestUser() {
         if (StringUtils.isBlank(testUserJwtToken)) {
             createUserInIdam();
-            testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
+            testUserJwtToken = generateClientToken(idamUsername, idamPassword);
         }
 
         return testUserJwtToken;
@@ -38,7 +41,7 @@ public class IdamUserSupport {
     public synchronized String getIdamTestCaseWorkerUser() {
         if (StringUtils.isBlank(testCaseworkerJwtToken)) {
             createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPassword);
+            testCaseworkerJwtToken = generateClientToken(IDAM_CASEWORKER_USER, IDAM_CASEWORKER_PASSWORD);
         }
 
         return testCaseworkerJwtToken;
@@ -57,8 +60,8 @@ public class IdamUserSupport {
     private void createCaseworkerUserInIdam() {
         RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPassword + "\", "
+                .body("{\"email\":\"" + IDAM_CASEWORKER_USER + "\", "
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + IDAM_CASEWORKER_PASSWORD + "\", "
                         + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
     }
@@ -67,15 +70,31 @@ public class IdamUserSupport {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    private String generateUserTokenWithNoRoles(String username, String password) {
-        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        final String token = RestAssured.given().baseUri(idamUserBaseUrl)
-            .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
-            .body()
-            .path("access-token");
+    private String generateClientToken(String username, String password) {
+        String code = generateClientCode(username, password);
+        String token = "";
+
+        token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
+            "&client_secret=" + idamSecret +
+            "&client_id=probate" +
+            "&redirect_uri=" + REDIRECT_URI +
+            "&grant_type=authorization_code")
+            .body().path("access_token");
 
         return "Bearer " + token;
+    }
+
+    private String generateClientCode(String username, String password) {
+        String code = "";
+        createUserInIdam();
+        System.out.println("created user in idam");
+        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        System.out.println("encoded auth is.." + encoded);
+        code = RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Authorization", "Basic " + encoded)
+            .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + REDIRECT_URI)
+            .body().path("code");
+        return code;
+
     }
 }
