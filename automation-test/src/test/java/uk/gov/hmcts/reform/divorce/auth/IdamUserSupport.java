@@ -81,6 +81,8 @@ public class IdamUserSupport {
             "&grant_type=authorization_code")
             .body().path("access_token");
 
+        System.out.println("Bearer token is " + token);
+
         return "Bearer " + token;
     }
 
@@ -90,10 +92,12 @@ public class IdamUserSupport {
         System.out.println("created user in idam");
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         System.out.println("encoded auth is.." + encoded);
+        System.out.println("Idam user base url " + idamUserBaseUrl);
         code = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + REDIRECT_URI)
             .body().path("code");
+        System.out.println("Code is " + code);
         return code;
 
     }
