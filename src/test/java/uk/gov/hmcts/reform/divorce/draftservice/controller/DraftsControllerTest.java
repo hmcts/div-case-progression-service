@@ -1,28 +1,5 @@
 package uk.gov.hmcts.reform.divorce.draftservice.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableException;
-import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
-import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
-
-import java.io.File;
-
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -37,6 +14,31 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.File;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.WebApplicationContext;
+
+import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableException;
+import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DraftsController.class)

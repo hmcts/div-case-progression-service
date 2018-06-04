@@ -1,15 +1,16 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 @Component
 @Slf4j

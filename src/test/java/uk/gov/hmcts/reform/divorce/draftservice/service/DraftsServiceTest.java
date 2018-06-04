@@ -1,7 +1,18 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import static junit.framework.TestCase.assertNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Collections;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
@@ -19,17 +31,8 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collections;
-
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftsServiceTest {
@@ -39,33 +42,26 @@ public class DraftsServiceTest {
     private static final String DRAFT_ID = "1";
     private static final String USER_ID = "60";
 
-    @Mock
-    private DraftModelFactory modelFactory;
-
-    @Mock
-    private EncryptionKeyFactory keyFactory;
-
-    @Mock
-    private DraftStoreClient client;
-
     @InjectMocks
     private DraftsService underTest;
-
+    @Mock
+    private DraftModelFactory modelFactory;
+    @Mock
+    private EncryptionKeyFactory keyFactory;
+    @Mock
+    private DraftStoreClient client;
     @Mock
     private DraftList draftList;
-
     @Mock
     private CreateDraft createDraft;
-
     @Mock
     private UpdateDraft updateDraft;
-
     @Mock
     private Draft draft;
-
     @Mock
     private UserService userService;
-
+    @Mock
+    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
     private JsonNode requestContent;
 
 

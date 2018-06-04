@@ -1,12 +1,8 @@
 package uk.gov.hmcts.reform.divorce.draftservice.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +16,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.divorce.draftservice.service.AwaitingPaymentCaseRetriever;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
-import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
-import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @RestController
 @RequestMapping(path = "/draftsapi/version/1")
@@ -42,10 +39,6 @@ public class DraftsController {
     private DraftsService service;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Saves a divorce case draft")
@@ -62,16 +55,7 @@ public class DraftsController {
         @ApiParam(value = "The email address that will receive the notification that the draft has been saved")
         @Email final String notificationEmail) {
         log.debug("Received request to save a divorce session draft");
-
-        // check if already in CCD
-        UserDetails userDetails = userService.getUserDetails(jwt);
-        String userID = userDetails.getId();
-        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
-
-        if (casesInCCD.isEmpty()){
-            service.saveDraft(jwt, data);
-        }
-
+        service.saveDraft(jwt, data);
         if (StringUtils.isNotBlank(notificationEmail)) {
             emailService.sendSaveDraftConfirmationEmail(notificationEmail);
         }
