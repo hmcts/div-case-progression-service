@@ -76,7 +76,7 @@ public class IdamUserSupport {
 
         token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
             "&client_secret=" + idamSecret +
-            "&client_id=probate" +
+            "&client_id=divorce" +
             "&redirect_uri=" + REDIRECT_URI +
             "&grant_type=authorization_code")
             .body().path("access_token");
