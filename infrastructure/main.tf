@@ -13,9 +13,6 @@ locals {
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 
-    nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
-    previewVaultUri = "https://div-${var.reform_service_name}-aat.vault.azure.net/"
-    vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "div-case-progression" {
