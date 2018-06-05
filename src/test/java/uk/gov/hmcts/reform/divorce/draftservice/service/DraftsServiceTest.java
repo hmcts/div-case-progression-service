@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import static junit.framework.TestCase.assertNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,14 +153,13 @@ public class DraftsServiceTest {
     }
 
     @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() throws IOException {
+    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() {
         when(draftList.getData()).thenReturn(Collections.singletonList(draft));
         when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
 
         JsonNode draftsContent = underTest.getDraft(JWT);
 
         assertEquals(requestContent, draftsContent);
-
     }
 
     @Test

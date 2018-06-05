@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,20 +20,27 @@ public class AwaitingPaymentCaseRetriever {
     private static final String CASE_STATE = "state";
     private static final String AWAITING_PAYMENT_STATE = "awaitingpayment";
     private final RetrieveCcdClient retrieveCcdClient;
+    private final Boolean checkCcdEnabled;
 
     @Autowired
-    public AwaitingPaymentCaseRetriever(RetrieveCcdClient retrieveCcdClient) {
+    public AwaitingPaymentCaseRetriever(RetrieveCcdClient retrieveCcdClient,
+                                        @Value("draft.api.ccd.check.enabled") String checkCcdEnabled) {
         this.retrieveCcdClient = retrieveCcdClient;
+        this.checkCcdEnabled = Boolean.valueOf(checkCcdEnabled);
     }
 
     public List<Map<String, Object>> getCases(String userId, String jwt) {
+
+        if (!checkCcdEnabled) {
+            return Collections.emptyList();
+        }
 
         List<Map<String, Object>> cases = retrieveCcdClient.getCases(userId, jwt);
 
         List<Map<String, Object>> awaitingPaymentCases = cases.stream()
                 .filter(caseData -> {
                     Object status = caseData.get(CASE_STATE);
-                    return status == null ? false : status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
+                    return status != null && status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
                 })
                 .collect(toList());
 
