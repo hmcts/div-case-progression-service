@@ -51,12 +51,12 @@ public class CcdCallBackController {
     @PostMapping(path = "/petition-submitted",
         consumes = MediaType.APPLICATION_JSON,
         produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Generate and dispatch a notification email to the petition when the application is submitted")
+    @ApiOperation(value = "Generate/dispatch a notification email to the petitioner when the application is submitted")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "An email notification has been generated and dispatched",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-    })
+        })
     public ResponseEntity<CCDCallbackResponse> petitionSubmitted(
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
