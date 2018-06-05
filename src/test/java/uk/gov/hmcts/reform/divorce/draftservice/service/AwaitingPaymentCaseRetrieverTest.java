@@ -15,6 +15,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AwaitingPaymentCaseRetrieverTest {
@@ -28,7 +29,23 @@ public class AwaitingPaymentCaseRetrieverTest {
 
     @Before
     public void setUp() throws Exception {
-        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient);
+        String checkCcdEnabled = "true";
+        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient, checkCcdEnabled);
+    }
+
+    @Test
+    public void getCases_should_not_call_ccd_if_feature_flag_is_disabled() {
+
+        // given
+        String checkCcdEnabled = "false";
+        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient, checkCcdEnabled);
+
+        // when
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
+
+        // then
+        assertEquals(0, casesRetrieved.size());
+        verifyZeroInteractions(mockRetrieveCcdClient);
     }
 
     @Test
