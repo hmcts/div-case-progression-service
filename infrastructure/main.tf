@@ -54,7 +54,6 @@ module "div-case-progression" {
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
         IDAM_SECRET = "${data.vault_generic_secret.idam-secret.data["value"]}"
-        IDAM_REDIRECT_URL = "http://div-cps-${local.local_env}.service.core-compute-${local.local_env}.internal/authenticated"
     }
 }
 
