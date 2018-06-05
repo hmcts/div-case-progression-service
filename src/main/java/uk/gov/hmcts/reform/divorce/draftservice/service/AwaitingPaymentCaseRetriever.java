@@ -31,7 +31,7 @@ public class AwaitingPaymentCaseRetriever {
         List<Map<String, Object>> awaitingPaymentCases = cases.stream()
                 .filter(caseData -> {
                     Object status = caseData.get(CASE_STATE);
-                    return status == null ? false : status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
+                    return status != null && status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
                 })
                 .collect(toList());
 

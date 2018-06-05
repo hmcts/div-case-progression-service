@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +53,26 @@ public class AwaitingPaymentCaseRetrieverTest {
         // given
         Map<String, Object> caseData = new HashMap<>();
         caseData.put("state", "notAwaitingPayment");
+
+        List<Map<String, Object>> cases = new ArrayList<>();
+        cases.add(caseData);
+
+        given(mockRetrieveCcdClient
+                .getCases(USER_ID, JWT))
+                .willReturn(cases);
+
+        // when
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
+
+        // then
+        assertEquals(0, casesRetrieved.size());
+    }
+
+    @Test
+    public void getCases_should_return_empty_list_if_no_state_is_found() {
+
+        // given
+        Map<String, Object> caseData = new HashMap<>();
 
         List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);
