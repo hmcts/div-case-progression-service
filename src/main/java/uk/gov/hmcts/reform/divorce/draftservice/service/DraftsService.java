@@ -38,9 +38,8 @@ public class DraftsService {
         String secret = keyFactory.createEncryptionKey(userDetails.getId());
         String userID = userDetails.getId();
         List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
-        Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
         if (casesInCCD.isEmpty()) {
-            // refactor this - must be a better way to do it
+            Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
             if (divorceDraft.isPresent()) {
                 log.debug("Updating the existing divorce session draft");
                 client.updateDraft(
@@ -56,6 +55,7 @@ public class DraftsService {
                     modelFactory.createDraft(data));
             }
         }
+        log.debug("Case already exists in CCD, not creating or updating a divorce session draft");
     }
 
     public JsonNode getDraft(String jwt) {
