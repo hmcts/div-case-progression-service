@@ -13,13 +13,15 @@ public class IdamUserSupport {
 
     private static final String IDAM_CASEWORKER_USER = "CaseWorkerTest";
     private static final String IDAM_CASEWORKER_PASSWORD = "password";
-    private static final String REDIRECT_URI = "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
     @Value("${auth.idam.secret}")
     private String idamSecret;
+
+    @Value("${auth.idam.redirect.url}")
+    private String idamRedirectUrl;
 
     private String idamUsername;
 
@@ -77,7 +79,7 @@ public class IdamUserSupport {
         token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
             "&client_secret=" + idamSecret +
             "&client_id=divorce" +
-            "&redirect_uri=" + REDIRECT_URI +
+            "&redirect_uri=" + idamRedirectUrl +
             "&grant_type=authorization_code")
             .body().path("access_token");
 
@@ -87,6 +89,8 @@ public class IdamUserSupport {
     }
 
     private String generateClientCode(String username, String password) {
+        System.out.println("IDAM REDIRECT URL " + idamRedirectUrl);
+
         String code = "";
         createUserInIdam();
         System.out.println("created user in idam");
@@ -95,7 +99,7 @@ public class IdamUserSupport {
         System.out.println("Idam user base url " + idamUserBaseUrl);
         code = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + REDIRECT_URI)
+            .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + idamRedirectUrl)
             .body().path("code");
         System.out.println("Code is " + code);
         return code;
