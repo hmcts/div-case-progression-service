@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -54,6 +55,8 @@ public class CcdCallbackControllerTest {
     @Autowired
     private WebApplicationContext applicationContext;
 
+    @MockBean
+    public EmailService emailService;
     @MockBean
     private UpdateService updateService;
 
