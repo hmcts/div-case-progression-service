@@ -1,11 +1,8 @@
 #!/bin/bash
-## Usage: ./idam-user-token.sh [role] [user_id]
+## Usage: ./idam-user-token.sh
 ##
-## Options:
-##    - role: Role assigned to user in generated token. Default to `ccd-import`.
-##    - user_id: ID assigned to user in generated token. Default to `1`.
+## Registers a user and generates a JWT token for that user
 ##
-## Returns a valid IDAM user token for the given role and user_id.
 
 IDAM_URL=http://localhost:4501
 IDAM_REDIRECT_URL=https://localhost:4003/authenticated
@@ -15,7 +12,6 @@ SUFFIX=$RANDOM
 USER_EMAIL=test$SUFFIX@mailinator.com
 USER_PASSWORD=test$SUFFIX
 AUTHORIZATION_HEADER=`echo -n "$USER_EMAIL:$USER_PASSWORD" | openssl base64 -base64`
-
 
 echo "Creating account with username [$USER_EMAIL] and password [$USER_PASSWORD]"
 curl --silent -X POST \
