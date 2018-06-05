@@ -1,8 +1,12 @@
 package uk.gov.hmcts.reform.divorce.draftservice.controller;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.MediaType;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +20,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(path = "/draftsapi/version/1")

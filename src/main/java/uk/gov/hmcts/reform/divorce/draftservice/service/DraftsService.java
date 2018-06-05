@@ -1,13 +1,9 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
@@ -16,7 +12,9 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
