@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
@@ -27,6 +28,8 @@ public class CcdCallBackController {
 
     @Autowired
     private UpdateService updateService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON,
         produces = MediaType.APPLICATION_JSON)
