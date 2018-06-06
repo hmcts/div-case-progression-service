@@ -1,4 +1,5 @@
 vault_env = "prod"
+draft_check_ccd_enabled = true
 
 logging_level_org_springframework_web = "INFO"
 logging_level_uk_gov_hmcts_ccd = "INFO"
