@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,16 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
     @Value("${document.management.store.baseUrl}")
     private String documentManagementURL;
+
+    @BeforeClass
+    public void setUpClass() {
+        super.setUpClass();
+    }
+
+    @AfterClass
+    public void tearDownClass() {
+        super.tearDownClass();
+    }
 
     @Test
     @WithTag("test-type:e2e")

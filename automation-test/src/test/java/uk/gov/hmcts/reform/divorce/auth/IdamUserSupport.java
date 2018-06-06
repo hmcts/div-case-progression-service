@@ -1,18 +1,14 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class IdamUserSupport {
-
-    private static final String IDAM_CASEWORKER_USER = "CaseWorkerTest";
-    private static final String IDAM_CASEWORKER_PASSWORD = "password";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
@@ -23,49 +19,36 @@ public class IdamUserSupport {
     @Value("${auth.idam.redirect.url}")
     private String idamRedirectUrl;
 
-    private String idamUsername;
-
-    private String idamPassword;
-
-    private String testUserJwtToken;
-
-    private String testCaseworkerJwtToken;
-
-    public synchronized String getIdamTestUser() {
-        if (StringUtils.isBlank(testUserJwtToken)) {
-            createUserInIdam();
-            testUserJwtToken = generateClientToken(idamUsername, idamPassword);
-        }
-
-        return testUserJwtToken;
+    public String getIdamTestUser(String username, String password) {
+        createCitizen(username, password);
+        return generateClientToken(username, password);
     }
 
-    public synchronized String getIdamTestCaseWorkerUser() {
-        if (StringUtils.isBlank(testCaseworkerJwtToken)) {
-            createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateClientToken(IDAM_CASEWORKER_USER, IDAM_CASEWORKER_PASSWORD);
-        }
-
-        return testCaseworkerJwtToken;
+    public String getIdamTestCaseWorkerUser(String username, String password) {
+        createCaseworkerUserInIdam(username, password);
+        return generateClientToken(username, password);
     }
 
-    private void createUserInIdam() {
-        idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        idamPassword = UUID.randomUUID().toString();
+    public void deleteUsers(List<String> usernames) {
+        usernames.forEach(this::deleteUser);
+    }
 
+    private void createCitizen(String username, String password) {
         RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\"}")
+                .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
                 .post(idamCreateUrl());
+
     }
 
-    private void createCaseworkerUserInIdam() {
+    private void createCaseworkerUserInIdam(String username, String password) {
         RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + IDAM_CASEWORKER_USER + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + IDAM_CASEWORKER_PASSWORD + "\", "
+                .body("{\"email\":\"" + username + "\", "
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + password + "\", "
                         + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
+
     }
 
     private String idamCreateUrl() {
@@ -86,14 +69,19 @@ public class IdamUserSupport {
     }
 
     private String generateClientCode(String username, String password) {
-        createUserInIdam();
-
         String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
         return RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
             .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + idamRedirectUrl)
             .body().path("code");
+    }
 
+    private void deleteUser(String username) {
+        System.out.println("Deleting user " + username);
+        RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .delete(String.format("testing-support/accounts/%s", username));
     }
 }

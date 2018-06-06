@@ -4,6 +4,8 @@ import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -29,6 +31,16 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
 
     @Autowired
     private DraftStoreClient draftStoreClient;
+
+    @BeforeClass
+    public void setUpClass() {
+        super.setUpClass();
+    }
+
+    @AfterClass
+    public void tearDownClass() {
+        super.tearDownClass();
+    }
 
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {

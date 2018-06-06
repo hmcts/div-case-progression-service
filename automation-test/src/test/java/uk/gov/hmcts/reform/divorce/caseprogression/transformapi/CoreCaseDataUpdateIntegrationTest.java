@@ -2,7 +2,9 @@ package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,16 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
     private String transformationApiSubmitUrl;
     private String transformationApiUpdateUrl;
+
+    @BeforeClass
+    public void setUpClass() {
+        super.setUpClass();
+    }
+
+    @AfterClass
+    public void tearDownClass() {
+        super.tearDownClass();
+    }
 
     @Before
     public void setUp() {
