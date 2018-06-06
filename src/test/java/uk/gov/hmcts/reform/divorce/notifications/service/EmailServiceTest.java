@@ -61,4 +61,30 @@ public class EmailServiceTest {
         }
 
     }
+
+    @Test
+    public void sendSubmissionConfirmationEmailShouldCallTheEmailClientToSendAnEmail()
+        throws NotificationClientException {
+        emailService.sendSubmissionNotificationEmail(EMAIL_ADDRESS);
+
+        verify(mockClient).sendEmail(
+            eq(emailTemplates.get(EmailTemplateNames.APPLIC_SUBMISSION.name())),
+            eq(EMAIL_ADDRESS),
+            eq(emailTemplateVars.get(EmailTemplateNames.APPLIC_SUBMISSION.name())),
+            anyString());
+    }
+
+    @Test
+    public void sendSubmissionConfirmationEmailShouldNotPropagateNotificationClientException()
+        throws NotificationClientException {
+        doThrow(new NotificationClientException(new Exception("Exception inception")))
+            .when(mockClient).sendEmail(anyString(), anyString(), eq(null), anyString());
+
+        try {
+            emailService.sendSubmissionNotificationEmail(EMAIL_ADDRESS);
+        } catch (Exception e) {
+            fail();
+        }
+
+    }
 }
