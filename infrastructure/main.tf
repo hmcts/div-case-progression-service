@@ -23,6 +23,7 @@ module "div-case-progression" {
     ilbIp                           = "${var.ilbIp}"
     appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
     subscription                    = "${var.subscription}"
+    capacity                        = "${var.capacity}"
 
     is_frontend = false
 
