@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.divorce.auth.BaseIntegrationTestWithIdamSupport;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.Draft;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.DraftStoreClient;
+import uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
-
-    @Value("${drafts.api.url}")
-    private String draftsApiUrl;
+public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
     @Autowired
-    private DraftStoreClient draftStoreClient;
+    protected DraftStoreClient draftStoreClient;
 
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
@@ -43,7 +41,6 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
-        draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
         Response draftStoreResponse = draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
 
         assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
@@ -78,42 +75,6 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
         deleteDivorceDraft();
     }
 
-    private Response deleteDivorceDraft() {
-        return SerenityRest.given()
-                .headers(headers())
-                .when()
-                .delete(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Response saveDivorceDraft(String draft) {
-        return SerenityRest.given()
-                .headers(headers())
-                .body(draft)
-                .when()
-                .put(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Response getDivorceDraft() {
-        return SerenityRest.given()
-                .headers(headers())
-                .when()
-                .get(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Map<String, Object> headers() {
-        return headers(getIdamTestUser());
-    }
-
-    private Map<String, Object> headers(String token) {
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        headers.put("Authorization", token);
-        return headers;
-    }
-
     private void assertDraftIsSaved(String draft) {
         List<Draft> drafts = draftStoreClient.getDivorceDrafts(getIdamTestUser());
         assertEquals(1, drafts.size());
@@ -123,5 +84,4 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     private void assertThereAreNoDrafts() {
         assertEquals(0, draftStoreClient.getDivorceDrafts(getIdamTestUser()).size());
     }
-
 }

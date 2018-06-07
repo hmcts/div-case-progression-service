@@ -61,7 +61,7 @@ public class DraftsService {
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt,
                 userDetails.getId(),
                 encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
-        if (draftsResponse.isDraft()) {
+        if (draftsResponse != null && draftsResponse.isDraft()) {
             draftStoreClient.deleteDraft(jwt, draftsResponse.getDraftId());
         }
     }

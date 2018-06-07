@@ -177,6 +177,20 @@ public class DraftsServiceTest {
     }
 
     @Test
+    public void deleteDraftShouldNotDeleteAnythingIfServiceReturnsNull() {
+
+        DraftsResponse draftsResponse = null;
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+
+        underTest.deleteDraft(JWT);
+
+        verify(mockDraftStoreClient, times(0))
+                .deleteDraft(any(), any());
+    }
+
+    @Test
     public void deleteDraftShouldNotDeleteAnythingIfThereAreNoDrafts() {
 
         DraftsResponse draftsResponse = DraftsResponse.emptyResponse();

@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.reform.divorce.auth.config.ServiceContextConfiguration;
+//import uk.gov.hmcts.reform.divorce.auth.config.ServiceContextConfiguration;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TestContextConfiguration.class, ServiceContextConfiguration.class})
@@ -25,5 +26,10 @@ public abstract class IntegrationTest {
         this.springMethodIntegration = new SpringIntegrationMethodRule();
         SerenityRest.useRelaxedHTTPSValidation("SSL");
         RestAssured.useRelaxedHTTPSValidation();
+        System.setProperty("http.proxyHost", "proxyout.reform.hmcts.net");
+        System.setProperty("http.proxyPort", "8080");
+        //System.setProperty("http.nonProxyHosts", "http://localhost");
+        System.setProperty("https.proxyHost", "proxyout.reform.hmcts.net");
+        System.setProperty("https.proxyPort", "8080");
     }
 }
