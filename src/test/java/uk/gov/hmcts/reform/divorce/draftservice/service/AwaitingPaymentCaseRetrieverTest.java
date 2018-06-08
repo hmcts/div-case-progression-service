@@ -10,12 +10,12 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AwaitingPaymentCaseRetrieverTest {
@@ -29,7 +29,23 @@ public class AwaitingPaymentCaseRetrieverTest {
 
     @Before
     public void setUp() throws Exception {
-        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient);
+        String checkCcdEnabled = "true";
+        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient, checkCcdEnabled);
+    }
+
+    @Test
+    public void getCases_should_not_call_ccd_if_feature_flag_is_disabled() {
+
+        // given
+        String checkCcdEnabled = "false";
+        underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient, checkCcdEnabled);
+
+        // when
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
+
+        // then
+        assertEquals(0, casesRetrieved.size());
+        verifyZeroInteractions(mockRetrieveCcdClient);
     }
 
     @Test
@@ -54,6 +70,26 @@ public class AwaitingPaymentCaseRetrieverTest {
         // given
         Map<String, Object> caseData = new HashMap<>();
         caseData.put("state", "notAwaitingPayment");
+
+        List<Map<String, Object>> cases = new ArrayList<>();
+        cases.add(caseData);
+
+        given(mockRetrieveCcdClient
+                .getCases(USER_ID, JWT))
+                .willReturn(cases);
+
+        // when
+        List<Map<String, Object>> casesRetrieved = underTest.getCases(USER_ID, JWT);
+
+        // then
+        assertEquals(0, casesRetrieved.size());
+    }
+
+    @Test
+    public void getCases_should_return_empty_list_if_no_state_is_found() {
+
+        // given
+        Map<String, Object> caseData = new HashMap<>();
 
         List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);

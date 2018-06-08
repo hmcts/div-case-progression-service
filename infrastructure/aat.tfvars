@@ -6,3 +6,4 @@ draft_store_api_baseurl = "https://preproddraftstorelb.moneyclaim.reform.hmcts.n
 uk_gov_notify_email_templates = "{SAVE_DRAFT:'14074c06-87f1-4678-9238-4d71e741eb57'}"
 uk_gov_notify_email_template_vars = "{SAVE_DRAFT: {divorceUrl: 'https://div-pfe-aat.service.core-compute-aat.internal'}}"
 idam_api_baseurl = "https://preprod-idamapi.reform.hmcts.net:3511"
+capacity = "2"
