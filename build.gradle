@@ -184,6 +184,7 @@ dependencies {
         exclude(module: 'commons-logging')
     }
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
+    testCompile project(':test-support')
 }
 
 task printVersion {

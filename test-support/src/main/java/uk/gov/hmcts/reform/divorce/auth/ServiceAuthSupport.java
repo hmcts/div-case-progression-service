@@ -3,8 +3,11 @@ package uk.gov.hmcts.reform.divorce.auth;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
 
 import java.util.HashMap;
@@ -15,13 +18,20 @@ public class ServiceAuthSupport {
 
     private static final Map<ServiceAuthTokenFor, String> CACHED_TOKENS = new HashMap<>();
 
-    @Autowired
-    @Qualifier("caseProgressionAuthTokenGenerator")
-    private AuthTokenGenerator caseProgressionAuthTokenGenerator;
+    @Value("${document.generator.service.auth.secret}")
+    private String documentGeneratorSecret;
+
+    @Value("${document.generator.auth.microservice}")
+    private String documentGeneratorMicroserviceName;
+
+    @Value("${case.progression.service.auth.secret}")
+    private String caseProgressionSecret;
+
+    @Value("${case.progression.auth.microservice}")
+    private String caseProgressionMicroserviceName;
 
     @Autowired
-    @Qualifier("documentGeneratorAuthTokenGenerator")
-    private AuthTokenGenerator documentGeneratorAuthTokenGenerator;
+    private ServiceAuthorisationApi serviceAuthorisationApi;
 
     public synchronized String getServiceAuthTokenFor(ServiceAuthTokenFor serviceAuthTokenFor) {
         if (serviceAuthTokenFor == null) {
@@ -42,9 +52,9 @@ public class ServiceAuthSupport {
     private AuthTokenGenerator getCaseProgressionAuthTokenGenerator(ServiceAuthTokenFor serviceAuthTokenFor) {
         switch (serviceAuthTokenFor) {
             case CASE_PROGRESSION:
-                return caseProgressionAuthTokenGenerator;
+                return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret, caseProgressionMicroserviceName, serviceAuthorisationApi);
             case DIV_DOCUMENT_GENERATOR:
-                return documentGeneratorAuthTokenGenerator;
+                return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret, documentGeneratorMicroserviceName, serviceAuthorisationApi);
         }
 
         return null;

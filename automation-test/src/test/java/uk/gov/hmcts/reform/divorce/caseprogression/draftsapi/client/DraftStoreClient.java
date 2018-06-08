@@ -53,7 +53,7 @@ public class DraftStoreClient {
         return findDivorceDraft(jwt, draftList, new ArrayList<>());
     }
 
-    public void createDraft(String jwt, String draft) {
+    public Response createDraft(String jwt, String draft) {
         ObjectMapper objectMapper = new ObjectMapper();
         CreateDraft createDraft;
         try {
@@ -62,7 +62,7 @@ public class DraftStoreClient {
             throw new IllegalArgumentException("Draft is not in the correct format");
         }
         try {
-            SerenityRest.given()
+            return SerenityRest.given()
                     .config(config().encoderConfig(encoderConfig().encodeContentTypeAs("application", ContentType.JSON)))
                     .headers(getHeaders(jwt))
                     .body(objectMapper.writeValueAsString(createDraft))
@@ -108,7 +108,7 @@ public class DraftStoreClient {
         headers.put("ServiceAuthorization",
                 serviceAuthSupport.getServiceAuthTokenFor(ServiceAuthTokenFor.CASE_PROGRESSION));
         headers.put("Secret", getSecret(jwt));
-        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.getType());
+        headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 
         return headers;
     }
