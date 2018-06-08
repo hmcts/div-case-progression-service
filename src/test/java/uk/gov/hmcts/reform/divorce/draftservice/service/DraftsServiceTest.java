@@ -30,9 +30,9 @@ import java.util.Map;
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -82,10 +82,10 @@ public class DraftsServiceTest {
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
+        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
+
         when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
         when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
-
-        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
 
         when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
     }
@@ -94,7 +94,7 @@ public class DraftsServiceTest {
     public void saveDraftShouldNotCreateOrUpdateADraftIfAlreadyExistsInCCD() {
 
         Map<String, Object> caseData = new HashMap<>();
-        caseData.put("state", "notAwaitingPayment");
+        caseData.put("state", "awaitingPayment");
 
         List<Map<String, Object>> cases = new ArrayList<>();
         cases.add(caseData);
@@ -103,10 +103,7 @@ public class DraftsServiceTest {
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(client, never())
-            .createDraft(JWT, SECRET, createDraft);
-        verify(client, never())
-            .updateDraft(JWT, USER_ID, SECRET, updateDraft);
+        verifyZeroInteractions(client);
     }
 
     @Test
