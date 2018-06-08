@@ -9,28 +9,22 @@
             <Method name="saveDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
             <Method name="getDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
             <Method name="deleteDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
-            <Method name="getDivorceDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
-            <Method name="findDivorceDraft" reportCaughtExceptions="true" reportExecutionTime="true"/>
-        </Class>
-        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.DivorceToCcdTransformationService">
-            <Method name="transform" reportCaughtExceptions="true" reportExecutionTime="true"/>
-        </Class>
-        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService">
-            <Method name="getRespondentGender" reportCaughtExceptions="true" reportExecutionTime="true"/>
-            <Method name="getPetitionerGender" reportCaughtExceptions="true" reportExecutionTime="true"/>
         </Class>
         <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.PdfGeneratorService">
             <Method name="generatePdf" reportCaughtExceptions="true" reportExecutionTime="true"/>
-        </Class>
-        <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.PetitionValidatorService">
-            <Method name="validateFieldsForIssued" reportCaughtExceptions="true" reportExecutionTime="true"/>
         </Class>
         <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService">
             <Method name="submit" reportCaughtExceptions="true" reportExecutionTime="true"/>
         </Class>
         <Class name="uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService">
             <Method name="update" reportCaughtExceptions="true" reportExecutionTime="true"/>
+            <Method name="addPdf" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.notifications.service.EmailService">
+            <Method name="sendSaveDraftConfirmationEmail" reportCaughtExceptions="true" reportExecutionTime="true"/>
+        </Class>
+        <Class name="uk.gov.hmcts.reform.divorce.idam.services.UserService">
+            <Method name="getUserDetails" reportCaughtExceptions="true" reportExecutionTime="true"/>
         </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
-
