@@ -20,6 +20,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDC
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
 @RestController
@@ -64,7 +66,13 @@ public class CcdCallBackController {
         String petitionerEmail = caseDetailsRequest.getCaseDetails().getCaseData().getD8PetitionerEmail();
 
         if (StringUtils.isNotBlank(petitionerEmail)) {
-            emailService.sendSubmissionNotificationEmail(petitionerEmail);
+            Map<String, String> templateVars = new HashMap<>();
+            CoreCaseData        caseData     = caseDetailsRequest.getCaseDetails().getCaseData();
+
+            templateVars.put("firstName",   caseData.getD8PetitionerFirstName());
+            templateVars.put("lastName",    caseData.getD8PetitionerLastName());
+            templateVars.put("referenceId", caseData.getD8caseReference());
+            emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
 
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));

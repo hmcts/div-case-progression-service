@@ -26,22 +26,28 @@ public class EmailService {
     private Map<String, Map<String, String>> emailTemplateVars;
 
     public void sendSaveDraftConfirmationEmail(String destinationAddress) {
-        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.SAVE_DRAFT.name());
+        String      templateName = EmailTemplateNames.SAVE_DRAFT.name();
+        EmailToSend emailToSend = generateEmail(destinationAddress, templateName, null);
+
         sendEmail(emailToSend, "draft saved confirmation");
     }
 
-    public void sendSubmissionNotificationEmail(String destinationAddress) {
-        EmailToSend emailToSend = generateEmail(destinationAddress, EmailTemplateNames.APPLIC_SUBMISSION.name());
+    public void sendSubmissionNotificationEmail(String              destinationAddress,
+                                                Map<String, String> templateVars) {
+        String      templateName = EmailTemplateNames.APPLIC_SUBMISSION.name();
+        EmailToSend emailToSend  = generateEmail(destinationAddress, templateName, templateVars);
+
         sendEmail(emailToSend, "submission notification");
     }
 
     private EmailToSend generateEmail(String destinationAddress,
-                                      String templateName) {
-        String              referenceId    = UUID.randomUUID().toString();
-        String              templateId     = emailTemplates.get(templateName);
-        Map<String, String> templateFields = emailTemplateVars.get(templateName);
+                                      String templateName,
+                                      Map<String, String> templateVars) {
+        String              referenceId  = UUID.randomUUID().toString();
+        String              templateId   = emailTemplates.get(templateName);
+        Map<String, String> templateFlds = (templateVars != null ? templateVars : emailTemplateVars.get(templateName));
 
-        return new EmailToSend(destinationAddress, templateId, templateFields, referenceId);
+        return new EmailToSend(destinationAddress, templateId, templateFlds, referenceId);
     }
 
     private void sendEmail(EmailToSend emailToSend,
