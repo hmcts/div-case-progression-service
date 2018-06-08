@@ -35,7 +35,7 @@ public class DraftResponseFactory {
         }
 
         if (listOfCasesAwaitingPayment.size() > 1) {
-            log.debug("Multiple cases found awaiting payment. Building empty draft response");
+            log.info("Multiple cases found awaiting payment. Building empty draft response");
             return DraftsResponse.emptyResponse();
         }
 
