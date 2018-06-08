@@ -29,8 +29,14 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.url}")
     private String transformationApiUrl;
 
+    @Value("${transformation.api.endpoint.submit}")
+    private String transformationApiSubmitEndpoint;
+
     @Value("${transformation.api.endpoint.generatePetition}")
     private String transformationApiGeneratePdfEndpoint;
+
+    @Value("${transformation.api.endpoint.update}")
+    private String transformationApiUpdateEndpoint;
 
     private JSONArray fileUploadResponse = null;
 
