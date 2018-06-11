@@ -12,8 +12,6 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,39 +19,35 @@ import java.util.Optional;
 public class DraftsService {
 
     @Autowired
-    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
-    @Autowired
     private DraftModelFactory modelFactory;
-    @Autowired
-    private DraftStoreClient client;
+
     @Autowired
     private EncryptionKeyFactory keyFactory;
+
+    @Autowired
+    private DraftStoreClient client;
+
     @Autowired
     private UserService userService;
 
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
         String secret = keyFactory.createEncryptionKey(userDetails.getId());
-        String userID = userDetails.getId();
-        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
-        if (casesInCCD.isEmpty()) {
-            Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
-            if (divorceDraft.isPresent()) {
-                log.debug("Updating the existing divorce session draft");
-                client.updateDraft(
-                    jwt,
-                    divorceDraft.get().getId(),
-                    secret,
-                    modelFactory.updateDraft(data));
-            } else {
-                log.debug("Creating a new divorce session draft");
-                client.createDraft(
-                    jwt,
-                    secret,
-                    modelFactory.createDraft(data));
-            }
+        Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
+        if (divorceDraft.isPresent()) {
+            log.debug("Updating the existing divorce session draft");
+            client.updateDraft(
+                jwt,
+                divorceDraft.get().getId(),
+                secret,
+                modelFactory.updateDraft(data));
+        } else {
+            log.debug("Creating a new divorce session draft");
+            client.createDraft(
+                jwt,
+                secret,
+                modelFactory.createDraft(data));
         }
-        log.debug("Case already exists in CCD, not creating or updating a divorce session draft");
     }
 
     public JsonNode getDraft(String jwt) {
