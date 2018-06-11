@@ -29,6 +29,23 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "Transformation API", consumes = "application/json", produces = "application/json")
 public class CcdCallBackController {
 
+    private enum Courts {
+        eastMidlands("East Midlands Regional Divorce Centre"),
+        westMidlands("West Midlands Regional Divorce Centre"),
+        southWest("South West Regional Divorce Centre"),
+        northWest("North West Regional Divorce Centre");
+
+        private String displayName;
+
+        private Courts(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+
     @Autowired
     private UpdateService updateService;
     @Autowired
@@ -69,9 +86,11 @@ public class CcdCallBackController {
             Map<String, String> templateVars = new HashMap<>();
             CoreCaseData        caseData     = caseDetailsRequest.getCaseDetails().getCaseData();
 
-            templateVars.put("firstName",   caseData.getD8PetitionerFirstName());
-            templateVars.put("lastName",    caseData.getD8PetitionerLastName());
-            templateVars.put("referenceId", caseData.getD8caseReference());
+            templateVars.put("email address", petitionerEmail);
+            templateVars.put("first name",    caseData.getD8PetitionerFirstName());
+            templateVars.put("last name",     caseData.getD8PetitionerLastName());
+            templateVars.put("RDC name",      Courts.valueOf(caseData.getD8DivorceUnit()).getDisplayName());
+            templateVars.put("CCD reference", caseData.getD8caseReference());
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
 
