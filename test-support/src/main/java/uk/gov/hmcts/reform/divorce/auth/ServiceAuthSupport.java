@@ -41,7 +41,10 @@ public class ServiceAuthSupport {
         String serviceToken = CACHED_TOKENS.get(serviceAuthTokenFor);
 
         if (StringUtils.isBlank(serviceToken)) {
-            serviceToken = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor).generate();
+            AuthTokenGenerator caseProgressionAuthTokenGenerator = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor);
+            if (caseProgressionAuthTokenGenerator != null) {
+                serviceToken = caseProgressionAuthTokenGenerator.generate();
+            }
 
             CACHED_TOKENS.put(serviceAuthTokenFor, serviceToken);
         }

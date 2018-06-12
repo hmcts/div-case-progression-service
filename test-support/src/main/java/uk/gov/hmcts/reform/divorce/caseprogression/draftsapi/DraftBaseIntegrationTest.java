@@ -17,7 +17,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
 
     protected Response deleteDivorceDraft() {
         return SerenityRest.given()
-                .headers(headers())
+                .headers(buildHeaders())
                 .when()
                 .delete(draftsApiUrl)
                 .andReturn();
@@ -25,7 +25,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
 
     protected Response saveDivorceDraft(String draft) {
         return SerenityRest.given()
-                .headers(headers())
+                .headers(buildHeaders())
                 .body(draft)
                 .when()
                 .put(draftsApiUrl)
@@ -34,17 +34,17 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
 
     protected Response getDivorceDraft() {
         return SerenityRest.given()
-                .headers(headers())
+                .headers(buildHeaders())
                 .when()
                 .get(draftsApiUrl)
                 .andReturn();
     }
 
-    protected Map<String, Object> headers() {
-        return headers(getIdamTestUser());
+    protected Map<String, Object> buildHeaders() {
+        return buildHeaders(getIdamTestUser());
     }
 
-    protected Map<String, Object> headers(String token) {
+    protected Map<String, Object> buildHeaders(String token) {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
