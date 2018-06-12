@@ -28,11 +28,14 @@ public class IdamUserSupport {
 
     public synchronized String getIdamTestUser() {
         if (StringUtils.isBlank(testUserJwtToken)) {
-            createUserInIdam();
-            testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
+            createUserAndToken();
         }
-
         return testUserJwtToken;
+    }
+
+    protected void createUserAndToken() {
+        createUserInIdam();
+        testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
     }
 
     public synchronized String getIdamTestCaseWorkerUser() {

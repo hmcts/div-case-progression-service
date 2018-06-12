@@ -52,7 +52,6 @@ public class ServiceAuthSupport {
     private AuthTokenGenerator getCaseProgressionAuthTokenGenerator(ServiceAuthTokenFor serviceAuthTokenFor) {
         switch (serviceAuthTokenFor) {
             case CASE_PROGRESSION:
-                System.out.println("ATTENTION PLEASE: " + caseProgressionSecret);
                 return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret, caseProgressionMicroserviceName, serviceAuthorisationApi);
             case DIV_DOCUMENT_GENERATOR:
                 return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret, documentGeneratorMicroserviceName, serviceAuthorisationApi);

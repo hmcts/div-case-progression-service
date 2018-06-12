@@ -24,7 +24,7 @@ public class AwaitingPaymentCaseRetriever {
 
     @Autowired
     public AwaitingPaymentCaseRetriever(RetrieveCcdClient retrieveCcdClient,
-                                        @Value("draft.api.ccd.check.enabled") String checkCcdEnabled) {
+                                        @Value("${draft.api.ccd.check.enabled}") String checkCcdEnabled) {
         this.retrieveCcdClient = retrieveCcdClient;
         this.checkCcdEnabled = Boolean.valueOf(checkCcdEnabled);
     }

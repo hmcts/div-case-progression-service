@@ -24,6 +24,10 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
         return idamUserSupport.getIdamTestUser();
     }
 
+    protected void regenerateIdamTestUser() {
+        idamUserSupport.createUserAndToken();
+    }
+
     protected String getIdamTestCaseWorkerUser() {
         return idamUserSupport.getIdamTestCaseWorkerUser();
     }

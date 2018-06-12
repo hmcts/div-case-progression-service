@@ -55,6 +55,9 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
+
+        regenerateIdamTestUser();
+
         Response response = getDivorceDraft();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());
@@ -68,6 +71,28 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         Response response = deleteDivorceDraft();
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
         assertThereAreNoDrafts();
+    }
+
+    @Test
+    public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
+
+        // given
+        Response caseSubmissionResponse = submitCase("addresses.json");
+
+        // when
+        Response draftResponse = getDivorceDraft();
+
+        // then
+        assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
+
+        Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
+        Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
+        Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
+        String courts = draftResponse.getBody().path("courts").toString();
+
+        assertEquals(caseId, draftResponseCaseId);
+        assertEquals("eastMidlands", courts);
+        assertEquals(true, submissionStarted);
     }
 
     @After
