@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
-import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.client.SubmitCcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
@@ -16,8 +16,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class SubmissionServiceTest {
 
     @Mock
-    private CcdClient ccdClient;
+    private SubmitCcdClient ccdClient;
 
     @Mock
     private TransformationService transformationService;
@@ -38,7 +38,6 @@ public class SubmissionServiceTest {
 
     @Mock
     private UserService userService;
-
 
     @InjectMocks
     private SubmissionService submissionService;
@@ -59,13 +58,13 @@ public class SubmissionServiceTest {
         submitEvent.setCaseId(caseId);
 
         when(userService.getUserDetails(jwt)).thenReturn(userDetails);
-        when(ccdClient.createCase(userDetails, jwt)).thenReturn(createEvent);
+        when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
         when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
         when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
 
         assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
 
-        verify(ccdClient).createCase(userDetails, jwt);
+        verify(ccdClient).createCase(userDetails, jwt, divorceSession);
         verify(transformationService).transform(divorceSession, createEvent, eventSummary);
         verify(ccdClient).submitCase(userDetails, jwt, caseDataContent);
         verifyNoMoreInteractions(ccdClient, transformationService);

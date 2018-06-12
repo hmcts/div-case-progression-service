@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.YesNoAnswer;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.payments.PaymentContext;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce.ReasonForDivorceContext;
@@ -68,6 +69,7 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "reasonForDivorceAdulteryDetails", target = "d8ReasonForDivorceAdulteryDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhenDetails", target = "d8ReasonForDivorceAdulteryWhenDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhereDetails", target = "d8ReasonForDivorceAdulteryWhereDetails")
+    @Mapping(source = "reasonForDivorceAdultery3rdAddress", target = "d8ReasonForDivorceAdultery3rdAddress")
     @Mapping(source = "legalProceedingsDetails", target = "d8LegalProceedingsDetails")
     @Mapping(source = "residualJurisdictionEligible", target = "d8ResidualJurisdictionEligible")
     @Mapping(source = "reasonForDivorceDesertionDetails", target = "d8ReasonForDivorceDesertionDetails")
@@ -248,7 +250,12 @@ public abstract class DivorceCaseToCCDMapper {
 
     @AfterMapping
     protected void mapHelpWithFeesNeedHelp(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
-        result.setD8HelpWithFeesNeedHelp(translateToStringYesNo(divorceSession.getHelpWithFeesNeedHelp()));
+        result.setD8HelpWithFeesNeedHelp(
+                translateToStringYesNo(getYesNoAnswer(divorceSession.getHelpWithFeesNeedHelp())));
+    }
+
+    private static String getYesNoAnswer(YesNoAnswer yesNoAnswer) {
+        return yesNoAnswer == null ? null : yesNoAnswer.getAnswer();
     }
 
     @AfterMapping

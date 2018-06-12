@@ -5,8 +5,10 @@ locals {
 
     pdf_generator_base_url = "http://div-dgs-${local.local_env}.service.core-compute-${local.local_env}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    div_validation_service_url = "http://div-vs-${local.local_env}.service.core-compute-${local.local_env}.internal"
 
     previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
@@ -18,12 +20,15 @@ locals {
 }
 
 module "div-case-progression" {
-    source = "git@github.com:hmcts/moj-module-webapp.git"
-    product = "${var.product}-${var.reform_service_name}"
-    location = "${var.location}"
-    env = "${var.env}"
-    ilbIp = "${var.ilbIp}"
-    subscription = "${var.subscription}"
+    source                          = "git@github.com:hmcts/moj-module-webapp.git"
+    product                         = "${var.product}-${var.reform_service_name}"
+    location                        = "${var.location}"
+    env                             = "${var.env}"
+    ilbIp                           = "${var.ilbIp}"
+    appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+    subscription                    = "${var.subscription}"
+    capacity                        = "${var.capacity}"
+
     is_frontend = false
 
     app_settings = {
@@ -45,14 +50,16 @@ module "div-case-progression" {
         PDF_GENERATOR_BASE_URL = "${local.pdf_generator_base_url}"
         PDF_GENERATOR_HEALTHURL = "${local.pdf_generator_base_url}/health"
         DRAFT_STORE_API_ENCRYPTION_KEY = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
-        DRAFT_STORE_API_BASEURL = "${var.draft_store_api_baseurl}"
-        DRAFT_STORE_API_HEALTH_URI = "${var.draft_store_api_baseurl}/health"
+        DRAFT_STORE_API_BASEURL = "${local.draft_store_api_baseurl}"
+        DRAFT_STORE_API_HEALTH_URI = "${local.draft_store_api_baseurl}/health"
         UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk-gov-notify-api-key.data["value"]}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATE_VARS = "${var.uk_gov_notify_email_template_vars}"
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
+        DIV_VALIDATION_SERVICE_URL = "${local.div_validation_service_url}"
     }
 }
 

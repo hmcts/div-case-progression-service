@@ -10,10 +10,11 @@ import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 
 @Component
 @Slf4j
-public class SubmitCcdClient implements CcdClient {
+public class SubmitCcdClient {
 
     @Autowired
     private CcdClientConfiguration ccdClientConfiguration;
@@ -22,17 +23,17 @@ public class SubmitCcdClient implements CcdClient {
     @Autowired
     private TransformationHttpEntityFactory httpEntityFactory;
 
-    @Override
-    public CreateEvent createCase(UserDetails userDetails, String encodedJwt) {
+
+    public CreateEvent createCase(UserDetails userDetails, String encodedJwt, DivorceSession divorceSessionData) {
 
         HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(encodedJwt);
 
-        String url = ccdClientConfiguration.getCreateCaseUrl(userDetails.getId());
+        String url = ccdClientConfiguration.getCreateCaseUrl(
+                userDetails.getId(), divorceSessionData.getHelpWithFeesNeedHelp());
         log.info("Formatted url create case {} ", url);
         return restTemplate.exchange(url, HttpMethod.GET, httpEntity, CreateEvent.class).getBody();
     }
 
-    @Override
     public SubmitEvent submitCase(UserDetails userDetails, String userToken, CaseDataContent caseDataContent) {
 
         HttpEntity<CaseDataContent> httpEntity = httpEntityFactory.createRequestEntityForSubmitCase(userToken,

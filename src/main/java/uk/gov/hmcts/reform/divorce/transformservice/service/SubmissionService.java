@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
-import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.client.SubmitCcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
@@ -17,7 +17,7 @@ public class SubmissionService {
     private static final String EVENT_SUMMARY = "Create case";
 
     @Autowired
-    private CcdClient ccdClient;
+    private SubmitCcdClient ccdClient;
 
     @Autowired
     private DraftsService draftsService;
@@ -30,7 +30,7 @@ public class SubmissionService {
 
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        CreateEvent createEvent = ccdClient.createCase(userDetails, jwt);
+        CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
 
         SubmitEvent submitEvent = ccdClient.submitCase(userDetails, jwt,
             transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));

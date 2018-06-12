@@ -6,6 +6,10 @@ variable "reform_team" {
     default = "div"
 }
 
+variable "capacity" {
+    default = "1"
+}
+
 variable "env" {
     type = "string"
 }
@@ -23,6 +27,11 @@ variable "client_id" {
 variable "jenkins_AAD_objectId" {
     type        = "string"
     description = "(Required) The Azure AD object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
+}
+
+variable "appinsights_instrumentation_key" {
+    description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
+    default = ""
 }
 
 variable "idam_s2s_url_prefix" {
@@ -61,10 +70,6 @@ variable "logging_level_uk_gov_hmcts_ccd" {
     type = "string"
 }
 
-variable "draft_store_api_baseurl" {
-    type = "string"
-}
-
 variable "uk_gov_notify_email_templates" {
     type = "string"
 }
@@ -86,4 +91,8 @@ variable "vault_env" {}
 
 variable "idam_api_baseurl" {
     type = "string"
+}
+
+variable "draft_check_ccd_enabled" {
+    default = false
 }

@@ -1,8 +1,6 @@
 # div-case-progression-service
 
-
 ## A restful service used to transform a divorce frontend session to a general core case data format
-
 
 ## Introduction
 * This API provides below endpoints
@@ -93,6 +91,8 @@ Start the docker container
 ```
 docker-compose up
 ```
+
+NOTE: You'll need to start Div-Validation-Service manually until it gets published to docker.
 
 Create the citizen and caseworker-divorce roles in CCD
 ```
