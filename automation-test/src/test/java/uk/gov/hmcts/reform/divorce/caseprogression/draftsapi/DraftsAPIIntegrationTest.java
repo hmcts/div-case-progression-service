@@ -28,6 +28,9 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Autowired
     protected DraftStoreClient draftStoreClient;
 
+    @Value("${env}")
+    private String environment;
+
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
         String draft = "{\"message\": \"Hello World!\"}";
@@ -76,23 +79,26 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
 
-        // given
-        Response caseSubmissionResponse = submitCase("addresses.json");
+        // only execute on preview as feature toggle is currently only enabled on preview and prod
+        if ("preview".equalsIgnoreCase(environment)) {
+            // given
+            Response caseSubmissionResponse = submitCase("addresses.json");
 
-        // when
-        Response draftResponse = getDivorceDraft();
+            // when
+            Response draftResponse = getDivorceDraft();
 
-        // then
-        assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
+            // then
+            assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
 
-        Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
-        Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
-        Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
-        String courts = draftResponse.getBody().path("courts").toString();
+            Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
+            Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
+            Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
+            String courts = draftResponse.getBody().path("courts").toString();
 
-        assertEquals(caseId, draftResponseCaseId);
-        assertEquals("eastMidlands", courts);
-        assertEquals(true, submissionStarted);
+            assertEquals(caseId, draftResponseCaseId);
+            assertEquals("eastMidlands", courts);
+            assertEquals(true, submissionStarted);
+        }
     }
 
     @After
