@@ -71,7 +71,7 @@ public class IdamUserSupport {
 
     private String generateUserTokenWithNoRoles(String username, String password) {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        final String redirectUri = environment.equalsIgnoreCase("saat") == true
+        final String redirectUri = "saat".equalsIgnoreCase(environment)
             ? "https://ccd-case-management-web-saat.service.core-compute-saat.internal/oauth2redirect"
             : "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect";
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
