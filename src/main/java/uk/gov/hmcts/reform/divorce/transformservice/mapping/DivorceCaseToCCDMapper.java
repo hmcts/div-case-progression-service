@@ -69,6 +69,7 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "reasonForDivorceAdulteryDetails", target = "d8ReasonForDivorceAdulteryDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhenDetails", target = "d8ReasonForDivorceAdulteryWhenDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhereDetails", target = "d8ReasonForDivorceAdulteryWhereDetails")
+    @Mapping(source = "reasonForDivorceAdultery3rdAddress", target = "d8ReasonForDivorceAdultery3rdAddress")
     @Mapping(source = "legalProceedingsDetails", target = "d8LegalProceedingsDetails")
     @Mapping(source = "residualJurisdictionEligible", target = "d8ResidualJurisdictionEligible")
     @Mapping(source = "reasonForDivorceDesertionDetails", target = "d8ReasonForDivorceDesertionDetails")

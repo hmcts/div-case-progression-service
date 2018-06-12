@@ -64,6 +64,20 @@ public class BaseCcdClientConfigurationTest {
         assertEquals(expectedUrl, url);
     }
 
+
+    @Test
+    public void getRetrieveCaseUrl_should_return_correct_url() {
+
+        // given
+        String expectedUrl = "ccdBaseUrl/citizens/99/jurisdictions/jurisdictionId/case-types/caseTypeId/cases";
+
+        // when
+        String url = ccdClientConfiguration.getRetrieveCaseUrl(USER_ID);
+
+        // then
+        assertEquals(expectedUrl, url);
+    }
+
     @Test
     public void startingEventAsCitizenReturnsCitizenEndpointUrl() {
 
