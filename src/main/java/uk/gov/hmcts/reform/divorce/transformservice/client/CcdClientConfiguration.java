@@ -12,4 +12,6 @@ public interface CcdClientConfiguration {
     String getStartEventUrl(UserDetails userDetails, Long caseId, String eventId);
 
     String getCreateCaseEventUrl(UserDetails userDetails, Long caseId);
+
+    String getRetrieveCaseUrl(String userId);
 }

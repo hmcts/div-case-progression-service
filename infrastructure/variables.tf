@@ -6,6 +6,10 @@ variable "reform_team" {
     default = "div"
 }
 
+variable "capacity" {
+    default = "1"
+}
+
 variable "env" {
     type = "string"
 }
@@ -87,4 +91,8 @@ variable "vault_env" {}
 
 variable "idam_api_baseurl" {
     type = "string"
+}
+
+variable "draft_check_ccd_enabled" {
+    default = false
 }
