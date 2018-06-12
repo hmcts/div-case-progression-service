@@ -42,8 +42,7 @@ public class DraftsController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Saves a divorce case draft")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Draft saved")
-    })
+            @ApiResponse(code = 204, message = "Draft saved")})
     public ResponseEntity<Void> saveDraft(
             @RequestHeader("Authorization")
             @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt,
@@ -65,8 +64,7 @@ public class DraftsController {
     @ApiOperation(value = "Retrieves a divorce case draft")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "A draft exists. The draft content is in the response body"),
-            @ApiResponse(code = 404, message = "Draft does not exist")
-    })
+            @ApiResponse(code = 404, message = "Draft does not exist")})
     public ResponseEntity<JsonNode> retrieveDraft(
             @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
             final String jwt) {
@@ -81,8 +79,7 @@ public class DraftsController {
     @DeleteMapping
     @ApiOperation(value = "Deletes a divorce case draft")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "The divorce case draft has been deleted successfully")
-    })
+            @ApiResponse(code = 204, message = "The divorce case draft has been deleted successfully")})
     public ResponseEntity<Void> deleteDraft(@RequestHeader("Authorization")
                                             @ApiParam(value = "JWT authorisation token issued by IDAM",
                                                     required = true) final String jwt) {

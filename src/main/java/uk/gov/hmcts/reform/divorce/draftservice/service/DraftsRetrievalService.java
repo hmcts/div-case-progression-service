@@ -41,7 +41,8 @@ class DraftsRetrievalService {
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
         } else {
             log.debug("Checking CCD for an existing case as draft not found");
-            return DraftResponseFactory.buildDraftResponseFromCaseData(awaitingPaymentCaseRetriever.getCases(userId, jwt));
+            return DraftResponseFactory.buildDraftResponseFromCaseData(
+                awaitingPaymentCaseRetriever.getCases(userId, jwt));
         }
     }
 
