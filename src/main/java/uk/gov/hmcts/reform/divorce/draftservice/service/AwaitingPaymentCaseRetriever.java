@@ -45,11 +45,11 @@ public class AwaitingPaymentCaseRetriever {
                 .collect(toList());
 
         if (awaitingPaymentCases.isEmpty()) {
-            log.debug("No cases found awaiting payment");
+            log.info("No cases found awaiting payment");
             return Collections.emptyList();
         }
 
-        log.debug(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
+        log.info(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
 
         return awaitingPaymentCases;
     }
