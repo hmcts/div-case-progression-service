@@ -41,7 +41,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     private JSONArray fileUploadResponse = null;
 
     public String loadJSON(final String fileName) throws Exception {
-        String jsonPayload = ResourceLoader.loadAsText("divorce.support-payload-json/" + fileName);
+        String jsonPayload = ResourceLoader.loadAsText("divorce-payload-json/" + fileName);
         return replaceMockFileMetadataWithActualMetadata(jsonPayload);
     }
 
