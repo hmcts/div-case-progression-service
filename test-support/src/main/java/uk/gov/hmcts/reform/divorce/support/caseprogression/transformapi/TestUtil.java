@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
+package uk.gov.hmcts.reform.divorce.support.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;

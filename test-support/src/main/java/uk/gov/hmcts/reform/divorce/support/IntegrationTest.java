@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce;
+package uk.gov.hmcts.reform.divorce.support;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationMethodRule;
@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.reform.divorce.auth.config.ServiceContextConfiguration;
+import uk.gov.hmcts.reform.divorce.support.auth.config.ServiceContextConfiguration;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TestContextConfiguration.class, ServiceContextConfiguration.class})

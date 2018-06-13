@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.emclient;
+package uk.gov.hmcts.reform.divorce.support.emclient;
 
 import io.restassured.response.Response;
 import lombok.AccessLevel;
@@ -16,7 +16,7 @@ public final class EvidenceManagementUtil {
         Map<String, Object> headers = new HashMap<>();
         headers.put("ServiceAuthorization", serviceAuthToken);
         headers.put("user-id", userId);
-        headers.put("user-roles", "caseworker-divorce");
+        headers.put("user-roles", "caseworker-divorce.support");
         return given()
             .contentType("application/json")
             .headers(headers)

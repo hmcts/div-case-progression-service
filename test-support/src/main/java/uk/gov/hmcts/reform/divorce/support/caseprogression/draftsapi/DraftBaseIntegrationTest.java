@@ -1,10 +1,10 @@
-package uk.gov.hmcts.reform.divorce.caseprogression.draftsapi;
+package uk.gov.hmcts.reform.divorce.support.caseprogression.draftsapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.rest.SerenityRest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.BaseIntegrationTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
     @Value("${drafts.api.url}")
     protected String draftsApiUrl;
 
-    protected Response deleteDivorceDraft() {
+    protected Response deletedivorce.supportDraft() {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .when()
@@ -23,7 +23,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
                 .andReturn();
     }
 
-    protected Response saveDivorceDraft(String draft) {
+    protected Response savedivorce.supportDraft(String draft) {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .body(draft)
@@ -32,7 +32,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
                 .andReturn();
     }
 
-    protected Response getDivorceDraft() {
+    protected Response getdivorce.supportDraft() {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .when()

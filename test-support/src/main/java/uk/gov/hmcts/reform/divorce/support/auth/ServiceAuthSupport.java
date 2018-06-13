@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.auth;
+package uk.gov.hmcts.reform.divorce.support.auth;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
-import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
+import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
 
 import java.util.HashMap;
 import java.util.Map;

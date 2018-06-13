@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.caseprogression;
+package uk.gov.hmcts.reform.divorce.support.caseprogression;
 
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.config.SSLConfig;
@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
-import uk.gov.hmcts.reform.divorce.auth.BaseIntegrationTestWithIdamSupport;
-import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
-import uk.gov.hmcts.reform.divorce.util.ResourceLoader;
+import uk.gov.hmcts.reform.divorce.support.auth.BaseIntegrationTestWithIdamSupport;
+import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
+import uk.gov.hmcts.reform.divorce.support.util.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     private JSONArray fileUploadResponse = null;
 
     public String loadJSON(final String fileName) throws Exception {
-        String jsonPayload = ResourceLoader.loadAsText("divorce-payload-json/" + fileName);
+        String jsonPayload = ResourceLoader.loadAsText("divorce.support-payload-json/" + fileName);
         return replaceMockFileMetadataWithActualMetadata(jsonPayload);
     }
 
