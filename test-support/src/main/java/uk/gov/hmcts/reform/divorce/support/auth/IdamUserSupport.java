@@ -13,7 +13,7 @@ public class IdamUserSupport {
 
     private static final String idamCaseworkerUser = "CaseWorkerTest";
 
-    private static final String idamCaseworkerPw = "pw123456";
+    private static final String idamCaseworkerPw = "password";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
