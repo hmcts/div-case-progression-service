@@ -13,7 +13,7 @@ public class IdamUserSupport {
 
     private static final String idamCaseworkerUser = "CaseWorkerTest";
 
-    private static final String idamCaseworkerPassword = "pw123456";
+    private static final String idamCaseworkerPw = "pw123456";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
@@ -41,7 +41,7 @@ public class IdamUserSupport {
     public synchronized String getIdamTestCaseWorkerUser() {
         if (StringUtils.isBlank(testCaseworkerJwtToken)) {
             createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPassword);
+            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPw);
         }
 
         return testCaseworkerJwtToken;
@@ -61,7 +61,7 @@ public class IdamUserSupport {
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPassword + "\", "
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPw + "\", "
                         + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
     }
