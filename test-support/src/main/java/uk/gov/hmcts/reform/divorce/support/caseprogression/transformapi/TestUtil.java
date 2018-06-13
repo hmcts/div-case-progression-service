@@ -14,7 +14,7 @@ public class TestUtil {
     private static final String ERROR = "error";
     private static final Long ZERO_VALUE = new Long(0L);
 
-    static void assertOkResponseAndCaseIdIsNotZero(Response ccdResponse) {
+    public static void assertOkResponseAndCaseIdIsNotZero(Response ccdResponse) {
         assertEquals(Integer.valueOf(HttpStatus.OK.toString()).intValue(), ccdResponse.getStatusCode());
 
         assertNotEquals(ZERO_VALUE, extractCaseId(ccdResponse));
@@ -25,7 +25,7 @@ public class TestUtil {
         return caseId == null ? null : Long.parseLong(caseId.toString());
     }
 
-    static void assertResponseErrorsAreAsExpected(Response ccdResponse, String exception, String details) {
+    public static void assertResponseErrorsAreAsExpected(Response ccdResponse, String exception, String details) {
         assertEquals(Integer.valueOf(HttpStatus.OK.toString()).intValue(), ccdResponse.getStatusCode());
 
         assertEquals(ZERO_VALUE, extractCaseId(ccdResponse));

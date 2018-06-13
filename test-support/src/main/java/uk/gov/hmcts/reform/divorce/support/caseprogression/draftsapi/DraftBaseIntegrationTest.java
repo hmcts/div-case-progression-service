@@ -15,7 +15,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
     @Value("${drafts.api.url}")
     protected String draftsApiUrl;
 
-    protected Response deletedivorce.supportDraft() {
+    protected Response deleteDivorceDraft() {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .when()
@@ -23,7 +23,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
                 .andReturn();
     }
 
-    protected Response savedivorce.supportDraft(String draft) {
+    protected Response saveDivorceDraft(String draft) {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .body(draft)
@@ -32,7 +32,7 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
                 .andReturn();
     }
 
-    protected Response getdivorce.supportDraft() {
+    protected Response getDivorceDraft() {
         return SerenityRest.given()
                 .headers(buildHeaders())
                 .when()

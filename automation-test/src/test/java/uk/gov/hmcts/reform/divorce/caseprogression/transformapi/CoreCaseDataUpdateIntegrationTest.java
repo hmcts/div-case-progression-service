@@ -6,12 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
-import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.BaseIntegrationTest;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
-import static uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil.assertOkResponseAndCaseIdIsNotZero;
-import static uk.gov.hmcts.reform.divorce.caseprogression.transformapi.TestUtil.assertResponseErrorsAreAsExpected;
+import static uk.gov.hmcts.reform.divorce.support.caseprogression.transformapi.TestUtil.assertOkResponseAndCaseIdIsNotZero;
+import static uk.gov.hmcts.reform.divorce.support.caseprogression.transformapi.TestUtil.assertResponseErrorsAreAsExpected;
 
 @RunWith(SerenityRunner.class)
 public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {

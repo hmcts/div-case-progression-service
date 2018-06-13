@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.divorce.auth.ServiceAuthSupport;
-import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
+import uk.gov.hmcts.reform.divorce.support.auth.ServiceAuthSupport;
+import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
 
 import java.io.IOException;
 import java.text.ParseException;
