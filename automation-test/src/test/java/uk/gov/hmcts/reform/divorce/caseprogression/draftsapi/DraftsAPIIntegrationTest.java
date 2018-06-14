@@ -55,8 +55,6 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
 
-        regenerateIdamTestUser();
-
         Response response = getDivorceDraft();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());

@@ -69,7 +69,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         return SerenityRest.given()
                 .config(RestAssuredConfig.config()
                         .sslConfig(new SSLConfig().allowAllHostnames()))
-                .headers(headers(getIdamTestCaseWorkerUser(), true)).get(url).andReturn();
+                .headers(headers(getIdamTestCaseWorkerUser())).get(url).andReturn();
     }
 
 
@@ -78,16 +78,10 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     }
 
     private Map<String, Object> headers(String token) {
-        return headers(token, false);
-    }
-
-    private Map<String, Object> headers(String token, boolean serviceToken) {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
-       // if (serviceToken) {
-            headers.put("ServiceAuthorization", getServiceToken());
-       // }
+        headers.put("ServiceAuthorization", getServiceToken());
         return headers;
     }
 
