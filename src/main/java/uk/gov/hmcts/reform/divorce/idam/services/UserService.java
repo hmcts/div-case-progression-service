@@ -18,5 +18,4 @@ public class UserService {
     public UserDetails getUserDetails(String authorisation) {
         return idamApiClient.retrieveUserDetails(authorisation);
     }
-
 }

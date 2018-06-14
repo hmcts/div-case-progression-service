@@ -76,6 +76,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         // only execute on preview as feature toggle is currently only enabled on preview and prod
         if ("preview".equalsIgnoreCase(environment)) {
             // given
+            regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
             Response caseSubmissionResponse = submitCase("addresses.json");
 
             // when

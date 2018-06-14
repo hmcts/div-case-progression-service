@@ -49,7 +49,7 @@ public class AwaitingPaymentCaseRetriever {
             return Collections.emptyList();
         }
 
-        log.debug(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
+        log.info(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
 
         return awaitingPaymentCases;
     }
