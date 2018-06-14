@@ -30,7 +30,7 @@ public class DraftResponseFactory {
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesAwaitingPayment) {
 
         if (listOfCasesAwaitingPayment == null || listOfCasesAwaitingPayment.isEmpty()) {
-            log.info("No case found to build draft response");
+            log.debug("No case found to build draft response");
             return DraftsResponse.emptyResponse();
         }
 
@@ -39,7 +39,7 @@ public class DraftResponseFactory {
             return DraftsResponse.emptyResponse();
         }
 
-        log.info("Building draft response from existing case in CCD awaiting payment");
+        log.debug("Building draft response from existing case in CCD awaiting payment");
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         Map caseDetails = listOfCasesAwaitingPayment.get(0);

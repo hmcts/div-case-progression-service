@@ -45,7 +45,7 @@ public class AwaitingPaymentCaseRetriever {
                 .collect(toList());
 
         if (awaitingPaymentCases.isEmpty()) {
-            log.info("No cases found awaiting payment");
+            log.debug("No cases found awaiting payment");
             return Collections.emptyList();
         }
 
