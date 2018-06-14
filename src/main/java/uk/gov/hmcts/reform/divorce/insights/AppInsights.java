@@ -13,4 +13,8 @@ public class AppInsights extends AbstractAppInsights {
     public AppInsights(TelemetryClient client) {
         super(client);
     }
+
+    public void trackMetric(String name, double value) {
+        super.telemetry.trackMetric(name, value);
+    }
 }

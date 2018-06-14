@@ -56,6 +56,7 @@ module "div-case-progression" {
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        APPINSIGHTS_INSTRUMENTATIONKEY = "${var.appinsights_instrumentation_key}"
     }
 }
 
