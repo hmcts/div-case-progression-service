@@ -198,6 +198,8 @@ sonarqube {
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.projectKey", "DivorceCaseProgressionService"
         property "sonar.projectName", "Divorce :: case-progression-service"
+        property "sonar.host.url", "https://sonar02.reform.hmcts.net/"
+        property "sonar.projectVersion", "2.0.0"
     }
 }
 
