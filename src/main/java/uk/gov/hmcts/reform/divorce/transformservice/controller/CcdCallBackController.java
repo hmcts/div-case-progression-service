@@ -111,8 +111,8 @@ public class CcdCallBackController {
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
   
-       return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
-   }
+        return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
+    }
   
     private boolean isNotValidCoreCaseData(ValidationResponse response) {
         boolean hasErrors = response.getErrors() != null && response.getErrors().size() > 0;
