@@ -34,10 +34,10 @@ import javax.ws.rs.core.MediaType;
 public class CcdCallBackController {
 
     private enum Courts {
-        eastMidlands("East Midlands Regional Divorce Centre"),
-        westMidlands("West Midlands Regional Divorce Centre"),
-        southWest("South West Regional Divorce Centre"),
-        northWest("North West Regional Divorce Centre");
+        EASTMIDLANDS("East Midlands Regional Divorce Centre"),
+        WESTMIDLANDS("West Midlands Regional Divorce Centre"),
+        SOUTHWEST("South West Regional Divorce Centre"),
+        NORTHWEST("North West Regional Divorce Centre");
 
         private String displayName;
 
@@ -106,7 +106,7 @@ public class CcdCallBackController {
             templateVars.put("email address", petitionerEmail);
             templateVars.put("first name",    caseData.getD8PetitionerFirstName());
             templateVars.put("last name",     caseData.getD8PetitionerLastName());
-            templateVars.put("RDC name",      Courts.valueOf(caseData.getD8DivorceUnit()).getDisplayName());
+            templateVars.put("RDC name",      Courts.valueOf(caseData.getD8DivorceUnit().toUpperCase()).getDisplayName());
             templateVars.put("CCD reference", caseData.getId());
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
@@ -115,8 +115,8 @@ public class CcdCallBackController {
     }
   
     private boolean isNotValidCoreCaseData(ValidationResponse response) {
-        boolean hasErrors = response.getErrors() != null && response.getErrors().size() > 0;
-        boolean hasWarnings = response.getWarnings() != null && response.getWarnings().size() > 0;
+        boolean hasErrors = response.getErrors() != null && !response.getErrors().isEmpty();
+        boolean hasWarnings = response.getWarnings() != null && !response.getWarnings().isEmpty();
         
         return hasErrors || hasWarnings;
     }
