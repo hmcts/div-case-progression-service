@@ -75,8 +75,8 @@ public class CcdCallBackController {
         );
         if (isNotValidCoreCaseData(validationResponse)) {
             return ResponseEntity.ok(new CCDCallbackResponse(
-                caseDetailsRequest.getCaseDetails().getCaseData(), 
-                validationResponse.getErrors(), 
+                caseDetailsRequest.getCaseDetails().getCaseData(),
+                validationResponse.getErrors(),
                 validationResponse.getWarnings()
             ));
         }
@@ -109,17 +109,17 @@ public class CcdCallBackController {
             templateVars.put("RDC name",      Courts.valueOf(
                 caseData.getD8DivorceUnit().toUpperCase()).getDisplayName()
             );
-            templateVars.put("CCD reference", caseData.getId());
+            templateVars.put("CCD reference", caseDetailsRequest.getCaseDetails().getCaseId());
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
-  
+
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
     }
-  
+
     private boolean isNotValidCoreCaseData(ValidationResponse response) {
         boolean hasErrors = response.getErrors() != null && !response.getErrors().isEmpty();
         boolean hasWarnings = response.getWarnings() != null && !response.getWarnings().isEmpty();
-        
+
         return hasErrors || hasWarnings;
     }
 }
