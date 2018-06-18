@@ -37,6 +37,15 @@ List<LinkedHashMap<String, Object>> secrets = [
 withPipeline(type , product, component) {
     loadVaultSecrets(secrets)
 
+    after('test') {
+        try {
+            sh './gradlew pitest'
+        } finally {
+            steps.archiveArtifacts "build/reports/pitest/**/*.*"
+        }
+
+    }
+
     before('functionalTest:aat') {
         env.ITEST_ENVIRONMENT = "aat"
     }
@@ -44,7 +53,7 @@ withPipeline(type , product, component) {
     after('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
-    
+
     before('functionalTest:preview') {
         env.ITEST_ENVIRONMENT = "preview"
     }
