@@ -54,7 +54,8 @@ class DraftsRetrievalService {
                 if (draftList.getPaging().getAfter() != null) {
                     log.debug("Divorce session draft could not be found on the current page with drafts. "
                         + "Going to next page");
-                    return findDivorceDraft(jwt, secret, draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
+                    return findDivorceDraft(jwt, secret,
+                        draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
                 }
             } else {
                 log.debug("Divorce session draft found");
