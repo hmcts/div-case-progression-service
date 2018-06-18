@@ -11,6 +11,9 @@ import java.util.List;
 @Data
 public class CoreCaseData {
 
+    @JsonProperty("id")
+    private String id;
+
     @JsonProperty("D8legalProcess")
     private String d8legalProcess;
 

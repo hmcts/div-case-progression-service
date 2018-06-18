@@ -3,6 +3,7 @@
     "values":{
         "caseDetails":{
             "case_data":{
+                "id":null,
                 "D8legalProcess":null,
                 "D8caseReference":null,
                 "createdDate":null,
