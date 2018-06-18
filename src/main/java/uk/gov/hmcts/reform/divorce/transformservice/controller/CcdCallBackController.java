@@ -106,7 +106,9 @@ public class CcdCallBackController {
             templateVars.put("email address", petitionerEmail);
             templateVars.put("first name",    caseData.getD8PetitionerFirstName());
             templateVars.put("last name",     caseData.getD8PetitionerLastName());
-            templateVars.put("RDC name",      Courts.valueOf(caseData.getD8DivorceUnit().toUpperCase()).getDisplayName());
+            templateVars.put("RDC name",      Courts.valueOf(
+                caseData.getD8DivorceUnit().toUpperCase()).getDisplayName()
+            );
             templateVars.put("CCD reference", caseData.getId());
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
