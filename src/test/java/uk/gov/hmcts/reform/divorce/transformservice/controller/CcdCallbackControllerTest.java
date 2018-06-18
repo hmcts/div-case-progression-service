@@ -185,13 +185,15 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenPetitionerEmailAndEastMidlands_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
-        CreateEvent submittedCase = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
-        caseDetails.setCaseId("1000-1000-1000-1000");
         coreCaseData.setD8PetitionerEmail("example@email.com");
         coreCaseData.setD8DivorceUnit("eastMidlands");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
         caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
         Map<String, String> templateVars = getTemplateVars("East Midlands Regional Divorce Centre");
@@ -208,13 +210,15 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenPetitionerEmailAndWestMidlands_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
-        CreateEvent submittedCase = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
-        caseDetails.setCaseId("1000-1000-1000-1000");
         coreCaseData.setD8PetitionerEmail("example@email.com");
         coreCaseData.setD8DivorceUnit("westMidlands");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
         caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
         Map<String, String> templateVars = getTemplateVars("West Midlands Regional Divorce Centre");
@@ -231,13 +235,15 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenPetitionerEmailAndSouthWest_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
-        CreateEvent submittedCase = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
-        caseDetails.setCaseId("1000-1000-1000-1000");
         coreCaseData.setD8PetitionerEmail("example@email.com");
         coreCaseData.setD8DivorceUnit("southWest");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
         caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
         Map<String, String> templateVars = getTemplateVars("South West Regional Divorce Centre");
@@ -254,13 +260,15 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenPetitionerEmailAndNorthWest_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
-        CreateEvent submittedCase = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
-        caseDetails.setCaseId("1000-1000-1000-1000");
         coreCaseData.setD8PetitionerEmail("example@email.com");
         coreCaseData.setD8DivorceUnit("northWest");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
         caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
         Map<String, String> templateVars = getTemplateVars("North West Regional Divorce Centre");
