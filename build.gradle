@@ -194,7 +194,7 @@ task printVersion {
 
 def sonarExclusions = [
     '**uk/gov/hmcts/reform/divorce/**/domain/**/*', 
-    '**uk/gov/hmcts/reform/divorce/**/CcdCallbackController.java'
+    '**uk/gov/hmcts/reform/divorce/**/controller/**/*.java'
 ]
 
 sonarqube {
