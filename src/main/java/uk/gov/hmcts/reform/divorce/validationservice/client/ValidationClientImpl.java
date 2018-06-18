@@ -28,7 +28,7 @@ public class ValidationClientImpl implements ValidationClient {
     @Value("${div.validation.service.url}")
     private String validationServiceUrl;
 
-    private static final String validateEndpoint = "/version/1/validate";
+    private static final String VALIDATE_ENDPOINT = "/version/1/validate";
     
     @Override
     public ValidationResponse validate(ValidationRequest request) {
@@ -36,7 +36,7 @@ public class ValidationClientImpl implements ValidationClient {
         
         HttpEntity<ValidationRequest> requestEntity = httpEntityFactory.createRequestEntityForValidation(request);
 
-        String validateUrl = validationServiceUrl.concat(validateEndpoint);
+        String validateUrl = validationServiceUrl.concat(VALIDATE_ENDPOINT);
 
         log.info("Calling validation endpoint at:", validateUrl);
         try {

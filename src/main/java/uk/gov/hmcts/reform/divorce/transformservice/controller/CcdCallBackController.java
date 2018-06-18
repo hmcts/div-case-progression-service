@@ -118,8 +118,8 @@ public class CcdCallBackController {
     }
     
     private boolean isNotValidCoreCaseData(ValidationResponse response) {
-        boolean hasErrors = response.getErrors() != null && response.getErrors().size() > 0;
-        boolean hasWarnings = response.getWarnings() != null && response.getWarnings().size() > 0;
+        boolean hasErrors = response.getErrors() != null && !response.getErrors().isEmpty();
+        boolean hasWarnings = response.getWarnings() != null && !response.getWarnings().isEmpty();
         
         return hasErrors || hasWarnings;
     }

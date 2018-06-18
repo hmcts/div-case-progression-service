@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 public class ValidationServiceImpl implements ValidationService {
 
-    private static final String formId = "case-progression";
+    private static final String FORM_ID = "case-progression";
 
     @Autowired
     ValidationClient validationClient;
@@ -45,7 +45,7 @@ public class ValidationServiceImpl implements ValidationService {
 
         ValidationRequest request = new ValidationRequest();
 
-        request.setFormId(formId);
+        request.setFormId(FORM_ID);
         request.setData(caseData);
 
         return validationClient.validate(request);
