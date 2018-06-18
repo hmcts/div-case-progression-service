@@ -15,7 +15,6 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
@@ -31,7 +30,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

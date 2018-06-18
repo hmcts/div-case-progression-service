@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNull;
 @RunWith(MockitoJUnitRunner.class)
 public class DraftResponseFactoryTest {
 
-    private static final String NOT_AWAITING_PAYMENT_STATUS = "notAwaitingPayment";
     private static final String CASE_STATUS = "state";
     private static final String AWAITING_PAYMENT_STATUS = "awaitingPayment";
 
@@ -28,10 +27,10 @@ public class DraftResponseFactoryTest {
         // given
         List<Map<String, Object>> listOfCases = new ArrayList<>();
 
-        Map<String, Object> caseData1 = new HashMap();
+        Map<String, Object> caseData1 = new HashMap<>();
         caseData1.put(CASE_STATUS, AWAITING_PAYMENT_STATUS);
 
-        Map<String, Object> caseData2 = new HashMap();
+        Map<String, Object> caseData2 = new HashMap<>();
         caseData2.put(CASE_STATUS, AWAITING_PAYMENT_STATUS);
 
         listOfCases.add(caseData1);
@@ -50,10 +49,9 @@ public class DraftResponseFactoryTest {
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_input_is_null() {
 
         // given
-        List<Map<String, Object>> listOfCases = null;
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null);
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -80,12 +78,12 @@ public class DraftResponseFactoryTest {
     public void buildDraftResponseFromCaseData_should_return_draft_response_when_case_exists_in_awaiting_payment() {
 
         // given
-        Map<String, Object> caseData2 = new HashMap();
+        Map<String, Object> caseData2 = new HashMap<>();
         caseData2.put(CASE_STATUS, "awaitingPayment");
         Long caseId = 123L;
         caseData2.put("id", caseId);
 
-        Map<String, Object> caseDetails = new HashMap();
+        Map<String, Object> caseDetails = new HashMap<>();
         String courts = "courtsXYZz";
         caseDetails.put("D8DivorceUnit", courts);
 

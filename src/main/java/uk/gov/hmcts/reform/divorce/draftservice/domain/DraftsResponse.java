@@ -9,13 +9,13 @@ import lombok.Data;
 @Builder
 public class DraftsResponse {
 
-    public static DraftsResponse emptyResponse() {
-        return DraftsResponse.builder().build();
-    }
-
     private final boolean isDraft;
 
     private final String draftId;
 
     private final JsonNode data;
+
+    public static DraftsResponse emptyResponse() {
+        return DraftsResponse.builder().build();
+    }
 }

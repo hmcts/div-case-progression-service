@@ -89,7 +89,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
             Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
             Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
-            Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
+            Boolean submissionStarted = Boolean.valueOf(draftResponse.getBody().path("submissionStarted").toString());
             String courts = draftResponse.getBody().path("courts").toString();
 
             assertEquals(caseId, draftResponseCaseId);

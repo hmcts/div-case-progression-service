@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
@@ -55,8 +54,7 @@ class DraftsRetrievalService {
                 if (draftList.getPaging().getAfter() != null) {
                     log.debug("Divorce session draft could not be found on the current page with drafts. "
                         + "Going to next page");
-                    draftList = draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter());
-                    return findDivorceDraft(jwt, secret, draftList);
+                    return findDivorceDraft(jwt, secret, draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
                 }
             } else {
                 log.debug("Divorce session draft found");
