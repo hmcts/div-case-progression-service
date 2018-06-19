@@ -177,7 +177,7 @@ public class DraftsServiceTest {
     }
 
     @Test
-    public void saveDraftShouldNotCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasACase() {
+    public void saveDraftShouldNotCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasAnAwaitingPaymentCase() {
         UserDetails mockUserDetails = mock(UserDetails.class);
         given(mockUserDetails.getId())
             .willReturn(USER_ID);
