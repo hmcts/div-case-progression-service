@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
@@ -90,7 +91,7 @@ public class CcdCallBackController {
             templateVars.put("first name",    caseData.getD8PetitionerFirstName());
             templateVars.put("last name",     caseData.getD8PetitionerLastName());
             templateVars.put("RDC name",      Courts.valueOf(
-                caseData.getD8DivorceUnit().toUpperCase()).getDisplayName()
+                caseData.getD8DivorceUnit().toUpperCase(Locale.UK)).getDisplayName()
             );
             templateVars.put("CCD reference", caseDetailsRequest.getCaseDetails().getCaseId());
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
