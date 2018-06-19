@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
-import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.BaseIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;

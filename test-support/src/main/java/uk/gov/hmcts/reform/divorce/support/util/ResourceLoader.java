@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.util;
+package uk.gov.hmcts.reform.divorce.support.util;
 
 import java.net.URL;
 import java.nio.charset.Charset;

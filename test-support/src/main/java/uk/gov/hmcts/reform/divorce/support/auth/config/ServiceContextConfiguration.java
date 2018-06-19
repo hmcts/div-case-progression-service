@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.auth.config;
+package uk.gov.hmcts.reform.divorce.support.auth.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -19,22 +19,4 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 @ImportAutoConfiguration({RibbonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, FeignRibbonClientAutoConfiguration.class, FeignAutoConfiguration.class})
 @EnableFeignClients(basePackageClasses = ServiceAuthorisationApi.class)
 public class ServiceContextConfiguration {
-
-    @Bean("caseProgressionAuthTokenGenerator")
-    public AuthTokenGenerator caseProgressionServiceAuthTokenGenerator(
-            @Value("${case.progression.service.auth.secret}") final String secret,
-            @Value("${case.progression.auth.microservice}") final String microService,
-            final ServiceAuthorisationApi serviceAuthorisationApi
-    ) {
-        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
-    }
-
-    @Bean("documentGeneratorAuthTokenGenerator")
-    public AuthTokenGenerator documentGeneratorserviceAuthTokenGenerator(
-        @Value("${document.generator.service.auth.secret}") final String secret,
-        @Value("${document.generator.auth.microservice}") final String microService,
-        final ServiceAuthorisationApi serviceAuthorisationApi
-    ) {
-        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
-    }
 }

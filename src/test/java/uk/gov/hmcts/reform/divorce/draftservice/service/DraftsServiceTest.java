@@ -2,17 +2,19 @@ package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.CreateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
+import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
@@ -21,15 +23,13 @@ import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.junit.Assert.assertNull;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -43,178 +43,310 @@ public class DraftsServiceTest {
     private static final String DRAFT_ID = "1";
     private static final String USER_ID = "60";
 
-    @InjectMocks
-    private DraftsService underTest;
-    @Mock
-    private DraftModelFactory modelFactory;
-    @Mock
-    private EncryptionKeyFactory keyFactory;
-    @Mock
-    private DraftStoreClient client;
     @Mock
     private DraftList draftList;
+
+    @Mock
+    private DraftStoreClient mockDraftStoreClient;
+
     @Mock
     private CreateDraft createDraft;
+
+    @Mock
+    private DraftModelFactory mockDraftModelFactory;
+
+    @Mock
+    private EncryptionKeyFactory mockEncryptionKeyFactory;
+
     @Mock
     private UpdateDraft updateDraft;
+
+    @Mock
+    private DraftsRetrievalService mockDraftsRetrievalService;
+
     @Mock
     private Draft draft;
+
     @Mock
-    private UserService userService;
+    private UserService mockUserService;
+
     @Mock
-    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
+    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+
     private JsonNode requestContent;
 
+    private DraftsService underTest;
 
     @Before
     public void setUp() throws Exception {
+
         String requestContentAsString = FileUtils.readFileToString(
-            new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
-            Charset.defaultCharset());
+                new File(getClass().getResource("/fixtures/divorce/submit-request-body.json").toURI()),
+                Charset.defaultCharset());
 
         ObjectMapper objectMapper = new ObjectMapper();
         requestContent = objectMapper.readTree(requestContentAsString);
 
-        when(client.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+
+        when(mockEncryptionKeyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
 
         when(draft.getId()).thenReturn(DRAFT_ID);
         when(draft.getDocument()).thenReturn(requestContent);
 
-        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
+        when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
-        when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
-
-        when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
-        when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
-
-        when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
+        underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
+                mockDraftStoreClient, mockDraftModelFactory, mockAwaitingPaymentCaseRetriever);
     }
 
     @Test
-    public void saveDraftShouldNotCreateOrUpdateADraftIfAlreadyExistsInCCD() {
+    public void saveDraftShouldCreateANewDraftIfTheDraftReturnedIsNull() {
 
-        Map<String, Object> caseData = new HashMap<>();
-        caseData.put("state", "awaitingPayment");
+        DraftsResponse draftsResponse = null;
 
-        List<Map<String, Object>> cases = new ArrayList<>();
-        cases.add(caseData);
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
 
-        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(cases);
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
 
-        underTest.saveDraft(JWT, requestContent);
-
-        verifyZeroInteractions(client);
-    }
-
-    @Test
-    public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExistInCCDOrInDraftstore() {
-        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(Collections.emptyList());
         when(draftList.getData()).thenReturn(Collections.emptyList());
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(client)
-            .createDraft(JWT, SECRET, createDraft);
-        verify(client, times(0))
-            .updateDraft(any(), any(), any(), any());
+        verify(mockDraftStoreClient)
+                .createDraft(JWT, SECRET, createDraft);
+        verify(mockDraftStoreClient, times(0))
+                .updateDraft(any(), any(), any(), any());
     }
 
     @Test
-    public void saveDraftShouldOverrideTheExistingDraftIfADivorceDraftExistsInCCDAndInDraftstore() {
-        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(Collections.emptyList());
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
+    public void saveDraftShouldCreateANewDraftIfTheDraftReturnedIsNotADraft() {
 
-        underTest.saveDraft(JWT, requestContent);
+        DraftsResponse draftsResponse = DraftsResponse.builder().isDraft(false).build();
 
-        verify(client)
-            .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
-        verify(client, times(0))
-            .createDraft(any(), any(), any());
-    }
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
 
-    @Test
-    public void saveDraftShouldCreateANewDraftWhenADraftExistsButItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
 
-        underTest.saveDraft(JWT, requestContent);
-
-        verify(client)
-            .createDraft(JWT, SECRET, createDraft);
-        verify(client, times(0))
-            .updateDraft(any(), any(), any(), any());
-    }
-
-    @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
-
-        JsonNode draftsContent = underTest.getDraft(JWT);
-
-        assertEquals(requestContent, draftsContent);
-    }
-
-    @Test
-    public void getDraftShouldReturnNullWhenTheDraftDoesNotExist() {
         when(draftList.getData()).thenReturn(Collections.emptyList());
 
-        JsonNode draftsContent = underTest.getDraft(JWT);
+        underTest.saveDraft(JWT, requestContent);
 
-        assertNull(draftsContent);
+        verify(mockDraftStoreClient)
+                .createDraft(JWT, SECRET, createDraft);
+        verify(mockDraftStoreClient, times(0))
+                .updateDraft(any(), any(), any(), any());
     }
 
     @Test
-    public void getDraftShouldReturnNullWhenADraftExistsButItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
+    public void saveDraftShouldOverrideTheExistingDraftIfADivorceDraftExists() {
 
-        JsonNode draftsContent = underTest.getDraft(JWT);
+        DraftsResponse draftsResponse = DraftsResponse.builder()
+                .isDraft(true)
+                .draftId(DRAFT_ID)
+                .build();
 
-        assertNull(draftsContent);
+        when(mockDraftModelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+        when(mockDraftModelFactory.isDivorceDraft(draft)).thenReturn(true);
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+                .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
+        verify(mockDraftStoreClient, times(0))
+                .createDraft(any(), any(), any());
     }
 
     @Test
-    public void getDraftShouldGetADivorceDraftFromTheSecondPageOfDrafts() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
-        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors("10"));
+    public void saveDraftShouldCallTheCaseRetrievalServiceToFindAllCases() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
 
-        underTest.getDraft(JWT);
+        given(mockUserService.getUserDetails(JWT))
+            .willReturn(mockUserDetails);
 
-        verify(client).getAll(JWT, SECRET, "10");
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockAwaitingPaymentCaseRetriever).getCases(USER_ID, JWT);
+    }
+
+    @Test
+    public void saveDraftShouldNotCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasACase() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        given(mockUserService.getUserDetails(JWT))
+            .willReturn(mockUserDetails);
+
+        given(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .willReturn(ImmutableList.of(ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verifyZeroInteractions(mockDraftStoreClient);
+    }
+
+    @Test
+    public void saveDraftShouldCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasMoreThanOneAwaitingPaymentCase() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        when(mockUserService.getUserDetails(JWT))
+            .thenReturn(mockUserDetails);
+
+        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .thenReturn(ImmutableList.of(
+                ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap()),
+                ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
+
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
+
+        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+            .createDraft(JWT, SECRET, createDraft);
+    }
+
+    @Test
+    public void saveDraftShouldCallTheDraftStoreClientToSaveTheDraftWhenTheUserDoesNotHaveAnyAwaitingPaymentCases() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        when(mockUserService.getUserDetails(JWT))
+            .thenReturn(mockUserDetails);
+
+        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .thenReturn(Collections.emptyList());
+
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
+
+        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+            .createDraft(JWT, SECRET, createDraft);
     }
 
     @Test
     public void deleteDraftShouldDeleteTheDraftIfADivorceDraftExists() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
+
+        DraftsResponse draftsResponse = DraftsResponse.builder()
+                .isDraft(true)
+                .draftId(DRAFT_ID)
+                .build();
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+        when(mockDraftModelFactory.isDivorceDraft(draft)).thenReturn(true);
 
         underTest.deleteDraft(JWT);
 
-        verify(client).deleteDraft(JWT, DRAFT_ID);
+        verify(mockDraftStoreClient).deleteDraft(JWT, DRAFT_ID);
+    }
+
+    @Test
+    public void deleteDraftShouldNotDeleteAnythingIfServiceReturnsNull() {
+
+        DraftsResponse draftsResponse = null;
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
+
+        underTest.deleteDraft(JWT);
+
+        verify(mockDraftStoreClient, times(0))
+                .deleteDraft(any(), any());
     }
 
     @Test
     public void deleteDraftShouldNotDeleteAnythingIfThereAreNoDrafts() {
-        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        DraftsResponse draftsResponse = DraftsResponse.emptyResponse();
+
+        when(mockDraftsRetrievalService.getDraft(JWT, USER_ID, SECRET))
+                .thenReturn(draftsResponse);
 
         underTest.deleteDraft(JWT);
 
-        verify(client, times(0))
-            .deleteDraft(any(), any());
+        verify(mockDraftStoreClient, times(0))
+                .deleteDraft(any(), any());
     }
 
     @Test
-    public void deleteDraftShouldNotDeleteTheDraftIfItIsNotADivorceDraft() {
-        when(draftList.getData()).thenReturn(Collections.singletonList(draft));
-        when(modelFactory.isDivorceDraft(draft)).thenReturn(false);
+    public void getDraft_should_call_draft_retrieval_service() {
 
-        underTest.deleteDraft(JWT);
+        // given
+        givenEncryptionKeyIsGenerated();
 
-        verify(client, times(0))
-            .deleteDraft(any(), any());
+        // when
+        underTest.getDraft(JWT);
+
+        // then
+        verify(mockDraftsRetrievalService).getDraft(JWT, USER_ID, SECRET);
     }
 
+    private void givenEncryptionKeyIsGenerated() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+                .willReturn(USER_ID);
+
+        given(mockUserService.getUserDetails(JWT))
+                .willReturn(mockUserDetails);
+
+        given(mockEncryptionKeyFactory.createEncryptionKey(USER_ID))
+                .willReturn(SECRET);
+    }
+
+    @Test
+    public void getDraft_should_return_what_draft_retrieval_service_returns() {
+
+        // given
+        givenEncryptionKeyIsGenerated();
+
+        JsonNode mockDraft = mock(JsonNode.class);
+        DraftsResponse draftsResponse = DraftsResponse.builder()
+                .data(mockDraft)
+                .build();
+
+        given(mockDraftsRetrievalService
+                .getDraft(JWT, USER_ID, SECRET))
+                .willReturn(draftsResponse);
+
+        // when
+        JsonNode draft = underTest.getDraft(JWT);
+
+        // then
+        assertEquals(mockDraft, draft);
+    }
+
+    @Test
+    public void getDraft_should_return_null_when_draft_retrieval_service_returns_null() {
+
+        // given
+        givenEncryptionKeyIsGenerated();
+
+        DraftsResponse draftsResponse = null;
+
+        given(mockDraftsRetrievalService
+                .getDraft(JWT, USER_ID, SECRET))
+                .willReturn(draftsResponse);
+
+        // when
+        JsonNode draft = underTest.getDraft(JWT);
+
+        // then
+        assertNull(draft);
+    }
 }

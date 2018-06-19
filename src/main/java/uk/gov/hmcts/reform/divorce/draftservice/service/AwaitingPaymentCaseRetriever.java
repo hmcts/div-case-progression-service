@@ -23,7 +23,7 @@ public class AwaitingPaymentCaseRetriever {
 
     @Autowired
     public AwaitingPaymentCaseRetriever(RetrieveCcdClient retrieveCcdClient,
-                                        @Value("draft.api.ccd.check.enabled") String checkCcdEnabled) {
+                                        @Value("${draft.api.ccd.check.enabled}") String checkCcdEnabled) {
         this.retrieveCcdClient = retrieveCcdClient;
         this.checkCcdEnabled = Boolean.valueOf(checkCcdEnabled);
     }
@@ -48,7 +48,7 @@ public class AwaitingPaymentCaseRetriever {
             return Collections.emptyList();
         }
 
-        log.debug(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
+        log.info(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
 
         return awaitingPaymentCases;
     }

@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
-import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
-import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
+import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
@@ -14,92 +13,76 @@ import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
 public class DraftsService {
 
+    private final DraftsRetrievalService draftsRetrievalService;
+    private final UserService userService;
+    private final EncryptionKeyFactory encryptionKeyFactory;
+    private final DraftStoreClient draftStoreClient;
+    private final DraftModelFactory draftModelFactory;
+    private final AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
+
     @Autowired
-    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
-    @Autowired
-    private DraftModelFactory modelFactory;
-    @Autowired
-    private DraftStoreClient client;
-    @Autowired
-    private EncryptionKeyFactory keyFactory;
-    @Autowired
-    private UserService userService;
+    public DraftsService(DraftsRetrievalService draftsRetrievalService,
+                         UserService userService,
+                         EncryptionKeyFactory encryptionKeyFactory,
+                         DraftStoreClient draftStoreClient,
+                         DraftModelFactory draftModelFactory,
+                         AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever) {
+        this.draftsRetrievalService = draftsRetrievalService;
+        this.userService = userService;
+        this.encryptionKeyFactory = encryptionKeyFactory;
+        this.draftStoreClient = draftStoreClient;
+        this.draftModelFactory = draftModelFactory;
+        this.awaitingPaymentCaseRetriever = awaitingPaymentCaseRetriever;
+    }
 
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        String secret = keyFactory.createEncryptionKey(userDetails.getId());
-        String userID = userDetails.getId();
-        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userID, jwt);
-        if (casesInCCD.isEmpty()) {
-            Optional<Draft> divorceDraft = getDivorceDraft(jwt, secret);
-            if (divorceDraft.isPresent()) {
-                log.debug("Updating the existing divorce session draft");
-                client.updateDraft(
-                    jwt,
-                    divorceDraft.get().getId(),
-                    secret,
-                    modelFactory.updateDraft(data));
-            } else {
+        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userDetails.getId(), jwt);
+        if (casesInCCD.isEmpty() || casesInCCD.size() > 1) {
+            String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
+            DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
+            if (draftsResponse == null || !draftsResponse.isDraft()) {
                 log.debug("Creating a new divorce session draft");
-                client.createDraft(
+                draftStoreClient.createDraft(
                     jwt,
                     secret,
-                    modelFactory.createDraft(data));
+                    draftModelFactory.createDraft(data));
+            } else if (draftsResponse.isDraft()) {
+                log.debug("Updating the existing divorce session draft");
+                draftStoreClient.updateDraft(
+                    jwt,
+                    draftsResponse.getDraftId(),
+                    secret,
+                    draftModelFactory.updateDraft(data));
             }
         }
-        log.debug("Case already exists in CCD, not creating or updating a divorce session draft");
-    }
-
-    public JsonNode getDraft(String jwt) {
-        log.debug("Retrieving a divorce session draft");
-        UserDetails userDetails = userService.getUserDetails(jwt);
-        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(userDetails.getId()));
-        if (divorceDraft.isPresent()) {
-            log.debug("Returning the saved divorce session draft");
-            return divorceDraft.get().getDocument();
-        }
-        log.debug("There is no saved divorce session draft");
-        return null;
     }
 
     public void deleteDraft(String jwt) {
         log.debug("Deleting the divorce session draft");
         UserDetails userDetails = userService.getUserDetails(jwt);
-        Optional<Draft> divorceDraft = getDivorceDraft(jwt, keyFactory.createEncryptionKey(userDetails.getId()));
-        divorceDraft.ifPresent(draft -> client.deleteDraft(jwt, draft.getId()));
-    }
-
-    private Optional<Draft> getDivorceDraft(String jwt, String secret) {
-        log.debug("Looking for a saved divorce session draft");
-        DraftList draftList = client.getAll(jwt, secret);
-
-        return findDivorceDraft(jwt, secret, draftList);
-    }
-
-    private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {
-        if (draftList != null && !draftList.getData().isEmpty()) {
-            Optional<Draft> divorceDraft = draftList.getData().stream()
-                .filter(draft -> modelFactory.isDivorceDraft(draft))
-                .findFirst();
-            if (!divorceDraft.isPresent()) {
-                if (draftList.getPaging().getAfter() != null) {
-                    log.debug("Divorce session draft could not be found on the current page with drafts. "
-                        + "Going to next page");
-                    draftList = client.getAll(jwt, secret, draftList.getPaging().getAfter());
-                    return findDivorceDraft(jwt, secret, draftList);
-                }
-            } else {
-                log.debug("Divorce session draft found");
-                return divorceDraft;
-            }
+        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt,
+                userDetails.getId(),
+                encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
+        if (draftsResponse != null && draftsResponse.isDraft()) {
+            draftStoreClient.deleteDraft(jwt, draftsResponse.getDraftId());
         }
-        log.debug("Divorce session draft could not be found");
-        return Optional.empty();
+    }
+
+    public JsonNode getDraft(String jwt) {
+        UserDetails userDetails = userService.getUserDetails(jwt);
+        String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
+        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
+
+        if (draftsResponse != null) {
+            return draftsResponse.getData();
+        }
+        return null;
     }
 }

@@ -1,10 +1,10 @@
-package uk.gov.hmcts.reform.divorce.auth;
+package uk.gov.hmcts.reform.divorce.support.auth;
 
 import com.nimbusds.jwt.JWTParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import uk.gov.hmcts.reform.divorce.IntegrationTest;
-import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
+import uk.gov.hmcts.reform.divorce.support.IntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
 
 import java.text.ParseException;
 import java.util.Map;
@@ -22,6 +22,10 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
 
     protected String getIdamTestUser() {
         return idamUserSupport.getIdamTestUser();
+    }
+
+    protected void regenerateIdamTestUser() {
+        idamUserSupport.createUserAndToken();
     }
 
     protected String getIdamTestCaseWorkerUser() {

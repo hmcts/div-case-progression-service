@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.caseprogression.draftsapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,25 +9,23 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import uk.gov.hmcts.reform.divorce.auth.BaseIntegrationTestWithIdamSupport;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.Draft;
 import uk.gov.hmcts.reform.divorce.caseprogression.draftsapi.client.DraftStoreClient;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.draftsapi.DraftBaseIntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.transformapi.TestUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport {
-
-    @Value("${drafts.api.url}")
-    private String draftsApiUrl;
+public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
     @Autowired
-    private DraftStoreClient draftStoreClient;
+    protected DraftStoreClient draftStoreClient;
+
+    @Value("${env}")
+    private String environment;
 
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
@@ -43,8 +40,9 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
-        draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
+        Response draftStoreResponse = draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
 
+        assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
         String draft = "{\"message\": \"Hello World!\"}";
         saveDivorceDraft(draft);
 
@@ -56,6 +54,9 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
 
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
+
+        regenerateIdamTestUser();
+
         Response response = getDivorceDraft();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());
@@ -71,45 +72,35 @@ public class DraftsAPIIntegrationTest extends BaseIntegrationTestWithIdamSupport
         assertThereAreNoDrafts();
     }
 
+    @Test
+    public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
+
+        // only execute on preview as feature toggle is currently only enabled on preview and prod
+        if ("preview".equalsIgnoreCase(environment)) {
+            // given
+            regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
+            Response caseSubmissionResponse = submitCase("addresses.json");
+
+            // when
+            Response draftResponse = getDivorceDraft();
+
+            // then
+            assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
+
+            Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
+            Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
+            Boolean submissionStarted = Boolean.valueOf(draftResponse.getBody().path("submissionStarted").toString());
+            String courts = draftResponse.getBody().path("courts").toString();
+
+            assertEquals(caseId, draftResponseCaseId);
+            assertEquals("eastMidlands", courts);
+            assertEquals(true, submissionStarted);
+        }
+    }
+
     @After
     public void tearDown() {
         deleteDivorceDraft();
-    }
-
-    private Response deleteDivorceDraft() {
-        return SerenityRest.given()
-                .headers(headers())
-                .when()
-                .delete(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Response saveDivorceDraft(String draft) {
-        return SerenityRest.given()
-                .headers(headers())
-                .body(draft)
-                .when()
-                .put(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Response getDivorceDraft() {
-        return SerenityRest.given()
-                .headers(headers())
-                .when()
-                .get(draftsApiUrl)
-                .andReturn();
-    }
-
-    private Map<String, Object> headers() {
-        return headers(getIdamTestUser());
-    }
-
-    private Map<String, Object> headers(String token) {
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
-        headers.put("Authorization", token);
-        return headers;
     }
 
     private void assertDraftIsSaved(String draft) {

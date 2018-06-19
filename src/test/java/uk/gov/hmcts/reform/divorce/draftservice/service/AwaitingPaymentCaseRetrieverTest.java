@@ -28,7 +28,7 @@ public class AwaitingPaymentCaseRetrieverTest {
     private RetrieveCcdClient mockRetrieveCcdClient;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         String checkCcdEnabled = "true";
         underTest = new AwaitingPaymentCaseRetriever(mockRetrieveCcdClient, checkCcdEnabled);
     }
