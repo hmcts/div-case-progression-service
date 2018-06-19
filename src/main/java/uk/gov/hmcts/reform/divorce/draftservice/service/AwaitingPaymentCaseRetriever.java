@@ -18,7 +18,6 @@ public class AwaitingPaymentCaseRetriever {
 
     private static final String CASE_STATE = "state";
     private static final String AWAITING_PAYMENT_STATE = "awaitingpayment";
-
     private final RetrieveCcdClient retrieveCcdClient;
     private final Boolean checkCcdEnabled;
 

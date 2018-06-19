@@ -20,15 +20,19 @@ import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,33 +43,26 @@ public class DraftsServiceTest {
     private static final String DRAFT_ID = "1";
     private static final String USER_ID = "60";
 
-    @Mock
-    private DraftModelFactory modelFactory;
-
-    @Mock
-    private EncryptionKeyFactory keyFactory;
-
-    @Mock
-    private DraftStoreClient client;
-
     @InjectMocks
     private DraftsService underTest;
-
+    @Mock
+    private DraftModelFactory modelFactory;
+    @Mock
+    private EncryptionKeyFactory keyFactory;
+    @Mock
+    private DraftStoreClient client;
     @Mock
     private DraftList draftList;
-
     @Mock
     private CreateDraft createDraft;
-
     @Mock
     private UpdateDraft updateDraft;
-
     @Mock
     private Draft draft;
-
     @Mock
     private UserService userService;
-
+    @Mock
+    private AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
     private JsonNode requestContent;
 
 
@@ -80,22 +77,38 @@ public class DraftsServiceTest {
 
         when(client.getAll(JWT, SECRET)).thenReturn(draftList);
 
-        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
+        when(draft.getId()).thenReturn(DRAFT_ID);
+        when(draft.getDocument()).thenReturn(requestContent);
 
-        when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
-        when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
+        when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
         when(keyFactory.createEncryptionKey(USER_ID)).thenReturn(SECRET);
 
-
-        when(draft.getId()).thenReturn(DRAFT_ID);
-        when(draft.getDocument()).thenReturn(requestContent);
+        when(modelFactory.createDraft(requestContent)).thenReturn(createDraft);
+        when(modelFactory.updateDraft(requestContent)).thenReturn(updateDraft);
 
         when(userService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
     }
 
     @Test
-    public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExist() {
+    public void saveDraftShouldNotCreateOrUpdateADraftIfAlreadyExistsInCCD() {
+
+        Map<String, Object> caseData = new HashMap<>();
+        caseData.put("state", "awaitingPayment");
+
+        List<Map<String, Object>> cases = new ArrayList<>();
+        cases.add(caseData);
+
+        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(cases);
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verifyZeroInteractions(client);
+    }
+
+    @Test
+    public void saveDraftShouldCreateANewDraftIfTheDraftDoesNotExistInCCDOrInDraftstore() {
+        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(Collections.emptyList());
         when(draftList.getData()).thenReturn(Collections.emptyList());
 
         underTest.saveDraft(JWT, requestContent);
@@ -107,7 +120,8 @@ public class DraftsServiceTest {
     }
 
     @Test
-    public void saveDraftShouldOverrideTheExistingDraftIfADivorceDraftExists() {
+    public void saveDraftShouldOverrideTheExistingDraftIfADivorceDraftExistsInCCDAndInDraftstore() {
+        when(awaitingPaymentCaseRetriever.getCases(USER_ID, JWT)).thenReturn(Collections.emptyList());
         when(draftList.getData()).thenReturn(Collections.singletonList(draft));
         when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
 
@@ -133,14 +147,13 @@ public class DraftsServiceTest {
     }
 
     @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() throws IOException {
+    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() {
         when(draftList.getData()).thenReturn(Collections.singletonList(draft));
         when(modelFactory.isDivorceDraft(draft)).thenReturn(true);
 
         JsonNode draftsContent = underTest.getDraft(JWT);
 
         assertEquals(requestContent, draftsContent);
-
     }
 
     @Test
