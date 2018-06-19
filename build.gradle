@@ -7,6 +7,10 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath('info.solidsoft.gradle.pitest:gradle-pitest-plugin:0.32.0') {
+            exclude(group: 'org.pitest')
+        }
+        classpath ('org.pitest:pitest-command-line:0.33')
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
@@ -108,6 +112,19 @@ distributions {
             }
         }
     }
+}
+
+pitest {
+    targetClasses = ['uk.gov.hmcts.reform.divorce.*']
+    excludedClasses = ['uk.gov.hmcts.reform.divorce.health.*',
+                       'uk.gov.hmcts.reform.divorce.common.*',
+                       'uk.gov.hmcts.reform.divorce.transformservice.config.*',
+                       'uk.gov.hmcts.reform.divorce.transformservice.domain.*',
+                       'uk.gov.hmcts.reform.divorce.errorhandler.*']
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    mutationThreshold = 50
 }
 
 pmd {
