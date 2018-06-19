@@ -20,3 +20,6 @@
 .DS_store
 **/target/
 bin/
+
+### Visual Studio Code ###
+.vscode/
