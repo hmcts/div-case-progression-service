@@ -12,7 +12,7 @@
         <notes><![CDATA[
    file name: tomcat-embed-core-8.5.29.jar and tomcat-embed-websocket-8.5.29.jar
    ]]></notes>
-        <gav regex="true">^org\.apache\.tomcat:tomcat-embed:.*$</gav>
+        <filePath regex="true">.*tomcat-embed.*\.jar</filePath>
         <cve>CVE-2018-8014</cve>
     </suppress>
 </suppressions>
