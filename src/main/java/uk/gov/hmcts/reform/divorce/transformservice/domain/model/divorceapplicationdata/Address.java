@@ -35,4 +35,6 @@ public class Address {
     private boolean postcodeError;
     @ApiModelProperty(value = "URL.")
     private String url;
+    @ApiModelProperty(value = "Address Base UK")
+    private AddressBaseUK addressBaseUK;
 }
