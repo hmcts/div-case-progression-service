@@ -1,81 +1,87 @@
 package uk.gov.hmcts.reform.divorce.auth;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class IdamUserSupport {
 
-    private static final String idamCaseworkerUser = "CaseWorkerTest";
-
-    private static final String idamCaseworkerPassword = "password";
-
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
-    private String idamUsername;
+    @Value("${auth.idam.secret}")
+    private String idamSecret;
 
-    private String idamPassword;
+    @Value("${auth.idam.redirect.url}")
+    private String idamRedirectUrl;
 
-    private String testUserJwtToken;
-
-    private String testCaseworkerJwtToken;
-
-    public synchronized String getIdamTestUser() {
-        if (StringUtils.isBlank(testUserJwtToken)) {
-            createUserInIdam();
-            testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
-        }
-
-        return testUserJwtToken;
+    public String getIdamTestUser(String username, String password) {
+        createCitizen(username, password);
+        return generateClientToken(username, password);
     }
 
-    public synchronized String getIdamTestCaseWorkerUser() {
-        if (StringUtils.isBlank(testCaseworkerJwtToken)) {
-            createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPassword);
-        }
-
-        return testCaseworkerJwtToken;
+    public String getIdamTestCaseWorkerUser(String username, String password) {
+        createCaseworkerUserInIdam(username, password);
+        return generateClientToken(username, password);
     }
 
-    private void createUserInIdam() {
-        idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        idamPassword = UUID.randomUUID().toString();
+    public void deleteUsers(List<String> usernames) {
+        usernames.forEach(this::deleteUser);
+    }
 
+    private void createCitizen(String username, String password) {
         RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\"}")
+                .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
                 .post(idamCreateUrl());
+
     }
 
-    private void createCaseworkerUserInIdam() {
+    private void createCaseworkerUserInIdam(String username, String password) {
         RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPassword + "\", "
+                .body("{\"email\":\"" + username + "\", "
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + password + "\", "
                         + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
+
     }
 
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    private String generateUserTokenWithNoRoles(String username, String password) {
-        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        final String token = RestAssured.given().baseUri(idamUserBaseUrl)
-            .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
-            .body()
-            .path("access-token");
+    private String generateClientToken(String username, String password) {
+        String code = generateClientCode(username, password);
+
+        String token = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
+            "&client_secret=" + idamSecret +
+            "&client_id=divorce" +
+            "&redirect_uri=" + idamRedirectUrl +
+            "&grant_type=authorization_code")
+            .body().path("access_token");
 
         return "Bearer " + token;
+    }
+
+    private String generateClientCode(String username, String password) {
+        String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+
+        return RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Authorization", "Basic " + encoded)
+            .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + idamRedirectUrl)
+            .body().path("code");
+    }
+
+    private void deleteUser(String username) {
+        System.out.println("Deleting user " + username);
+        RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .delete(String.format("testing-support/accounts/%s", username));
     }
 }

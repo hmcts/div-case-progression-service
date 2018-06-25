@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.divorce.caseprogression.transformapi;
 
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,16 @@ public class CoreCaseDataSubmitIntegrationTest extends BaseIntegrationTest {
 
     private static final String CASE_VALIDATION_EXCEPTION = "Request Id : null and Exception message : 422 , Exception response body: {\"exception\":\"uk.gov.hmcts.ccd.endpoint.exceptions.CaseValidationException\"";
     private static final String UNAUTHORISED_JWT_EXCEPTION = "Request Id : null and Exception message : status 403 reading IdamApiClient#retrieveUserDetails(String)";
+
+    @BeforeClass
+    public void setUpClass() {
+        super.setUpClass();
+    }
+
+    @AfterClass
+    public void tearDownClass() {
+        super.tearDownClass();
+    }
 
     /**
      * Verify case id with address json.
