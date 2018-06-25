@@ -30,7 +30,7 @@ public class IdamUserSupport {
         String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
         String password = UUID.randomUUID().toString();
         createUserInIdam(username, password);
-        return generateUserTokenWithNoRoles(idamUsername, idamPassword);
+        return generateUserTokenWithNoRoles(username, password);
     }
 
     public synchronized String getIdamTestUser() {
