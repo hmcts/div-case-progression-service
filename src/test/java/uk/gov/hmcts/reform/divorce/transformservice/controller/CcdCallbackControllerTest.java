@@ -307,7 +307,7 @@ public class CcdCallbackControllerTest {
         verifyNoMoreInteractions(emailService);
     }
 
-    public void givenErrorCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToReturnErrors() throws Exception {
+    public void givenErrorCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToNotAddPdf() throws Exception {
         CreateEvent submittedCase = new CreateEvent();
         CaseDetails caseDetails = new CaseDetails();
         submittedCase.setCaseDetails(caseDetails);
@@ -330,7 +330,7 @@ public class CcdCallbackControllerTest {
     }
 
     @Test
-    public void givenWarningsCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToReturnErrors() throws Exception {
+    public void givenWarningsCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToNotAddPdf() throws Exception {
         CreateEvent submittedCase = new CreateEvent();
         CaseDetails caseDetails = new CaseDetails();
         submittedCase.setCaseDetails(caseDetails);
@@ -340,7 +340,7 @@ public class CcdCallbackControllerTest {
 
         ValidationResponse validationResponse = new ValidationResponse();
         validationResponse.setValidationStatus("failed");
-        validationResponse.setErrors(warnings);
+        validationResponse.setWarnings(warnings);
 
         when(validationService.validateCoreCaseData(null)).thenReturn(validationResponse);
 
