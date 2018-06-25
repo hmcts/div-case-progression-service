@@ -7,10 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.logging.appinsights.AbstractAppInsights;
 
 @Component
-@ConditionalOnProperty("azure.app_insights_key")
 public class AppInsights extends AbstractAppInsights {
     @Autowired
     public AppInsights(TelemetryClient client) {
         super(client);
+    }
+
+    public void trackMetric(String name, double value) {
+        super.telemetry.trackMetric(name, value);
     }
 }
