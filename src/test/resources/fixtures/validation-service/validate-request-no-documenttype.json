@@ -1,6 +1,4 @@
 {
-    "formId": "case-progression",
-    "sectionId": null,
     "data": {
         "D8legalProcess":null,
         "D8caseReference":null,
@@ -19,7 +17,7 @@
         "D8CountryName":null,
         "D8RejectMarriageDetails":null,
         "D8PetitionerNameDifferentToMarriageCert":"YES",
-        "D8PetitionerEmail":"email@email.com",
+        "D8PetitionerEmail":"simulate-delivered@notifications.service.gov.uk",
         "D8PetitionerPhoneNumber":"01234567890",
         "D8PetitionerFirstName":"John",
         "D8PetitionerLastName":"Smith",
@@ -222,5 +220,7 @@
         "D8Cohort":"onlineSubmissionPrivateBeta",
         "D8InferredPetitionerGender":"female",
         "D8InferredRespondentGender":"female"
-    }
+    },
+    "formId": "case-progression",
+    "sectionId": null
 }
