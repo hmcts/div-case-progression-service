@@ -49,6 +49,14 @@ public abstract class DraftBaseIntegrationTest extends BaseIntegrationTest {
                 .andReturn();
     }
 
+    protected Response getDivorceDraft(String token) {
+        return SerenityRest.given()
+            .headers(buildHeaders(token))
+            .when()
+            .get(draftsApiUrl)
+            .andReturn();
+    }
+
     protected Map<String, Object> buildHeaders() {
         return buildHeaders(getIdamTestUser());
     }

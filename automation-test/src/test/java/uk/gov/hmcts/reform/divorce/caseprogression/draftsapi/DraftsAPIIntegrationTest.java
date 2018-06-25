@@ -34,7 +34,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         Response response = saveDivorceDraft(token, draft);
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
@@ -47,10 +47,10 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         String draft = "{\"message\": \"Hello World!\"}";
         saveDivorceDraft(token, draft);
 
-        Response response = getDivorceDraft();
+        Response response = getDivorceDraft(token);
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
@@ -104,8 +104,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         deleteDivorceDraft();
     }
 
-    private void assertDraftIsSaved(String draft) {
-        List<Draft> drafts = draftStoreClient.getDivorceDrafts(getIdamTestUser());
+    private void assertDraftIsSaved(String token, String draft) {
+        List<Draft> drafts = draftStoreClient.getDivorceDrafts(token);
         assertEquals(1, drafts.size());
         JSONAssert.assertEquals(draft, drafts.get(0).getDocument().toString(), false);
     }
