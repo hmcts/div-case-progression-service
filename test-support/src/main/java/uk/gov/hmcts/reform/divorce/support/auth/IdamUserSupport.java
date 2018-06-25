@@ -26,6 +26,11 @@ public class IdamUserSupport {
 
     private String testCaseworkerJwtToken;
 
+    public String generateNewUserAndReturnToken() {
+        createUserInIdam();
+        return generateUserTokenWithNoRoles(idamUsername, idamPassword);
+    }
+
     public synchronized String getIdamTestUser() {
         if (StringUtils.isBlank(testUserJwtToken)) {
             createUserAndToken();

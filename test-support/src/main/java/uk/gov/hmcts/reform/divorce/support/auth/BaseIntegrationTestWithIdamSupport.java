@@ -28,6 +28,10 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
         idamUserSupport.createUserAndToken();
     }
 
+    protected String generateNewUserAndReturnToken() {
+        return idamUserSupport.generateNewUserAndReturnToken();
+    }
+
     protected String getIdamTestCaseWorkerUser() {
         return idamUserSupport.getIdamTestCaseWorkerUser();
     }
