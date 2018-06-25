@@ -8,4 +8,11 @@
         <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: tomcat-embed-core-8.5.29.jar and tomcat-embed-websocket-8.5.29.jar
+   ]]></notes>
+        <filePath regex="true">.*tomcat-embed.*\.jar</filePath>
+        <cve>CVE-2018-8014</cve>
+    </suppress>
 </suppressions>

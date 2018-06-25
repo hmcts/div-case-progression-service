@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -27,14 +28,18 @@ import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -48,12 +53,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CcdCallbackControllerTest {
 
     private static final String ADD_PDF_URL = "/caseprogression/petition-issued";
+    private static final String PETITION_SUBMITTED_URL = "/caseprogression/petition-submitted";
     private static final String AUTH_TOKEN = "test";
     private static final String AUTH_HEADER = "Authorization";
 
     @Autowired
     private WebApplicationContext applicationContext;
 
+    @MockBean
+    public EmailService emailService;
     @MockBean
     private UpdateService updateService;
 
@@ -160,4 +168,130 @@ public class CcdCallbackControllerTest {
         verify(updateService).addPdf(anyObject(), eq(null));
     }
 
+    @Test
+    public void givenNoPetitionerEmail_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsNotCalled() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        caseDetails.setCaseData(coreCaseData);
+        submittedCase.setCaseDetails(caseDetails);
+
+        mvc.perform(post(PETITION_SUBMITTED_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(emailService, never()).sendSubmissionNotificationEmail(anyObject(), anyObject());
+    }
+
+    @Test
+    public void givenPetitionerEmailAndEastMidlands_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
+        CoreCaseData coreCaseData = new CoreCaseData();
+        coreCaseData.setD8PetitionerEmail("example@email.com");
+        coreCaseData.setD8DivorceUnit("eastMidlands");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        Map<String, String> templateVars = getTemplateVars("East Midlands Regional Divorce Centre");
+
+        doNothing().when(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+
+        mvc.perform(post(PETITION_SUBMITTED_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+        verifyNoMoreInteractions(emailService);
+    }
+
+    @Test
+    public void givenPetitionerEmailAndWestMidlands_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
+        CoreCaseData coreCaseData = new CoreCaseData();
+        coreCaseData.setD8PetitionerEmail("example@email.com");
+        coreCaseData.setD8DivorceUnit("westMidlands");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        Map<String, String> templateVars = getTemplateVars("West Midlands Regional Divorce Centre");
+
+        doNothing().when(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+
+        mvc.perform(post(PETITION_SUBMITTED_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+        verifyNoMoreInteractions(emailService);
+    }
+
+    @Test
+    public void givenPetitionerEmailAndSouthWest_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
+        CoreCaseData coreCaseData = new CoreCaseData();
+        coreCaseData.setD8PetitionerEmail("example@email.com");
+        coreCaseData.setD8DivorceUnit("southWest");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        Map<String, String> templateVars = getTemplateVars("South West Regional Divorce Centre");
+
+        doNothing().when(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+
+        mvc.perform(post(PETITION_SUBMITTED_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+        verifyNoMoreInteractions(emailService);
+    }
+
+    @Test
+    public void givenPetitionerEmailAndNorthWest_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
+        CoreCaseData coreCaseData = new CoreCaseData();
+        coreCaseData.setD8PetitionerEmail("example@email.com");
+        coreCaseData.setD8DivorceUnit("northWest");
+
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseData(coreCaseData);
+
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        Map<String, String> templateVars = getTemplateVars("North West Regional Divorce Centre");
+
+        doNothing().when(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+
+        mvc.perform(post(PETITION_SUBMITTED_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
+        verifyNoMoreInteractions(emailService);
+    }
+
+    private Map<String, String> getTemplateVars(String divorceUnit) {
+        Map<String, String> templateVars = new HashMap<>();
+        
+        templateVars.put("email address", "example@email.com");
+        templateVars.put("first name",    null);
+        templateVars.put("last name",     null);
+        templateVars.put("RDC name",      divorceUnit);
+        templateVars.put("CCD reference", "1000-1000-1000-1000");
+
+        return templateVars;
+    }
 }
