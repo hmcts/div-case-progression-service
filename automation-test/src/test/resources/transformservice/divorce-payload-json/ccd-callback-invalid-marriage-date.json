@@ -10,7 +10,7 @@
             "D8ScreenHasPrinter": "YES",
             "D8DivorceWho": "wife",
             "D8MarriageIsSameSexCouple": "YES",
-            "D8MarriageDate": "10001010",
+            "D8MarriageDate": "1000-10-10",
             "D8PetitionerNameDifferentToMarriageCert": "YES",
             "D8PetitionerEmail": "simulate-delivered@notifications.service.gov.uk",
             "D8PetitionerPhoneNumber": "01234567890",

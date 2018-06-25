@@ -38,6 +38,9 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.endpoint.update}")
     private String transformationApiUpdateEndpoint;
 
+    @Value("${transformation.api.endpoint.validate}")
+    private String transformationApiValidateEndpoint;
+
     private JSONArray fileUploadResponse = null;
 
     public String loadJSON(final String fileName) throws Exception {
