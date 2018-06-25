@@ -26,6 +26,13 @@ public class IdamUserSupport {
 
     private String testCaseworkerJwtToken;
 
+    public String generateNewUserAndReturnToken() {
+        String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
+        String password = UUID.randomUUID().toString();
+        createUserInIdam(username, password);
+        return generateUserTokenWithNoRoles(username, password);
+    }
+
     public synchronized String getIdamTestUser() {
         if (StringUtils.isBlank(testUserJwtToken)) {
             createUserAndToken();
@@ -47,14 +54,18 @@ public class IdamUserSupport {
         return testCaseworkerJwtToken;
     }
 
+    private void createUserInIdam(String username, String password) {
+        RestAssured.given()
+            .header("Content-Type", "application/json")
+            .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
+            .post(idamCreateUrl());
+    }
+
     private void createUserInIdam() {
         idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
         idamPassword = UUID.randomUUID().toString();
 
-        RestAssured.given()
-                .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\"}")
-                .post(idamCreateUrl());
+        createUserInIdam(idamUsername, idamPassword);
     }
 
     private void createCaseworkerUserInIdam() {

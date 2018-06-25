@@ -11,6 +11,9 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 
+import java.util.List;
+import java.util.Map;
+
 
 @Service
 @Slf4j
@@ -21,37 +24,43 @@ public class DraftsService {
     private final EncryptionKeyFactory encryptionKeyFactory;
     private final DraftStoreClient draftStoreClient;
     private final DraftModelFactory draftModelFactory;
+    private final AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
 
     @Autowired
     public DraftsService(DraftsRetrievalService draftsRetrievalService,
                          UserService userService,
                          EncryptionKeyFactory encryptionKeyFactory,
                          DraftStoreClient draftStoreClient,
-                         DraftModelFactory draftModelFactory) {
+                         DraftModelFactory draftModelFactory,
+                         AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever) {
         this.draftsRetrievalService = draftsRetrievalService;
         this.userService = userService;
         this.encryptionKeyFactory = encryptionKeyFactory;
         this.draftStoreClient = draftStoreClient;
         this.draftModelFactory = draftModelFactory;
+        this.awaitingPaymentCaseRetriever = awaitingPaymentCaseRetriever;
     }
 
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
-        DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
-        if (draftsResponse == null || !draftsResponse.isDraft()) {
-            log.debug("Creating a new divorce session draft");
-            draftStoreClient.createDraft(
+        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userDetails.getId(), jwt);
+        if (casesInCCD.isEmpty() || casesInCCD.size() > 1) {
+            String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
+            DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
+            if (draftsResponse == null || !draftsResponse.isDraft()) {
+                log.debug("Creating a new divorce session draft");
+                draftStoreClient.createDraft(
                     jwt,
                     secret,
                     draftModelFactory.createDraft(data));
-        } else if (draftsResponse.isDraft()) {
-            log.debug("Updating the existing divorce session draft");
-            draftStoreClient.updateDraft(
+            } else if (draftsResponse.isDraft()) {
+                log.debug("Updating the existing divorce session draft");
+                draftStoreClient.updateDraft(
                     jwt,
                     draftsResponse.getDraftId(),
                     secret,
                     draftModelFactory.updateDraft(data));
+            }
         }
     }
 

@@ -30,26 +30,27 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
         String draft = "{\"message\": \"Hello World!\"}";
-
-        Response response = saveDivorceDraft(draft);
+        String token = generateNewUserAndReturnToken();
+        Response response = saveDivorceDraft(token, draft);
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
-        Response draftStoreResponse = draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
+        String token = generateNewUserAndReturnToken();
+        Response draftStoreResponse = draftStoreClient.createDraft(token, savedDraft);
 
         assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
         String draft = "{\"message\": \"Hello World!\"}";
-        saveDivorceDraft(draft);
+        saveDivorceDraft(token, draft);
 
-        Response response = getDivorceDraft();
+        Response response = getDivorceDraft(token);
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
@@ -103,8 +104,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         deleteDivorceDraft();
     }
 
-    private void assertDraftIsSaved(String draft) {
-        List<Draft> drafts = draftStoreClient.getDivorceDrafts(getIdamTestUser());
+    private void assertDraftIsSaved(String token, String draft) {
+        List<Draft> drafts = draftStoreClient.getDivorceDrafts(token);
         assertEquals(1, drafts.size());
         JSONAssert.assertEquals(draft, drafts.get(0).getDocument().toString(), false);
     }
