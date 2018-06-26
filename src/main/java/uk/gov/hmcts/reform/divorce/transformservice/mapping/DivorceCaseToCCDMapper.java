@@ -25,7 +25,8 @@ import static java.lang.String.join;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@Mapper(componentModel = "spring", uses = {DocumentCollectionMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = {DocumentCollectionMapper.class},
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class DivorceCaseToCCDMapper {
 
     private static final String BLANK_SPACE = " ";
@@ -70,8 +71,10 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "reasonForDivorceAdulteryDetails", target = "d8ReasonForDivorceAdulteryDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhenDetails", target = "d8ReasonForDivorceAdulteryWhenDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhereDetails", target = "d8ReasonForDivorceAdulteryWhereDetails")
-    @Mapping(source = "reasonForDivorceAdultery3rdAddress.addressBaseUK", target = "d8ReasonForDivorceAdultery3rdAddress")
-    @Mapping(source = "livingArrangementsLastLivedTogetherAddress.addressBaseUK", target = "d8LivingArrangementsLastLivedTogethAddr")
+    @Mapping(source = "reasonForDivorceAdultery3rdAddress.addressBaseUK",
+        target = "d8ReasonForDivorceAdultery3rdAddress")
+    @Mapping(source = "livingArrangementsLastLivedTogetherAddress.addressBaseUK",
+        target = "d8LivingArrangementsLastLivedTogethAddr")
     @Mapping(source = "legalProceedingsDetails", target = "d8LegalProceedingsDetails")
     @Mapping(source = "residualJurisdictionEligible", target = "d8ResidualJurisdictionEligible")
     @Mapping(source = "reasonForDivorceDesertionDetails", target = "d8ReasonForDivorceDesertionDetails")
