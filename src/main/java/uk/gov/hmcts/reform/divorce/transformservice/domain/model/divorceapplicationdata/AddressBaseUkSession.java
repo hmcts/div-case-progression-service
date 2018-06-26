@@ -8,18 +8,18 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class AddressBaseUkSession {
-    @ApiModelProperty(value = "AddressLine1")
+    @ApiModelProperty(value = "addressLine1")
     private String addressLine1;
-    @ApiModelProperty(value = "ddressLine2")
+    @ApiModelProperty(value = "addressLine2")
     private String addressLine2;
-    @ApiModelProperty(value = "AddressLine3")
+    @ApiModelProperty(value = "addressLine3")
     private String addressLine3;
-    @ApiModelProperty(value = "PostTown")
+    @ApiModelProperty(value = "postTown")
     private String postTown;
-    @ApiModelProperty(value = "PostCode")
+    @ApiModelProperty(value = "postCode")
     private String postCode;
-    @ApiModelProperty(value = "County")
+    @ApiModelProperty(value = "county")
     private String county;
-    @ApiModelProperty(value = "Country")
+    @ApiModelProperty(value = "country")
     private String country;
 }

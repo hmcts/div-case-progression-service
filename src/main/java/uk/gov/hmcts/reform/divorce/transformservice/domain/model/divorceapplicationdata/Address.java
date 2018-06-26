@@ -10,25 +10,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class Address {
-    @ApiModelProperty("Address type.")
-    private String addressType;
     @ApiModelProperty(value = "Address post code.")
     private String postcode;
     @JsonProperty("address")
     @ApiModelProperty(value = "Address.")
     private List<String> addressField;
-    @ApiModelProperty(value = "Street line 1.")
-    private String street1;
-    @ApiModelProperty(value = "Street line 2.")
-    private String street2;
     @ApiModelProperty(value = "Town.")
     private String town;
-    @ApiModelProperty(value = "Postcode manual.")
-    private String postcodeManual;
     @ApiModelProperty(value = "Is the address confirmed?")
     private boolean addressConfirmed;
-    @ApiModelProperty(value = "Address abroad.")
-    private String addressAbroad;
     @ApiModelProperty(value = "Is the postcode valid?")
     private boolean validPostcode;
     @ApiModelProperty(value = "Is there an error in the postcode?")

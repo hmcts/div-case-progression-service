@@ -25,13 +25,23 @@
     "D8PetitionerNameChangedHowOtherDetails" : null,
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
-        "County" : null,
-        "PostCode" : "SW9 9PE"
+        "addressLine1": "82 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
-        "County" : null,
-        "PostCode" : "SW9 9PE"
+        "addressLine1": "82 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
@@ -41,15 +51,25 @@
     "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8DerivedRespondentSolicitorDetails" : null,
     "D8RespondentHomeAddress" : {
-        "County" : null,
-        "PostCode" : "SW9 9PE"
+        "addressLine1": "82 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedRespondentHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
-        "County" : null,
-        "PostCode" : "SW9 9PE"
+        "addressLine1": "999 Landor Road",
+        "addressLine2": "Near a tree",
+        "addressLine3": "And a road",
+        "postCode": "SW9 9PF",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
-    "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
+    "D8DerivedRespondentCorrespondenceAddr" : "999 Landor Road\nNear a tree\nAnd a road\nLondon\nSW9 9PF",
     "D8RespondentSolicitorName" : null,
     "D8RespondentSolicitorCompany" : null,
     "D8RespondentCorrespondenceSendToSol" : null,

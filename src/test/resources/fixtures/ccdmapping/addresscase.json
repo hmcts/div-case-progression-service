@@ -25,13 +25,23 @@
     "D8PetitionerNameChangedHowOtherDetails" : null,
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "addressLine1": "82 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
-      "County" : null,
-      "PostCode" : "AB24 232"
+        "addressLine1": "84 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "84 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "NO",
@@ -41,19 +51,37 @@
     "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8DerivedRespondentSolicitorDetails" : "Justin\nCase\n90 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentHomeAddress" : {
-      "County" : null,
-      "PostCode" : "SS SSS"
+        "addressLine1": "88 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedRespondentHomeAddress" : "88 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "addressLine1": "82 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentSolicitorName" : null,
     "D8RespondentSolicitorCompany" : null,
     "D8RespondentCorrespondenceSendToSol" : null,
-    "D8RespondentSolicitorAddress" : null,
+    "D8RespondentSolicitorAddress" : {
+        "addressLine1": "90 Landor Road",
+        "addressLine2": "",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
+    },
     "D8RespondentCorrespondenceUseHomeAddress" : "Solicitor",
     "D8RespondentKnowsHomeAddress" : null,
     "D8RespondentLivesAtLastAddress" : "NO",
@@ -61,7 +89,15 @@
     "D8LivingArrangementsTogetherSeparated" : null,
     "D8LivingArrangementsLastLivedTogether" : "NO",
     "D8LivingArrangementsLiveTogether" : "NO",
-    "D8LivingArrangementsLastLivedTogethAddr" : null,
+    "D8LivingArrangementsLastLivedTogethAddr" : {
+        "addressLine1": "Flat A-B",
+        "addressLine2": "86 Landor Road",
+        "addressLine3": "",
+        "postCode": "SW9 9PE",
+        "postTown": "London",
+        "county": "",
+        "country": "UK"
+    },
     "D8LegalProceedings" : "YES",
     "D8LegalProceedingsRelated" : [ "children" ],
     "D8LegalProceedingsDetails" : "The legal proceeding details",
