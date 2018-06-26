@@ -5,21 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class AddressBaseUK {
-    @ApiModelProperty(value = "Address line 1")
+public class AddressBaseUkSession {
+    @ApiModelProperty(value = "AddressLine1")
     private String addressLine1;
-    @ApiModelProperty(value = "Address line 2")
+    @ApiModelProperty(value = "ddressLine2")
     private String addressLine2;
-    @ApiModelProperty(value = "Address line 3")
+    @ApiModelProperty(value = "AddressLine3")
     private String addressLine3;
-    @ApiModelProperty(value = "Post Code")
-    private String postCode;
-    @ApiModelProperty(value = "Town")
+    @ApiModelProperty(value = "PostTown")
     private String postTown;
+    @ApiModelProperty(value = "PostCode")
+    private String postCode;
     @ApiModelProperty(value = "County")
     private String county;
     @ApiModelProperty(value = "Country")

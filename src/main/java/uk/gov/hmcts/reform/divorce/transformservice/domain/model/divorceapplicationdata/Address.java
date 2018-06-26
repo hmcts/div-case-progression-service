@@ -36,5 +36,5 @@ public class Address {
     @ApiModelProperty(value = "URL.")
     private String url;
     @ApiModelProperty(value = "Address Base UK")
-    private AddressBaseUK addressBaseUK;
+    private AddressBaseUkSession addressBaseUK;
 }
