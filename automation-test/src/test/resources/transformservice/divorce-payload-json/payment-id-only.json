@@ -64,6 +64,15 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
+        "addressBaseUK": {
+            "addressLine1": "82 Landor Road",
+            "addressLine2": "",
+            "addressLine3": "",
+            "postCode": "SW9 9PE",
+            "postTown": "London",
+            "county": "",
+            "country": "UK"
+        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -84,6 +93,15 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
+        "addressBaseUK": {
+            "addressLine1": "82 Landor Road",
+            "addressLine2": "",
+            "addressLine3": "",
+            "postCode": "SW9 9PE",
+            "postTown": "London",
+            "county": "",
+            "country": "UK"
+        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -104,6 +122,15 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
+        "addressBaseUK": {
+            "addressLine1": "82 Landor Road",
+            "addressLine2": "",
+            "addressLine3": "",
+            "postCode": "SW9 9PE",
+            "postTown": "London",
+            "county": "",
+            "country": "UK"
+        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -124,6 +151,15 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
+        "addressBaseUK": {
+            "addressLine1": "82 Landor Road",
+            "addressLine2": "",
+            "addressLine3": "",
+            "postCode": "SW9 9PE",
+            "postTown": "London",
+            "county": "",
+            "country": "UK"
+        },
         "url": "/petitioner-respondent/respondent-correspondence-address",
         "formattedAddress": {
             "whereabouts": [

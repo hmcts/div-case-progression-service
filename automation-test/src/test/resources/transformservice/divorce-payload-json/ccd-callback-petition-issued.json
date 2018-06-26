@@ -22,11 +22,23 @@
       ],
       "D8PetitionerContactDetailsConfidential": "share",
       "D8PetitionerHomeAddress": {
-        "PostCode": "SW9 9PE"
+          "addressLine1": "Flat A-B",
+          "addressLine2": "86 Landor Road",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
       },
       "D8DerivedPetitionerHomeAddress": "82 Landor Road\nLondon\nSW9 9PE",
       "D8PetitionerCorrespondenceAddress": {
-        "PostCode": "SW9 9PE"
+          "addressLine1": "Flat A-B",
+          "addressLine2": "86 Landor Road",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
       },
       "D8DerivedPetitionerCorrespondenceAddr": "82 Landor Road\nLondon\nSW9 9PE",
       "D8PetitionerCorrespondenceUseHomeAddress": "YES",
@@ -34,11 +46,23 @@
       "D8RespondentLastName": "Jamed",
       "D8DerivedRespondentCurrentName": "Jane Jamed",
       "D8RespondentHomeAddress": {
-        "PostCode": "SW9 9PE"
+          "addressLine1": "Flat A-B",
+          "addressLine2": "86 Landor Road",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
       },
       "D8DerivedRespondentHomeAddress": "82 Landor Road\nLondon\nSW9 9PE",
       "D8RespondentCorrespondenceAddress": {
-        "PostCode": "SW9 9PE"
+          "addressLine1": "Flat A-B",
+          "addressLine2": "86 Landor Road",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
       },
       "D8DerivedRespondentCorrespondenceAddr": "82 Landor Road\nLondon\nSW9 9PE",
       "D8RespondentCorrespondenceUseHomeAddress": "No",
