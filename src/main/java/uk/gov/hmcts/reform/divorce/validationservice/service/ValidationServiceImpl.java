@@ -22,12 +22,10 @@ public class ValidationServiceImpl implements ValidationService {
     private static final String FORM_ID = "case-progression";
 
     @Autowired
-    ValidationClient validationClient;
+    private ValidationClient validationClient;
     
     @Override
     public ValidationResponse validate(ValidationRequest request) {
-        log.debug("Validation request is:", request);
-
         return validationClient.validate(request);
     }
 
@@ -40,8 +38,6 @@ public class ValidationServiceImpl implements ValidationService {
         Map<String, Object> caseData = objectMapper.convertValue(
             coreCaseData, new TypeReference<Map<String, Object>>() {}
         );
-
-        log.debug("Converted coreCaseData to Map");
 
         ValidationRequest request = new ValidationRequest();
 

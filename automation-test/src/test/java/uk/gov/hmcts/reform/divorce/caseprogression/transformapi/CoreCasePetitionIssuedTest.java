@@ -25,7 +25,7 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldReturnSuccessWhenApdfIsCreated() throws Exception {
+    public void shouldReturnSuccessWhenAPDFIsCreated() throws Exception {
 
         Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
 
@@ -37,7 +37,7 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldReturnResponseWithErrorsWhenThereInvalidD8MarriageDate() throws Exception {
+    public void shouldReturnResponseWithErrorsWhenThereIsInvalidD8MarriageDate() throws Exception {
 
         Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-invalid-marriage-date.json"), petitionIssuedApiUrl);
 
