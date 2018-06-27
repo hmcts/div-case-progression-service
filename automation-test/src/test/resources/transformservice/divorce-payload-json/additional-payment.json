@@ -64,15 +64,6 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
-        "addressBaseUK": {
-            "addressLine1": "82 Landor Road",
-            "addressLine2": "",
-            "addressLine3": "",
-            "postCode": "SW9 9PE",
-            "postTown": "London",
-            "county": "",
-            "country": "UK"
-        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -93,15 +84,6 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
-        "addressBaseUK": {
-            "addressLine1": "82 Landor Road",
-            "addressLine2": "",
-            "addressLine3": "",
-            "postCode": "SW9 9PE",
-            "postTown": "London",
-            "county": "",
-            "country": "UK"
-        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -122,15 +104,6 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
-        "addressBaseUK": {
-            "addressLine1": "82 Landor Road",
-            "addressLine2": "",
-            "addressLine3": "",
-            "postCode": "SW9 9PE",
-            "postTown": "London",
-            "county": "",
-            "country": "UK"
-        },
         "url": "/petitioner-respondent/address",
         "formattedAddress": {
             "whereabouts": [
@@ -151,15 +124,6 @@
         "addressConfirmed": "true",
         "validPostcode": true,
         "postcodeError": "false",
-        "addressBaseUK": {
-            "addressLine1": "82 Landor Road",
-            "addressLine2": "",
-            "addressLine3": "",
-            "postCode": "SW9 9PE",
-            "postTown": "London",
-            "county": "",
-            "country": "UK"
-        },
         "url": "/petitioner-respondent/respondent-correspondence-address",
         "formattedAddress": {
             "whereabouts": [
@@ -244,14 +208,14 @@
     },
     "courts": "eastMidlands",
     "confirmPrayer": "Yes",
-    "payment" : {
+    "payment": {
         "PaymentChannel" : "card",
-        "PaymentTransactionId" : "111222333",
-        "PaymentReference" : "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
+        "PaymentTransactionId" : "123456789",
+        "PaymentReference" : "DIV1$$$012345a-ffff-42e9-951d-afe599e5o5o5$$$AA00$$$X0168",
         "PaymentDate" : "02022001",
-        "PaymentAmount" : "48000",
+        "PaymentAmount" : "12000",
         "PaymentStatus" : "success",
-        "PaymentFeeId" : "X0165",
+        "PaymentFeeId" : "X0168",
         "PaymentSiteId" : "AA00"
     },
     "existingPayments": [{
@@ -259,7 +223,7 @@
         "value" : {
             "PaymentChannel" : "card",
             "PaymentTransactionId" : "111222333",
-            "PaymentReference" : "DIV1$$$0642465a-ffff-42e9-951d-afe599e2d4d2$$$AA00$$$X0165",
+            "PaymentReference" : "DIV1$$$12345a-ffff-eeee-dddd-afe599e2d4d2$$$AA00$$$X0165",
             "PaymentDate" : "2001-02-02",
             "PaymentAmount" : "55000",
             "PaymentStatus" : "success",
