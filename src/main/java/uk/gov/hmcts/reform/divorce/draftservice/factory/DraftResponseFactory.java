@@ -17,7 +17,7 @@ public class DraftResponseFactory {
     private static final String SUBMISSION_STARTED = "submissionStarted";
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
-    private static final String CASE_STATE = "state";
+    private static final String CASE_STATE = "case_state";
     private static final String ID = "id";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
