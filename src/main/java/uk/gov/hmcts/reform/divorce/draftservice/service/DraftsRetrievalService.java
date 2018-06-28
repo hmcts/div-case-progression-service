@@ -18,15 +18,15 @@ class DraftsRetrievalService {
 
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
-    private final AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
+    private final CaseRetriever caseRetriever;
 
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever) {
+                                  CaseRetriever caseRetriever) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
-        this.awaitingPaymentCaseRetriever = awaitingPaymentCaseRetriever;
+        this.caseRetriever = caseRetriever;
     }
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
@@ -41,7 +41,7 @@ class DraftsRetrievalService {
         } else {
             log.info("Checking CCD for an existing case as draft not found");
             return DraftResponseFactory.buildDraftResponseFromCaseData(
-                awaitingPaymentCaseRetriever.getCases(userId, jwt));
+                caseRetriever.getCases(userId, jwt));
         }
     }
 
