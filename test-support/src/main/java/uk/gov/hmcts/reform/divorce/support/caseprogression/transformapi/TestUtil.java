@@ -12,10 +12,12 @@ public class TestUtil {
 
     private static final String CASE_ID = "caseId";
     private static final String ERROR = "error";
-    private static final Long ZERO_VALUE = new Long(0L);
+    private static final Long ZERO_VALUE = 0L;
+
+    private TestUtil() {}
 
     public static void assertOkResponseAndCaseIdIsNotZero(Response ccdResponse) {
-        assertEquals(Integer.valueOf(HttpStatus.OK.toString()).intValue(), ccdResponse.getStatusCode());
+        assertEquals(HttpStatus.OK.value(), ccdResponse.getStatusCode());
 
         assertNotEquals(ZERO_VALUE, extractCaseId(ccdResponse));
     }
@@ -26,7 +28,7 @@ public class TestUtil {
     }
 
     public static void assertResponseErrorsAreAsExpected(Response ccdResponse, String exception, String details) {
-        assertEquals(Integer.valueOf(HttpStatus.OK.toString()).intValue(), ccdResponse.getStatusCode());
+        assertEquals(HttpStatus.OK.value(), ccdResponse.getStatusCode());
 
         assertEquals(ZERO_VALUE, extractCaseId(ccdResponse));
         assertEquals(ERROR, ccdResponse.getBody().path("status").toString());

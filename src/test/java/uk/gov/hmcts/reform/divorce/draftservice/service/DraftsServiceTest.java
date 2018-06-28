@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,6 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
@@ -69,6 +70,9 @@ public class DraftsServiceTest {
     @Mock
     private UserService mockUserService;
 
+    @Mock
+    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+
     private JsonNode requestContent;
 
     private DraftsService underTest;
@@ -93,8 +97,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
         underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
-                mockDraftStoreClient,
-                mockDraftModelFactory);
+                mockDraftStoreClient, mockDraftModelFactory, mockAwaitingPaymentCaseRetriever);
     }
 
     @Test
@@ -157,6 +160,83 @@ public class DraftsServiceTest {
                 .updateDraft(JWT, DRAFT_ID, SECRET, updateDraft);
         verify(mockDraftStoreClient, times(0))
                 .createDraft(any(), any(), any());
+    }
+
+    @Test
+    public void saveDraftShouldCallTheCaseRetrievalServiceToFindAllCases() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        given(mockUserService.getUserDetails(JWT))
+            .willReturn(mockUserDetails);
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockAwaitingPaymentCaseRetriever).getCases(USER_ID, JWT);
+    }
+
+    @Test
+    public void saveDraftShouldNotCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasAnAwaitingPaymentCase() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        given(mockUserService.getUserDetails(JWT))
+            .willReturn(mockUserDetails);
+
+        given(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .willReturn(ImmutableList.of(ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verifyZeroInteractions(mockDraftStoreClient);
+    }
+
+    @Test
+    public void saveDraftShouldCallTheDraftStoreClientToSaveTheDraftWhenTheUserHasMoreThanOneAwaitingPaymentCase() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        when(mockUserService.getUserDetails(JWT))
+            .thenReturn(mockUserDetails);
+
+        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .thenReturn(ImmutableList.of(
+                ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap()),
+                ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
+
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
+
+        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+            .createDraft(JWT, SECRET, createDraft);
+    }
+
+    @Test
+    public void saveDraftShouldCallTheDraftStoreClientToSaveTheDraftWhenTheUserDoesNotHaveAnyAwaitingPaymentCases() {
+        UserDetails mockUserDetails = mock(UserDetails.class);
+        given(mockUserDetails.getId())
+            .willReturn(USER_ID);
+
+        when(mockUserService.getUserDetails(JWT))
+            .thenReturn(mockUserDetails);
+
+        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+            .thenReturn(Collections.emptyList());
+
+        when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
+
+        when(draftList.getData()).thenReturn(Collections.emptyList());
+
+        underTest.saveDraft(JWT, requestContent);
+
+        verify(mockDraftStoreClient)
+            .createDraft(JWT, SECRET, createDraft);
     }
 
     @Test

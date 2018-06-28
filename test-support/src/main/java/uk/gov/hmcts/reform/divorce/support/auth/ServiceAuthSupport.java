@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.support.auth;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
@@ -33,31 +32,31 @@ public class ServiceAuthSupport {
     @Autowired
     private ServiceAuthorisationApi serviceAuthorisationApi;
 
-    public synchronized String getServiceAuthTokenFor(ServiceAuthTokenFor serviceAuthTokenFor) {
+    public String getServiceAuthTokenFor(ServiceAuthTokenFor serviceAuthTokenFor) {
         if (serviceAuthTokenFor == null) {
             throw new IllegalArgumentException("ServiceAuthTokenFor is null. Cannot generate service token");
         }
 
-        String serviceToken = CACHED_TOKENS.get(serviceAuthTokenFor);
+        synchronized (this) {
+            String serviceToken = CACHED_TOKENS.get(serviceAuthTokenFor);
 
-        if (StringUtils.isBlank(serviceToken)) {
-            AuthTokenGenerator caseProgressionAuthTokenGenerator = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor);
-            if (caseProgressionAuthTokenGenerator != null) {
-                serviceToken = caseProgressionAuthTokenGenerator.generate();
+            if (StringUtils.isBlank(serviceToken)) {
+                AuthTokenGenerator caseProgressionAuthTokenGenerator = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor);
+                if (caseProgressionAuthTokenGenerator != null) {
+                    serviceToken = caseProgressionAuthTokenGenerator.generate();
+                }
+
+                CACHED_TOKENS.put(serviceAuthTokenFor, serviceToken);
             }
-
-            CACHED_TOKENS.put(serviceAuthTokenFor, serviceToken);
+            return serviceToken;
         }
-
-        return serviceToken;
     }
 
     private AuthTokenGenerator getCaseProgressionAuthTokenGenerator(ServiceAuthTokenFor serviceAuthTokenFor) {
-        switch (serviceAuthTokenFor) {
-            case CASE_PROGRESSION:
-                return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret, caseProgressionMicroserviceName, serviceAuthorisationApi);
-            case DIV_DOCUMENT_GENERATOR:
-                return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret, documentGeneratorMicroserviceName, serviceAuthorisationApi);
+        if (serviceAuthTokenFor == ServiceAuthTokenFor.CASE_PROGRESSION) {
+            return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret, caseProgressionMicroserviceName, serviceAuthorisationApi);
+        } else if (serviceAuthTokenFor == ServiceAuthTokenFor.DIV_DOCUMENT_GENERATOR) {
+            return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret, documentGeneratorMicroserviceName, serviceAuthorisationApi);
         }
 
         return null;

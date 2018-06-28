@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
-import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

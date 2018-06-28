@@ -30,26 +30,27 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
         String draft = "{\"message\": \"Hello World!\"}";
-
-        Response response = saveDivorceDraft(draft);
+        String token = getIdamTestUser();
+        Response response = saveDivorceDraft(token, draft);
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
-        Response draftStoreResponse = draftStoreClient.createDraft(getIdamTestUser(), savedDraft);
+        String token = getIdamTestUser();
+        Response draftStoreResponse = draftStoreClient.createDraft(token, savedDraft);
 
         assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
         String draft = "{\"message\": \"Hello World!\"}";
-        saveDivorceDraft(draft);
+        saveDivorceDraft(token, draft);
 
-        Response response = getDivorceDraft();
+        Response response = getDivorceDraft(token);
 
         assertEquals(HttpStatus.OK.value(), response.getStatusCode());
-        assertDraftIsSaved(draft);
+        assertDraftIsSaved(token, draft);
     }
 
     @Test
@@ -76,7 +77,6 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         // only execute on preview as feature toggle is currently only enabled on preview and prod
         if ("preview".equalsIgnoreCase(environment)) {
             // given
-            regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
             Response caseSubmissionResponse = submitCase("addresses.json");
 
             // when
@@ -87,7 +87,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
             Long caseId = TestUtil.extractCaseId(caseSubmissionResponse);
             Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
-            Boolean submissionStarted = new Boolean(draftResponse.getBody().path("submissionStarted").toString());
+            Boolean submissionStarted = Boolean.valueOf(draftResponse.getBody().path("submissionStarted").toString());
             String courts = draftResponse.getBody().path("courts").toString();
 
             assertEquals(caseId, draftResponseCaseId);
@@ -101,8 +101,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         deleteDivorceDraft();
     }
 
-    private void assertDraftIsSaved(String draft) {
-        List<Draft> drafts = draftStoreClient.getDivorceDrafts(getIdamTestUser());
+    private void assertDraftIsSaved(String token, String draft) {
+        List<Draft> drafts = draftStoreClient.getDivorceDrafts(token);
         assertEquals(1, drafts.size());
         JSONAssert.assertEquals(draft, drafts.get(0).getDocument().toString(), false);
     }
