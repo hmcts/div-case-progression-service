@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
@@ -106,8 +107,11 @@ public abstract class DivorceCaseToCCDMapper {
     @AfterMapping
     protected void mapReasonForDivorceBehaviourDetails(DivorceSession divorceSession,
                                                        @MappingTarget CoreCaseData result) {
-        result.setD8ReasonForDivorceBehaviourDetails(
-            emptyIfNull(divorceSession.getReasonForDivorceBehaviourDetails()).stream().findFirst().orElse(null));
+        if (Objects.nonNull(divorceSession.getReasonForDivorceBehaviourDetails())) {
+            result.setD8ReasonForDivorceBehaviourDetails(
+                divorceSession.getReasonForDivorceBehaviourDetails()
+                    .stream().collect(Collectors.joining("\n")));
+        }
     }
 
     @AfterMapping
