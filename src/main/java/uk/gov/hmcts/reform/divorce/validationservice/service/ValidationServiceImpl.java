@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.divorce.validationservice.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +14,6 @@ import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
 import java.util.Map;
 
 @Component
-@Slf4j
 public class ValidationServiceImpl implements ValidationService {
 
     private static final String FORM_ID = "case-progression";
@@ -31,8 +28,6 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Override
     public ValidationResponse validateCoreCaseData(CoreCaseData coreCaseData) {
-        log.info("Validating coreCaseData");
-
         ObjectMapper objectMapper = new ObjectMapper();
 
         Map<String, Object> caseData = objectMapper.convertValue(

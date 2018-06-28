@@ -13,6 +13,8 @@ import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
 @Component
 public class ValidationClientImpl implements ValidationClient {
 
+    private static final String VALIDATE_ENDPOINT = "/version/1/validate";
+
     @Autowired
     private ValidationHttpEntityFactory httpEntityFactory;
 
@@ -21,8 +23,6 @@ public class ValidationClientImpl implements ValidationClient {
 
     @Value("${div.validation.service.url}")
     private String validationServiceUrl;
-
-    private static final String VALIDATE_ENDPOINT = "/version/1/validate";
     
     @Override
     public ValidationResponse validate(ValidationRequest request) {
