@@ -29,10 +29,6 @@ public class IdamUserSupport {
         return generateClientToken(username, password);
     }
 
-    public void deleteUsers(List<String> usernames) {
-        usernames.forEach(this::deleteUser);
-    }
-
     private void createCitizen(String username, String password) {
         RestAssured.given()
             .header("Content-Type", "application/json")
@@ -77,11 +73,4 @@ public class IdamUserSupport {
             .body().path("code");
     }
 
-    private void deleteUser(String username) {
-        System.out.println("Deleting user " + username);
-        RestAssured.given().baseUri(idamUserBaseUrl)
-            .header("Accept", "application/json")
-            .header("Content-Type", "application/json")
-            .delete(String.format("testing-support/accounts/%s", username));
-    }
 }
