@@ -17,7 +17,6 @@
     "D8PetitionerPhoneNumber" : "01234567890",
     "D8PetitionerFirstName" : "John",
     "D8PetitionerLastName" : "Smith",
-    "D8DerivedPetitionerCurrentFullName" : "John Smith",
     "D8PetitionerNameChangedHow" : [ "marriageCertificate" ],
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
@@ -31,7 +30,6 @@
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
     "D8RespondentFirstName" : "Jane",
     "D8RespondentLastName" : "Jamed",
-    "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8RespondentHomeAddress" : {
       "PostCode" : "SW9 9PE"
     },
@@ -46,7 +44,6 @@
     "D8LegalProceedingsRelated" : [ "children" ],
     "D8LegalProceedingsDetails" : "The legal proceeding details",
     "D8ReasonForDivorce" : "desertion",
-    "D8DerivedStatementOfCase" : "I have been deserted by my husband on the 01 February 2015.\nHe told me that he is going to his mother. ",
     "D8ReasonForDivorceDesertionDate" : "2015-02-01",
     "D8ReasonForDivorceDesertionAgreed" : "YES",
     "D8ReasonForDivorceDesertionDetails" : "He told me that he is going to his mother. ",

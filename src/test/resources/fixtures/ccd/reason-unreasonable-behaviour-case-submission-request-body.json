@@ -17,7 +17,6 @@
     "D8PetitionerPhoneNumber" : "01234567890",
     "D8PetitionerFirstName" : "John",
     "D8PetitionerLastName" : "Smith",
-    "D8DerivedPetitionerCurrentFullName" : "John Smith",
     "D8PetitionerNameChangedHow" : [ "marriageCertificate" ],
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
@@ -31,7 +30,6 @@
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
     "D8RespondentFirstName" : "Jane",
     "D8RespondentLastName" : "Jamed",
-    "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8RespondentHomeAddress" : {
       "PostCode" : "SW9 9PE"
     },
@@ -46,7 +44,6 @@
     "D8LegalProceedingsRelated" : [ "children" ],
     "D8LegalProceedingsDetails" : "The legal proceeding details",
     "D8ReasonForDivorce" : "unreasonable-behaviour",
-    "D8DerivedStatementOfCase" : "My wife is having an affair this week.\nMy wife is having an affair next week.\nMy wife is always having an affair.",
     "D8ReasonForDivorceBehaviourDetails" : "My wife is having an affair this week.\nMy wife is having an affair next week.\nMy wife is always having an affair.",
     "D8ReasonForDivorceAdulteryIsNamed" : "NO",
     "D8FinancialOrder" : "YES",
