@@ -10,20 +10,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toList;
-
 @Component
 @Slf4j
-public class AwaitingPaymentCaseRetriever {
+public class CaseRetriever {
 
-    private static final String CASE_STATE = "state";
-    private static final String AWAITING_PAYMENT_STATE = "awaitingpayment";
     private final RetrieveCcdClient retrieveCcdClient;
     private final Boolean checkCcdEnabled;
 
     @Autowired
-    public AwaitingPaymentCaseRetriever(RetrieveCcdClient retrieveCcdClient,
-                                        @Value("${draft.api.ccd.check.enabled}") String checkCcdEnabled) {
+    public CaseRetriever(RetrieveCcdClient retrieveCcdClient,
+                         @Value("${draft.api.ccd.check.enabled}") String checkCcdEnabled) {
         this.retrieveCcdClient = retrieveCcdClient;
         this.checkCcdEnabled = Boolean.valueOf(checkCcdEnabled);
     }
@@ -36,20 +32,13 @@ public class AwaitingPaymentCaseRetriever {
 
         List<Map<String, Object>> cases = retrieveCcdClient.getCases(userId, jwt);
 
-        List<Map<String, Object>> awaitingPaymentCases = cases.stream()
-                .filter(caseData -> {
-                    Object status = caseData.get(CASE_STATE);
-                    return status != null && status.toString().equalsIgnoreCase(AWAITING_PAYMENT_STATE);
-                })
-                .collect(toList());
-
-        if (awaitingPaymentCases.isEmpty()) {
-            log.debug("No cases found awaiting payment");
+        if (cases.isEmpty()) {
+            log.debug("No cases found");
             return Collections.emptyList();
         }
 
-        log.info(String.format("Found %s cases awaiting payment", awaitingPaymentCases.size()));
+        log.info(String.format("Found %s cases", cases.size()));
 
-        return awaitingPaymentCases;
+        return cases;
     }
 }
