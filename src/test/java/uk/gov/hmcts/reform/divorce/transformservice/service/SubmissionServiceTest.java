@@ -44,20 +44,22 @@ public class SubmissionServiceTest {
 
     @Test
     public void submitReturnsCaseId() throws Exception {
-        DivorceSession divorceSession = new DivorceSession();
         final CaseDataContent caseDataContent = mock(CaseDataContent.class);
-        String jwt = "_jwt";
         String token = "_token";
         final String eventSummary = "Create case";
         int caseId = 2893;
-        String userId = "60";
-        String userEmail = "simulate-delivered@notifications.service.gov.uk";
-        UserDetails userDetails = UserDetails.builder().id(userId).email(userEmail).build();
-        divorceSession.setPetitionerEmail(userEmail);
         CreateEvent createEvent = new CreateEvent();
         createEvent.setToken(token);
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(caseId);
+
+        DivorceSession divorceSession = new DivorceSession();
+        String userId = "60";
+        String userEmail = "simulate-delivered@notifications.service.gov.uk";
+        UserDetails userDetails = UserDetails.builder().id(userId).email(userEmail).build();
+        divorceSession.setPetitionerEmail(userEmail);
+
+        String jwt = "_jwt";
 
         when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
