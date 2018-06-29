@@ -17,7 +17,7 @@ public class DraftResponseFactory {
     private static final String SUBMISSION_STARTED = "submissionStarted";
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
-    private static final String CASE_STATE = "case_state";
+    private static final String CASE_STATE = "state";
     private static final String ID = "id";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
@@ -48,7 +48,7 @@ public class DraftResponseFactory {
         Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
-        jsonNode.put(CASE_STATE, (String) caseData.get(CASE_STATE));
+        jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
 
         return DraftsResponse.builder()
                 .isDraft(false)
