@@ -24,7 +24,7 @@ public class DraftsService {
     private final EncryptionKeyFactory encryptionKeyFactory;
     private final DraftStoreClient draftStoreClient;
     private final DraftModelFactory draftModelFactory;
-    private final AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever;
+    private final CaseRetriever caseRetriever;
 
     @Autowired
     public DraftsService(DraftsRetrievalService draftsRetrievalService,
@@ -32,18 +32,18 @@ public class DraftsService {
                          EncryptionKeyFactory encryptionKeyFactory,
                          DraftStoreClient draftStoreClient,
                          DraftModelFactory draftModelFactory,
-                         AwaitingPaymentCaseRetriever awaitingPaymentCaseRetriever) {
+                         CaseRetriever caseRetriever) {
         this.draftsRetrievalService = draftsRetrievalService;
         this.userService = userService;
         this.encryptionKeyFactory = encryptionKeyFactory;
         this.draftStoreClient = draftStoreClient;
         this.draftModelFactory = draftModelFactory;
-        this.awaitingPaymentCaseRetriever = awaitingPaymentCaseRetriever;
+        this.caseRetriever = caseRetriever;
     }
 
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        List<Map<String, Object>> casesInCCD = awaitingPaymentCaseRetriever.getCases(userDetails.getId(), jwt);
+        List<Map<String, Object>> casesInCCD = caseRetriever.getCases(userDetails.getId(), jwt);
         if (casesInCCD.isEmpty() || casesInCCD.size() > 1) {
             String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
             DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
@@ -68,8 +68,8 @@ public class DraftsService {
         log.debug("Deleting the divorce session draft");
         UserDetails userDetails = userService.getUserDetails(jwt);
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt,
-                userDetails.getId(),
-                encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
+            userDetails.getId(),
+            encryptionKeyFactory.createEncryptionKey(userDetails.getId()));
         if (draftsResponse != null && draftsResponse.isDraft()) {
             draftStoreClient.deleteDraft(jwt, draftsResponse.getDraftId());
         }

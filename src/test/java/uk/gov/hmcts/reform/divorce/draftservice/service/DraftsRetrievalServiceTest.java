@@ -37,7 +37,7 @@ public class DraftsRetrievalServiceTest {
     @Mock
     private DraftStoreClient mockDraftStoreClient;
     @Mock
-    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+    private CaseRetriever mockCaseRetriever;
     @Mock
     private DraftList draftList;
     @Mock
@@ -56,8 +56,8 @@ public class DraftsRetrievalServiceTest {
     public void setUp() throws Exception {
 
         underTest = new DraftsRetrievalService(mockModelFactory,
-                mockDraftStoreClient,
-                mockAwaitingPaymentCaseRetriever);
+            mockDraftStoreClient,
+            mockCaseRetriever);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
@@ -102,9 +102,9 @@ public class DraftsRetrievalServiceTest {
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(ccdResponseData);
-        when(mockAwaitingPaymentCaseRetriever
-                .getCases(USER_ID, JWT))
-                .thenReturn(listOfCases);
+        when(mockCaseRetriever
+            .getCases(USER_ID, JWT))
+            .thenReturn(listOfCases);
 
         // when
         DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
