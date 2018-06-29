@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 
@@ -30,7 +31,7 @@ public class DraftResponseFactory {
 
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
 
-        if (listOfCasesInCCD == null || listOfCasesInCCD.isEmpty()) {
+        if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
             log.debug("No case found to build draft response");
             return DraftsResponse.emptyResponse();
         }
