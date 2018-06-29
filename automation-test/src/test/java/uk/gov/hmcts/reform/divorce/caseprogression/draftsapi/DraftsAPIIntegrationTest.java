@@ -77,10 +77,11 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         // only execute on preview as feature toggle is currently only enabled on preview and prod
         if ("preview".equalsIgnoreCase(environment)) {
             // given
-            Response caseSubmissionResponse = submitCase("addresses.json");
+            String userToken = getIdamTestUser();
+            Response caseSubmissionResponse = submitCase("addresses.json", userToken);
 
             // when
-            Response draftResponse = getDivorceDraft();
+            Response draftResponse = getDivorceDraft(userToken);
 
             // then
             assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());

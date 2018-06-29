@@ -103,6 +103,12 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         return postToRestService(loadJSON(fileName), transformationApiSubmitUrl);
     }
 
+    protected Response submitCase(String fileName, String userToken) throws Exception {
+        return postToRestService(loadJSON(fileName), transformationApiSubmitUrl, userToken);
+    }
+
+
+
     @Override
     protected ServiceAuthTokenFor getServiceAuthTokenFor() {
         return ServiceAuthTokenFor.CASE_PROGRESSION;

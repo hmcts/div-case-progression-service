@@ -34,33 +34,33 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void shouldReturnCaseIdWhenUpdatingDataAfterInitialSubmit() throws Exception {
-
-        String caseId = getCaseIdFromSubmittingANewCase();
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
         Response ccdResponse = postToRestService(loadJSON("update-addresses.json"),
-                String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+                String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
     }
 
     @Test
     public void shouldReturnCaseIdWhenUpdatingPaymentAfterUpdatingWithPaymentReference() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
+        postToRestService(loadJSON("update-payment-reference.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
-        postToRestService(loadJSON("update-payment-reference.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
-
-        Response ccdResponse = postToRestService(loadJSON("payment-update.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJSON("payment-update.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
     }
 
     @Test
     public void shouldReturnErrorWhenUpdatingDataWithInvalidRequestBody() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService(loadJSON("addresses.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJSON("addresses.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event null for case type DIVORCE\"");
     }
@@ -85,50 +85,50 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void shouldReturnErrorForInvalidEventId() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService(loadJSON("update-invalid-event-id.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJSON("update-invalid-event-id.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event invalidId for case type DIVORCE\"");
     }
 
     @Test
     public void shouldReturnErrorUpdatingWithCaseSameEventId() throws Exception {
-
-        String caseId = getCaseIdFromSubmittingANewCase();
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
         String updatePaymentJson = loadJSON("payment-update.json");
-        postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
-        Response ccdResponse = postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
+        Response ccdResponse = postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
 
     @Test
     public void shouldReturnErrorUpdatingWithCaseWrongFlowEventId() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService(loadJSON("update-with-pending-rejection.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJSON("update-with-pending-rejection.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
 
     @Test
     public void shouldReturnErrorForInvalidSessionData() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService(loadJSON("invalid-update-session.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJSON("invalid-update-session.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertResponseErrorsAreAsExpected(ccdResponse, CASE_VALIDATION_EXCEPTION, "\"details\":{\"field_errors\":[{\"id\":\"D8DivorceWho\",\"message\":\"notAValidValue is not a valid value\"}]}");
     }
 
     @Test
     public void shouldReturnErrorForInvalidUserJwtToken() throws Exception {
-
-        String caseId = getCaseIdFromSubmittingANewCase();
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
         Response ccdResponse = given()
                 .header("Authorization", getInvalidToken())
@@ -143,16 +143,16 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void shouldReturnBadRequestForNoRequestBody() throws Exception {
+        String userToken = getIdamTestUser();
+        String caseId = getCaseIdFromSubmittingANewCase(userToken);
 
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService("", String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService("", String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId), userToken);
 
         assertEquals(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()).intValue(), ccdResponse.getStatusCode());
     }
 
-    private String getCaseIdFromSubmittingANewCase() throws Exception {
-        return postToRestService(loadJSON("addresses.json"), transformationApiSubmitUrl)
+    private String getCaseIdFromSubmittingANewCase(String userToken) throws Exception {
+        return postToRestService(loadJSON("addresses.json"), transformationApiSubmitUrl, userToken)
                 .getBody().path("caseId").toString();
     }
 }
