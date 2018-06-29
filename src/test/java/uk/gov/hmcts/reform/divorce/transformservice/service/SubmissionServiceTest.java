@@ -44,14 +44,16 @@ public class SubmissionServiceTest {
 
     @Test
     public void submitReturnsCaseId() throws Exception {
-        final DivorceSession divorceSession = new DivorceSession();
+        DivorceSession divorceSession = new DivorceSession();
         final CaseDataContent caseDataContent = mock(CaseDataContent.class);
         String jwt = "_jwt";
         String token = "_token";
         final String eventSummary = "Create case";
         int caseId = 2893;
         String userId = "60";
-        UserDetails userDetails = UserDetails.builder().id(userId).build();
+        String userEmail = "simulate-delivered@notifications.service.gov.uk";
+        UserDetails userDetails = UserDetails.builder().id(userId).email(userEmail).build();
+        divorceSession.setPetitionerEmail(userEmail);
         CreateEvent createEvent = new CreateEvent();
         createEvent.setToken(token);
         SubmitEvent submitEvent = new SubmitEvent();

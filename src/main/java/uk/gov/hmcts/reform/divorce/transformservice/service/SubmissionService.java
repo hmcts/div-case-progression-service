@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 
+import java.util.Objects;
+
 @Component
 @Slf4j
 public class SubmissionService {
@@ -30,6 +32,10 @@ public class SubmissionService {
 
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
         UserDetails userDetails = userService.getUserDetails(jwt);
+        if (Objects.nonNull(userDetails)) {
+            divorceSessionData.setPetitionerEmail(userDetails.getEmail());
+        }
+
         CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
 
         SubmitEvent submitEvent = ccdClient.submitCase(userDetails, jwt,
