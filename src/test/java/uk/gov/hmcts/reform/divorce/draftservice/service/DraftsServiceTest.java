@@ -71,7 +71,7 @@ public class DraftsServiceTest {
     private UserService mockUserService;
 
     @Mock
-    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+    private CaseRetriever mockCaseRetriever;
 
     private JsonNode requestContent;
 
@@ -97,7 +97,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
         underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
-                mockDraftStoreClient, mockDraftModelFactory, mockAwaitingPaymentCaseRetriever);
+                mockDraftStoreClient, mockDraftModelFactory, mockCaseRetriever);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class DraftsServiceTest {
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(mockAwaitingPaymentCaseRetriever).getCases(USER_ID, JWT);
+        verify(mockCaseRetriever).getCases(USER_ID, JWT);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class DraftsServiceTest {
         given(mockUserService.getUserDetails(JWT))
             .willReturn(mockUserDetails);
 
-        given(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        given(mockCaseRetriever.getCases(USER_ID, JWT))
             .willReturn(ImmutableList.of(ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
 
         underTest.saveDraft(JWT, requestContent);
@@ -202,7 +202,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        when(mockCaseRetriever.getCases(USER_ID, JWT))
             .thenReturn(ImmutableList.of(
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap()),
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
@@ -226,7 +226,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        when(mockCaseRetriever.getCases(USER_ID, JWT))
             .thenReturn(Collections.emptyList());
 
         when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);
