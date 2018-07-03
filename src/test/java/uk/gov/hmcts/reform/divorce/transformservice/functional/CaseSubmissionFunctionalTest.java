@@ -59,8 +59,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CaseSubmissionFunctionalTest {
 
     private static final String USER_ID = "60";
-    private static final String JURISDICTION = "divorce";
-    private static final String CASE_TYPE_ID = "divorce";
+    private static final String JURISDICTION = "DIVORCE";
+    private static final String CASE_TYPE_ID = "DIVORCE";
     private static final String CCD_CITIZENS_ENDPOINT = "/citizens";
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private static final String REQUEST_ID_HEADER_KEY = "requestId";
