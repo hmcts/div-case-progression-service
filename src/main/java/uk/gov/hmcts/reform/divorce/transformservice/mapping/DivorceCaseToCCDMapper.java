@@ -94,6 +94,8 @@ public abstract class DivorceCaseToCCDMapper {
         expression =
             "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     @Mapping(source = "d8Documents", target = "d8Documents")
+    @Mapping(source = "respondentSolicitorName", target = "d8RespondentSolicitorName")
+    @Mapping(source = "respondentSolicitorCompany", target = "d8RespondentSolicitorCompany")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
     private String translateToStringYesNo(final String value) {
