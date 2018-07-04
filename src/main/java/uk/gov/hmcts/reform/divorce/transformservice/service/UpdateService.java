@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.transformservice.client.CcdEventClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CaseEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceEventSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.pdf.PdfFile;
@@ -47,8 +48,15 @@ public class UpdateService {
         CreateEvent createEvent = updateCcdEventClient.startEvent(userDetails, jwt, caseId,
             divorceEventSessionData.getEventId());
 
+        System.out.println("eventData " + divorceEventSessionData.getEventData());
+        System.out.println("createEvent " + createEvent);
+
+        CaseDataContent transformed = transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY);
+
+        System.out.println("CaseDataContent" + transformed);
+
         CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(userDetails, jwt, caseId,
-            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+                transformed);
 
         try {
             draftsService.deleteDraft(jwt);
