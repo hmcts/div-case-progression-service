@@ -146,7 +146,9 @@
   "reasonForDivorceLimitReasons": false,
   "reasonForDivorceEnableAdultery": true,
   "reasonForDivorceBehaviourDetails": [
-    "My wife is having an affair this week."
+    "My wife is having an affair this week.",
+    "My wife is having an affair next week.",
+    "My wife is always having an affair."
   ],
   "legalProceedings": "Yes",
   "legalProceedingsRelated": [
