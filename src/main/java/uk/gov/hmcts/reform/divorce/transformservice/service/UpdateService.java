@@ -51,7 +51,8 @@ public class UpdateService {
         System.out.println("eventData " + divorceEventSessionData.getEventData());
         System.out.println("createEvent " + createEvent);
 
-        CaseDataContent transformed = transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY);
+        CaseDataContent transformed = transformationService
+                .transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY);
 
         System.out.println("CaseDataContent" + transformed);
 
