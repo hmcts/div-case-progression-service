@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class DraftsService {
     private final EncryptionKeyFactory encryptionKeyFactory;
     private final DraftStoreClient draftStoreClient;
     private final DraftModelFactory draftModelFactory;
-    private final CaseRetriever caseRetriever;
+    private final RetrieveCcdClient retrieveCcdClient;
 
     @Autowired
     public DraftsService(DraftsRetrievalService draftsRetrievalService,
@@ -32,18 +33,18 @@ public class DraftsService {
                          EncryptionKeyFactory encryptionKeyFactory,
                          DraftStoreClient draftStoreClient,
                          DraftModelFactory draftModelFactory,
-                         CaseRetriever caseRetriever) {
+                         RetrieveCcdClient retrieveCcdClient) {
         this.draftsRetrievalService = draftsRetrievalService;
         this.userService = userService;
         this.encryptionKeyFactory = encryptionKeyFactory;
         this.draftStoreClient = draftStoreClient;
         this.draftModelFactory = draftModelFactory;
-        this.caseRetriever = caseRetriever;
+        this.retrieveCcdClient = retrieveCcdClient;
     }
 
     public void saveDraft(String jwt, JsonNode data) {
         UserDetails userDetails = userService.getUserDetails(jwt);
-        List<Map<String, Object>> casesInCCD = caseRetriever.getCases(userDetails.getId(), jwt);
+        List<Map<String, Object>> casesInCCD = retrieveCcdClient.getCases(userDetails.getId(), jwt);
         if (casesInCCD.isEmpty() || casesInCCD.size() > 1) {
             String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
             DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);

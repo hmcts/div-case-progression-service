@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.Optional;
 
@@ -18,15 +19,15 @@ class DraftsRetrievalService {
 
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
-    private final CaseRetriever caseRetriever;
+    private final RetrieveCcdClient retrieveCcdClient;
 
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  CaseRetriever caseRetriever) {
+                                  RetrieveCcdClient retrieveCcdClient) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
-        this.caseRetriever = caseRetriever;
+        this.retrieveCcdClient = retrieveCcdClient;
     }
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
@@ -41,7 +42,7 @@ class DraftsRetrievalService {
         } else {
             log.info("Checking CCD for an existing case as draft not found");
             return DraftResponseFactory.buildDraftResponseFromCaseData(
-                caseRetriever.getCases(userId, jwt));
+                retrieveCcdClient.getCases(userId, jwt));
         }
     }
 

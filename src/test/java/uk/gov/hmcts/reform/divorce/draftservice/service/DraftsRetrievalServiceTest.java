@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ public class DraftsRetrievalServiceTest {
     @Mock
     private DraftStoreClient mockDraftStoreClient;
     @Mock
-    private CaseRetriever mockCaseRetriever;
+    private RetrieveCcdClient mockRetrieveCcdClient;
     @Mock
     private DraftList draftList;
     @Mock
@@ -53,11 +54,11 @@ public class DraftsRetrievalServiceTest {
     private DraftsRetrievalService underTest;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         underTest = new DraftsRetrievalService(mockModelFactory,
             mockDraftStoreClient,
-            mockCaseRetriever);
+            mockRetrieveCcdClient);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
@@ -102,7 +103,7 @@ public class DraftsRetrievalServiceTest {
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(ccdResponseData);
-        when(mockCaseRetriever
+        when(mockRetrieveCcdClient
             .getCases(USER_ID, JWT))
             .thenReturn(listOfCases);
 
