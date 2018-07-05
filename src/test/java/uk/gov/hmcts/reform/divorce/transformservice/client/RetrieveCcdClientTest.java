@@ -91,7 +91,7 @@ public class RetrieveCcdClientTest {
 
         // then
         assertEquals(0, listOfCases.size());
-        verifyZeroInteractions(mockRestTemplate);
+        verifyZeroInteractions(mockRestTemplate, mockClientConfiguration, mockHttpEntityFactory);
     }
 
     @Test

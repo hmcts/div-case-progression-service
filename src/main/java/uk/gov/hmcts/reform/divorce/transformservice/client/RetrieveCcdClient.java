@@ -33,13 +33,12 @@ public class RetrieveCcdClient {
     }
 
     public List<Map<String, Object>> getCases(String userId, String jwt) {
-        String url = ccdClientConfiguration.getRetrieveCaseUrl(userId);
-        HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(jwt);
-
         if (!checkCcdEnabled) {
             return Collections.emptyList();
         }
 
+        String url = ccdClientConfiguration.getRetrieveCaseUrl(userId);
+        HttpEntity<String> httpEntity = httpEntityFactory.createRequestEntityForCcdGet(jwt);
         List<Map<String, Object>> cases = restTemplate.exchange(url, HttpMethod.GET, httpEntity, List.class).getBody();
 
         if (cases.isEmpty()) {
