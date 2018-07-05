@@ -31,7 +31,7 @@ public class SubmissionServiceTest {
     private SubmitCcdClient ccdClient;
 
     @Mock
-    private TransformationService transformationService;
+    private DivorceToCcdTransformationService transformationService;
 
     @Mock
     private DraftsService draftsService;

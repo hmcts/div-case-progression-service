@@ -38,7 +38,7 @@ public class UpdateServiceTest {
     private CcdEventClient ccdEventClient;
 
     @Mock
-    private TransformationService transformationService;
+    private DivorceToCcdTransformationServiceTemp transformationService;
 
     @Mock
     private PdfService pdfService;
