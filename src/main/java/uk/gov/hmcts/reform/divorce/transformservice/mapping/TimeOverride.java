@@ -5,11 +5,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
 
-/**
- * TODO: write about the class
- *
- * @author wjtlopez
- */
 public class TimeOverride {
 
 
