@@ -24,7 +24,7 @@ public class UpdateService {
     private CcdEventClient updateCcdEventClient;
 
     @Autowired
-    private TransformationService transformationService;
+    private DivorceToCcdTransformationServiceTemp transformationService;
 
     @Autowired
     private PdfService pdfService;

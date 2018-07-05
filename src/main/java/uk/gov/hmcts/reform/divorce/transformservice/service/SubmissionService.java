@@ -23,7 +23,7 @@ public class SubmissionService {
     private DraftsService draftsService;
 
     @Autowired
-    private TransformationService transformationService;
+    private DivorceToCcdTransformationService transformationService;
 
     @Autowired
     private UserService userService;
