@@ -24,7 +24,7 @@ public class UpdateService {
     private CcdEventClient updateCcdEventClient;
 
     @Autowired
-    private DivorceToCcdTransformationServiceTemp transformationService;
+    private DivorceToCcdTransformationService transformationService;
 
     @Autowired
     private PdfService pdfService;
@@ -52,7 +52,7 @@ public class UpdateService {
         System.out.println("createEvent " + createEvent);
 
         CaseDataContent transformed = transformationService
-                .transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY);
+                .transformUpdate(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY);
 
         System.out.println("CaseDataContent" + transformed);
 

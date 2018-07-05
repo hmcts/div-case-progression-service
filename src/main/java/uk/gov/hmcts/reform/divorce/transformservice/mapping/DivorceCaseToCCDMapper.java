@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.format.DateTimeFormat;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -90,9 +91,6 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "connectionSummary", target = "d8ConnectionSummary")
     @Mapping(source = "courts", target = "d8DivorceUnit")
     @Mapping(source = "marriageCertificateFiles", target = "d8DocumentsUploaded")
-    @Mapping(target = "createdDate",
-        expression =
-            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     @Mapping(source = "d8Documents", target = "d8Documents")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
