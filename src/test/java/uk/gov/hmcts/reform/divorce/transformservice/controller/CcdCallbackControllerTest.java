@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,12 +17,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.fees.models.Fee;
+import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.pay.service.PaymentService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.OrderSummary;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
@@ -40,6 +45,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -54,6 +60,7 @@ public class CcdCallbackControllerTest {
 
     private static final String ADD_PDF_URL = "/caseprogression/petition-issued";
     private static final String PETITION_SUBMITTED_URL = "/caseprogression/petition-submitted";
+    private static final String PETITION_ISSUE_FEES_URL = "/caseprogression/petition-issue-fees";
     private static final String AUTH_TOKEN = "test";
     private static final String AUTH_HEADER = "Authorization";
 
@@ -64,6 +71,12 @@ public class CcdCallbackControllerTest {
     public EmailService emailService;
     @MockBean
     private UpdateService updateService;
+
+    @MockBean
+    private FeesAndPaymentService feesAndPaymentService;
+
+    @MockBean
+    private PaymentService paymentService;
 
     private MockMvc mvc;
 
@@ -184,6 +197,45 @@ public class CcdCallbackControllerTest {
     }
 
     @Test
+    public void givenCallbackReceived_whenSolicitorFeesIsCalled_thenExceptToPopulateOrderSummary() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setOrderSummary(orderSummary);
+        caseDetails.setCaseData(coreCaseData);
+        submittedCase.setCaseDetails(caseDetails);
+
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2").amount(555.00).version(2).build());
+        mvc.perform(post(PETITION_ISSUE_FEES_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+
+    }
+
+    //TODO: do some more code to add this test on positive and a negative scenario.
+    @Test
+    public void givenCallbackReceived_whenToProcessPBAPayments_thenExceptToSucceedWithPayment() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setOrderSummary(orderSummary);
+        caseDetails.setCaseData(coreCaseData);
+        submittedCase.setCaseDetails(caseDetails);
+
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2").amount(555.00).version(2).build());
+        mvc.perform(post(PETITION_ISSUE_FEES_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+
+    }
+
+    @Test
     public void givenPetitionerEmailAndEastMidlands_whenPetitionSubmittedEndpointIsCalled_thenEmailServiceIsCalled() throws Exception {
         CoreCaseData coreCaseData = new CoreCaseData();
         coreCaseData.setD8PetitionerEmail("example@email.com");
@@ -285,7 +337,7 @@ public class CcdCallbackControllerTest {
 
     private Map<String, String> getTemplateVars(String divorceUnit) {
         Map<String, String> templateVars = new HashMap<>();
-        
+
         templateVars.put("email address", "example@email.com");
         templateVars.put("first name",    null);
         templateVars.put("last name",     null);

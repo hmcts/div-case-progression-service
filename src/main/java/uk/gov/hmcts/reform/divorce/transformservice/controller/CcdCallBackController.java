@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -13,22 +14,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.divorce.fees.models.Fee;
+import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.pay.service.PaymentService;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.OrderSummary;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 @RestController
 @RequestMapping(path = "/caseprogression")
 @Api(value = "Transformation API", consumes = "application/json", produces = "application/json")
 public class CcdCallBackController {
+
+    @Autowired
+    private PaymentService paymentService;
 
     private enum Courts {
         EASTMIDLANDS("East Midlands Regional Divorce Centre"),
@@ -51,6 +63,9 @@ public class CcdCallBackController {
     private UpdateService updateService;
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private FeesAndPaymentService feesAndPaymentService;
 
     @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON,
         produces = MediaType.APPLICATION_JSON)
@@ -76,7 +91,7 @@ public class CcdCallBackController {
         @ApiResponse(code = 200, message = "An email notification has been generated and dispatched",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-        })
+    })
     public ResponseEntity<CCDCallbackResponse> petitionSubmitted(
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
@@ -99,4 +114,71 @@ public class CcdCallBackController {
 
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
     }
+
+    @PostMapping(path = "/petition-issue-fees",
+        consumes = MediaType.APPLICATION_JSON,
+        produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Return a order summary for petition issue")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Petition issue fee amount is send to CCD as callback response",
+            response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request")
+    })
+    public ResponseEntity<CCDCallbackResponse> getPetitionIssueFees(@RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+                Fee issueFee = feesAndPaymentService.getPetitionIssueFee();
+        CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.add(issueFee);
+        caseData.setOrderSummary(orderSummary);
+        CCDCallbackResponse ccdCallbackResponse = new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(System.out, ccdCallbackResponse);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(ccdCallbackResponse);
+    }
+
+    @PostMapping(path = "/process-pba-payment", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Solicitor pay callback")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Callback to receive payment from the solicitor",
+            response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request")
+    })
+    public ResponseEntity<CCDCallbackResponse> processPBAPayment(  @RequestHeader(value = "Authorization") String authorizationToken,
+                                                                   @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+        CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
+        setOrderSummary(caseData); //TODO: please remove me.
+        paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
+        return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
+    }
+
+    @PostMapping(path = "/solicitor-create", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Solicitor pay callback")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Callback to populate missing requirement fields when creating solicitor cases.",
+            response = CCDCallbackResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request")
+    })
+    public ResponseEntity<CCDCallbackResponse> solicitorCreate(  @RequestHeader(value = "Authorization") String authorizationToken,
+                                                                   @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+        CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
+        caseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
+        caseData.setD8DivorceUnit("northWest");
+        caseData.setD8SelectedDivorceCentreSiteId("AA04");
+        return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
+    }
+
+    private void setOrderSummary(CoreCaseData coreCaseData) {
+        Fee issueFee = feesAndPaymentService.getPetitionIssueFee();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.add(issueFee);
+        coreCaseData.setOrderSummary(orderSummary);
+    }
+
+
 }
