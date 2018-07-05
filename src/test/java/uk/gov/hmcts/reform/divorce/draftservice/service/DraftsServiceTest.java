@@ -72,7 +72,7 @@ public class DraftsServiceTest {
     private UserService mockUserService;
 
     @Mock
-    private RetrieveCcdClient MockRetrieveCcdClient;
+    private RetrieveCcdClient mockRetrieveCcdClient;
 
     private JsonNode requestContent;
 
@@ -98,7 +98,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
         underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
-                mockDraftStoreClient, mockDraftModelFactory, MockRetrieveCcdClient);
+                mockDraftStoreClient, mockDraftModelFactory, mockRetrieveCcdClient);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class DraftsServiceTest {
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(MockRetrieveCcdClient).getCases(USER_ID, JWT);
+        verify(mockRetrieveCcdClient).getCases(USER_ID, JWT);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class DraftsServiceTest {
         given(mockUserService.getUserDetails(JWT))
             .willReturn(mockUserDetails);
 
-        given(MockRetrieveCcdClient.getCases(USER_ID, JWT))
+        given(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .willReturn(ImmutableList.of(ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
 
         underTest.saveDraft(JWT, requestContent);
@@ -203,7 +203,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(MockRetrieveCcdClient.getCases(USER_ID, JWT))
+        when(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .thenReturn(ImmutableList.of(
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap()),
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
@@ -227,7 +227,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(MockRetrieveCcdClient.getCases(USER_ID, JWT))
+        when(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .thenReturn(Collections.emptyList());
 
         when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);

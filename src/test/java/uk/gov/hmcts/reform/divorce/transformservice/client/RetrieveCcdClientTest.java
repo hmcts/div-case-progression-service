@@ -34,11 +34,11 @@ public class RetrieveCcdClientTest {
     @Mock
     private TransformationHttpEntityFactory mockHttpEntityFactory;
 
-    private RetrieveCcdClient underTest;
-
     private HttpEntity<String> mockHttpEntity;
 
     private ResponseEntity<List> mockResponseEntity;
+
+    private RetrieveCcdClient underTest;
 
     private List<Map<String, Object>> listOfCases;
 
@@ -54,11 +54,17 @@ public class RetrieveCcdClientTest {
         given(mockHttpEntityFactory.createRequestEntityForCcdGet(JWT))
             .willReturn(mockHttpEntity);
 
-        given(mockRestTemplate.exchange(EXPECTED_URL, HttpMethod.GET, mockHttpEntity, List.class))
+        given(mockRestTemplate.exchange(EXPECTED_URL,
+            HttpMethod.GET,
+            mockHttpEntity,
+            List.class))
             .willReturn(mockResponseEntity);
 
         String checkCcdEnabled = "true";
-        underTest = new RetrieveCcdClient(mockClientConfiguration, mockRestTemplate, mockHttpEntityFactory, checkCcdEnabled);
+        underTest = new RetrieveCcdClient(mockClientConfiguration,
+            mockRestTemplate,
+            mockHttpEntityFactory,
+            checkCcdEnabled);
     }
 
     @Test
@@ -67,7 +73,10 @@ public class RetrieveCcdClientTest {
         //given
         List expectedListOfCases = mock(List.class);
         given(mockResponseEntity.getBody()).willReturn(expectedListOfCases);
-        given(mockRestTemplate.exchange(EXPECTED_URL, HttpMethod.GET, mockHttpEntity, List.class))
+        given(mockRestTemplate.exchange(EXPECTED_URL,
+            HttpMethod.GET,
+            mockHttpEntity,
+            List.class))
                 .willReturn(mockResponseEntity);
 
         // when
@@ -84,14 +93,19 @@ public class RetrieveCcdClientTest {
         List expectedListOfCases = mock(List.class);
         given(mockResponseEntity.getBody()).willReturn(expectedListOfCases);
         String checkCcdEnabled = "false";
-        underTest = new RetrieveCcdClient(mockClientConfiguration, mockRestTemplate, mockHttpEntityFactory, checkCcdEnabled);
+        underTest = new RetrieveCcdClient(mockClientConfiguration,
+            mockRestTemplate,
+            mockHttpEntityFactory,
+            checkCcdEnabled);
 
         // when
         listOfCases = underTest.getCases(USER_ID, JWT);
 
         // then
         assertEquals(0, listOfCases.size());
-        verifyZeroInteractions(mockRestTemplate, mockClientConfiguration, mockHttpEntityFactory);
+        verifyZeroInteractions(mockRestTemplate,
+            mockClientConfiguration,
+            mockHttpEntityFactory);
     }
 
     @Test
