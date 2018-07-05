@@ -8,24 +8,17 @@ import lombok.Data;
 @Data
 public class AddressBaseUk {
 
-    @JsonProperty("addressLine1")
     private String addressLine1;
 
-    @JsonProperty("addressLine2")
     private String addressLine2;
 
-    @JsonProperty("addressLine3")
     private String addressLine3;
 
-    @JsonProperty("postTown")
     private String postTown;
 
-    @JsonProperty("postCode")
     private String postCode;
 
-    @JsonProperty("county")
     private String county;
 
-    @JsonProperty("country")
     private String country;
 }
