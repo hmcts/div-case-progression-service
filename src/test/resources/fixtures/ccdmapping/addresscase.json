@@ -70,8 +70,8 @@
         "country": "UK"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
-    "D8RespondentSolicitorName" : null,
-    "D8RespondentSolicitorCompany" : null,
+    "D8RespondentSolicitorName" : "Justin",
+    "D8RespondentSolicitorCompany" : "Case",
     "D8RespondentCorrespondenceSendToSol" : null,
     "D8RespondentSolicitorAddress" : {
         "addressLine1": "90 Landor Road",

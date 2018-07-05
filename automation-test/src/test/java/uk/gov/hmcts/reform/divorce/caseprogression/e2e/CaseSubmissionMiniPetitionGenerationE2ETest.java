@@ -8,9 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import uk.gov.hmcts.reform.divorce.auth.model.ServiceAuthTokenFor;
-import uk.gov.hmcts.reform.divorce.caseprogression.BaseIntegrationTest;
-import uk.gov.hmcts.reform.divorce.emclient.EvidenceManagementUtil;
+import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
+import uk.gov.hmcts.reform.divorce.support.caseprogression.BaseIntegrationTest;
+import uk.gov.hmcts.reform.divorce.support.emclient.EvidenceManagementUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

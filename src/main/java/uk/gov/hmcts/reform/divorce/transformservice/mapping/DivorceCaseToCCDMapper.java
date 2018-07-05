@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
@@ -99,6 +100,8 @@ public abstract class DivorceCaseToCCDMapper {
         expression =
             "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     @Mapping(source = "d8Documents", target = "d8Documents")
+    @Mapping(source = "respondentSolicitorName", target = "d8RespondentSolicitorName")
+    @Mapping(source = "respondentSolicitorCompany", target = "d8RespondentSolicitorCompany")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
     private String translateToStringYesNo(final String value) {
@@ -111,8 +114,11 @@ public abstract class DivorceCaseToCCDMapper {
     @AfterMapping
     protected void mapReasonForDivorceBehaviourDetails(DivorceSession divorceSession,
                                                        @MappingTarget CoreCaseData result) {
-        result.setD8ReasonForDivorceBehaviourDetails(
-            emptyIfNull(divorceSession.getReasonForDivorceBehaviourDetails()).stream().findFirst().orElse(null));
+        if (Objects.nonNull(divorceSession.getReasonForDivorceBehaviourDetails())) {
+            result.setD8ReasonForDivorceBehaviourDetails(
+                divorceSession.getReasonForDivorceBehaviourDetails()
+                    .stream().collect(Collectors.joining("\n")));
+        }
     }
 
     @AfterMapping

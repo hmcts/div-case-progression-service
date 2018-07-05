@@ -6,14 +6,13 @@
     "httpOnly": true,
     "path": "/"
   },
-  "expires": 1507916125312,
+  "expires": 1507919805739,
   "screenHasMarriageBroken": "Yes",
   "screenHasRespondentAddress": "Yes",
   "screenHasMarriageCert": "Yes",
   "screenHasPrinter": "Yes",
-  "helpWithFeesNeedHelp": "Yes",
-  "helpWithFeesAppliedForFees": "Yes",
-  "helpWithFeesReferenceNumber": "HWF-123-456",
+  "helpWithFeesNeedHelp": "No",
+  "helpWithFeesAppliedForFees": "No",
   "divorceWho": "husband",
   "marriageIsSameSexCouple": "No",
   "marriageDateDay": 2,
@@ -28,18 +27,6 @@
     "JurisdictionHabitualResidence",
     "JurisdictionInterstitial"
   ],
-  "jurisdictionConnection": [
-    "A",
-    "C"
-  ],
-  "connections": {
-    "A": "The Petitioner and the Respondent are habitually resident in England and Wales",
-    "C": "The Respondent is habitually resident in England and Wales"
-  },
-  "jurisdictionPetitionerResidence": "Yes",
-  "jurisdictionRespondentResidence": "Yes",
-  "jurisdictionConfidentLegal": "Yes",
-  "jurisdictionConnectionFirst": "A",
   "petitionerContactDetailsConfidential": "share",
   "petitionerFirstName": "John",
   "petitionerLastName": "Smith",
@@ -51,7 +38,7 @@
   "petitionerNameChangedHow": [
     "marriageCertificate"
   ],
-  "petitionerEmail": "simulate-delivered@notifications.service.gov.uk",
+  "petitionerEmail": "email@email.com",
   "petitionerPhoneNumber": "01234567890",
   "petitionerHomeAddress": {
     "addressType": "postcode",
@@ -64,15 +51,6 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
-    "addressBaseUK": {
-          "addressLine1": "82 Landor Road",
-          "addressLine2": "",
-          "addressLine3": "",
-          "postCode": "SW9 9PE",
-          "postTown": "London",
-          "county": "",
-          "country": "UK"
-    },
     "url": "/petitioner-respondent/address",
     "formattedAddress": {
       "whereabouts": [
@@ -82,96 +60,9 @@
       "postcode": "SW9 9PE"
     }
   },
-  "petitionerCorrespondenceUseHomeAddress": "Yes",
-  "petitionerCorrespondenceAddress": {
-    "addressType": "postcode",
-    "postcode": "SW9 9PE",
-    "address": [
-      "82 Landor Road",
-      "London",
-      "SW9 9PE"
-    ],
-    "addressConfirmed": "true",
-    "validPostcode": true,
-    "postcodeError": "false",
-    "addressBaseUK": {
-          "addressLine1": "82 Landor Road",
-          "addressLine2": "",
-          "addressLine3": "",
-          "postCode": "SW9 9PE",
-          "postTown": "London",
-          "county": "",
-          "country": "UK"
-    },
-    "url": "/petitioner-respondent/address",
-    "formattedAddress": {
-      "whereabouts": [
-        "82 Landor Road",
-        "London"
-      ],
-      "postcode": "SW9 9PE"
-    }
-  },
-  "livingArrangementsLiveTogether": "Yes",
-  "respondentHomeAddress": {
-    "addressType": "postcode",
-    "postcode": "SW9 9PE",
-    "address": [
-      "82 Landor Road",
-      "London",
-      "SW9 9PE"
-    ],
-    "addressConfirmed": "true",
-    "validPostcode": true,
-    "postcodeError": "false",
-    "addressBaseUK": {
-          "addressLine1": "82 Landor Road",
-          "addressLine2": "",
-          "addressLine3": "",
-          "postCode": "SW9 9PE",
-          "postTown": "London",
-          "county": "",
-          "country": "UK"
-    },
-    "url": "/petitioner-respondent/address",
-    "formattedAddress": {
-      "whereabouts": [
-        "82 Landor Road",
-        "London"
-      ],
-      "postcode": "SW9 9PE"
-    }
-  },
-  "respondentCorrespondenceUseHomeAddress": "No",
-  "respondentCorrespondenceAddress": {
-    "addressType": "postcode",
-    "postcode": "SW9 9PE",
-    "address": [
-      "82 Landor Road",
-      "London",
-      "SW9 9PE"
-    ],
-    "addressConfirmed": "true",
-    "validPostcode": true,
-    "postcodeError": "false",
-      "addressBaseUK": {
-          "addressLine1": "82 Landor Road",
-          "addressLine2": "",
-          "addressLine3": "",
-          "postCode": "SW9 9PE",
-          "postTown": "London",
-          "county": "",
-          "country": "UK"
-    },
-    "url": "/petitioner-respondent/respondent-correspondence-address",
-    "formattedAddress": {
-      "whereabouts": [
-        "82 Landor Road",
-        "London"
-      ],
-      "postcode": "SW9 9PE"
-    }
-  },
+  "petitionerCorrespondenceUseHomeAddress": "No",
+  "livingArrangementsLiveTogether": "No",
+  "respondentCorrespondenceUseHomeAddress": "Solicitor",
   "reasonForDivorce": "unreasonable-behaviour",
   "reasonForDivorceHasMarriageDate": true,
   "reasonForDivorceShowAdultery": true,
@@ -182,9 +73,7 @@
   "reasonForDivorceLimitReasons": false,
   "reasonForDivorceEnableAdultery": true,
   "reasonForDivorceBehaviourDetails": [
-    "My wife is having an affair this week.",
-    "My wife is having an affair next week.",
-    "My wife is always having an affair."
+    "My wife is having an affair this week."
   ],
   "legalProceedings": "Yes",
   "legalProceedingsRelated": [
@@ -211,7 +100,7 @@
       "lastModifiedBy" : 12661,
       "modifiedOn" : "2017-12-11",
       "fileName" : "govuklogo.png",
-      "fileUrl" : "http://localhost:5006/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
+      "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
       "mimeType" : "image/png",
       "status" : "OK"
     },
@@ -221,7 +110,7 @@
       "lastModifiedBy" : 12661,
       "modifiedOn" : "2017-12-11",
       "fileName" : "d8-eng.pdf",
-      "fileUrl" : "http://localhost:5006/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
+      "fileUrl" : "https://api-gateway.test.dm.reform.hmcts.net/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
       "mimeType" : "application/pdf",
       "status" : "OK"
     }
@@ -256,5 +145,127 @@
     }
   },
   "courts": "eastMidlands",
-  "sessionKey": "744e590518fd5a8114fe6c280df7ef9488b9b29c839ea08eef567cda752369b3:f0e0d0b7c03d6d0ffaf0e302f1c385d0:1f29a3d9dd276937ebdc06fff8fa8424c9bac0a15ab881feb518fb5e31d6fc09a37615ba5f728e99676810c40510ab80e9719aa1d595bb45a18709f47e9d9102"
+  "jurisdictionConnection": [
+    "A",
+    "C"
+  ],
+  "connections": {
+    "A": "The Petitioner and the Respondent are habitually resident in England and Wales",
+    "C": "The Respondent is habitually resident in England and Wales"
+  },
+  "jurisdictionPetitionerResidence": "Yes",
+  "jurisdictionRespondentResidence": "Yes",
+  "jurisdictionConfidentLegal": "Yes",
+  "jurisdictionConnectionFirst": "A",
+  "respondentCorrespondenceAddress": {
+    "addressType": "postcode",
+    "postcode": "SW9 9PE",
+    "address": [
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/respondent-correspondence-address",
+    "formattedAddress": {
+      "whereabouts": [
+        "82 Landor Road",
+        "London"
+      ],
+      "postcode": "SW9 9PE"
+    }
+  },
+  "petitionerCorrespondenceAddress": {
+    "addressType": "postcode",
+    "postcode": "AB24 232",
+    "address": [
+      "84 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/petitioner-correspondence-address",
+    "formattedAddress": {
+      "whereabouts": [
+        "84 Landor Road",
+        "London",
+        "SW9 9PE"
+      ],
+      "postcode": "AB24 232"
+    }
+  },
+  "livingArrangementsLastLivedTogether": "No",
+  "livingArrangementsLastLivedTogetherAddress": {
+    "addressType": "postcode",
+    "postcode": "AB22 222",
+    "address": [
+      "Flat A-B",
+      "86 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/last-lived-together-address",
+    "formattedAddress": {
+      "whereabouts": [
+        "Flat A-B",
+        "86 Landor Road",
+        "London",
+        "SW9 9PE"
+      ],
+      "postcode": "AB22 222"
+    }
+  },
+  "respondentLivesAtLastAddress": "No",
+  "respondentHomeAddress": {
+    "addressType": "postcode",
+    "postcode": "SS SSS",
+    "address": [
+      "88 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/home-address",
+    "formattedAddress": {
+      "whereabouts": [
+        "88 Landor Road",
+        "London",
+        "SW9 9PE"
+      ],
+      "postcode": "SS SSS"
+    }
+  },
+  "respondentSolicitorName": "Justin",
+  "respondentSolicitorCompany": "Case",
+  "respondentSolicitorAddress": {
+    "addressType": "postcode",
+    "postcode": "A AAA",
+    "address": [
+      "90 Landor Road",
+      "London",
+      "SW9 9PE"
+    ],
+    "addressConfirmed": "true",
+    "validPostcode": true,
+    "postcodeError": "false",
+    "url": "/petitioner-respondent/solicitor/address",
+    "formattedAddress": {
+      "whereabouts": [
+        "90 Landor Road",
+        "London",
+        "SW9 9PE"
+      ],
+      "postcode": "A AAA"
+    }
+  },
+  "sessionKey": "4d3750ad58d94896a0042b4ad4ac8e3ec3aca0723826a81c7adc6dcd1ddee5a1:9cc8a76688bde61315e40e5e13866078:85bc7a64fe2f7ee61e3a086d70b910cb03d60c308dfecf42bae1d63bb0850eca7060fd7c0b4c14dfaacb45679d8bc8287b1ae85718e75b137a2d0386f784e952"
 }
