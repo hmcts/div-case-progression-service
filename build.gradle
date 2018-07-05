@@ -212,7 +212,7 @@ task printVersion {
 
 sonarqube {
     properties {
-        property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*,**uk/gov/hmcts/reform/divorce/support/**"
+        property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.projectKey", "DivorceCaseProgressionService"
         property "sonar.projectName", "Divorce :: case-progression-service"
