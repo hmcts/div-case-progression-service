@@ -100,3 +100,7 @@ variable "idam_api_baseurl" {
 variable "draft_check_ccd_enabled" {
     default = false
 }
+
+variable "common_tags" {
+    type = "map"
+}
