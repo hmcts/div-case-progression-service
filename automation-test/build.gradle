@@ -56,6 +56,7 @@ dependencies {
 
     testCompile group: 'uk.gov.hmcts.reform', name: 'java-logging', version:'2.0.2'
     testCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
+    testCompile project(':test-support')
 }
 
 // Hook into the gradle processTestResources task to execute the copyPropsFile custom task

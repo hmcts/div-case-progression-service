@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.auth;
+package uk.gov.hmcts.reform.divorce.support.auth;
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +13,7 @@ public class IdamUserSupport {
 
     private static final String idamCaseworkerUser = "CaseWorkerTest";
 
-    private static final String idamCaseworkerPassword = "password";
+    private static final String idamCaseworkerPw = "password";
 
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
@@ -26,40 +26,54 @@ public class IdamUserSupport {
 
     private String testCaseworkerJwtToken;
 
+    public String generateNewUserAndReturnToken() {
+        String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
+        String password = UUID.randomUUID().toString();
+        createUserInIdam(username, password);
+        return generateUserTokenWithNoRoles(username, password);
+    }
+
     public synchronized String getIdamTestUser() {
         if (StringUtils.isBlank(testUserJwtToken)) {
-            createUserInIdam();
-            testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
+            createUserAndToken();
         }
-
         return testUserJwtToken;
+    }
+
+    protected void createUserAndToken() {
+        createUserInIdam();
+        testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
     }
 
     public synchronized String getIdamTestCaseWorkerUser() {
         if (StringUtils.isBlank(testCaseworkerJwtToken)) {
             createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPassword);
+            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPw);
         }
 
         return testCaseworkerJwtToken;
+    }
+
+    private void createUserInIdam(String username, String password) {
+        RestAssured.given()
+            .header("Content-Type", "application/json")
+            .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
+            .post(idamCreateUrl());
     }
 
     private void createUserInIdam() {
         idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
         idamPassword = UUID.randomUUID().toString();
 
-        RestAssured.given()
-                .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamUsername + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + idamPassword + "\"}")
-                .post(idamCreateUrl());
+        createUserInIdam(idamUsername, idamPassword);
     }
 
     private void createCaseworkerUserInIdam() {
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPassword + "\", "
-                        + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPw + "\", "
+                        + "\"roles\":[\"caseworker-divorce.support\"], \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
     }
 
@@ -71,7 +85,7 @@ public class IdamUserSupport {
         final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
         final String token = RestAssured.given().baseUri(idamUserBaseUrl)
             .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=token&client_id=divorce&redirect_uri="
+            .post("/oauth2/authorize?response_type=token&client_id=divorce.support&redirect_uri="
                 + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
             .body()
             .path("access-token");
