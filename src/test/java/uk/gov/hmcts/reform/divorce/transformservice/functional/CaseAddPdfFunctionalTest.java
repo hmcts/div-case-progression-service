@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.transformservice.functional;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.commons.io.FileUtils;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class CaseAddPdfFunctionalTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Ignore
     @Test
     public void shouldReturnCaseDataWhenAddPdf() throws Exception {
         String requestBody = loadResourceAsString("/divorce-payload-json/add-pdf.json");

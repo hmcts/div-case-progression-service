@@ -4,6 +4,8 @@ locals {
     local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
 
     pdf_generator_base_url = "http://div-dgs-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    fees_and_payments_base_url= "http://div-fps-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    payment_api_base_url= "http://payment-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
@@ -57,6 +59,8 @@ module "div-case-progression" {
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        PAYMENT_API_BASEURL = "${local.payment_api_base_url}"
+        FEES_AND_PAYMENTS_BASE_URL="${local.fees_and_payments_base_url}"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
     }
 }
