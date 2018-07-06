@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.pay.models.request;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,5 +47,10 @@ public class CreditAccountPaymentRequest{
 
 	@JsonProperty("organisation_name")
 	private String organisationName;
+
+    public void setAmount(String amount) {
+        String value = Optional.ofNullable(amount).map(Double::parseDouble).map(i -> i /100).map(String::valueOf).orElse(amount);
+        this.amount = value;
+    }
 
 }

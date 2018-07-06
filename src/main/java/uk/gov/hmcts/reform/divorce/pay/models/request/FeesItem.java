@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.annotation.Generated;
+import java.util.Optional;
 
 @Data
 @ToString
@@ -35,5 +36,10 @@ public class FeesItem{
 
 	@JsonProperty("version")
 	private String version;
+
+    public void setCalculatedAmount(String calculatedAmount) {
+        String value = Optional.ofNullable(calculatedAmount).map(Double::parseDouble).map(i -> i /100).map(String::valueOf).orElse(calculatedAmount);
+        this.calculatedAmount = value;
+    }
 
 }

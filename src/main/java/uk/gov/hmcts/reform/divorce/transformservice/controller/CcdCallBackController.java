@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
-import uk.gov.hmcts.reform.divorce.pay.service.PaymentService;
+import uk.gov.hmcts.reform.divorce.pay.services.PaymentService;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.OrderSummary;
@@ -131,14 +131,15 @@ public class CcdCallBackController {
         orderSummary.add(issueFee);
         caseData.setOrderSummary(orderSummary);
         CCDCallbackResponse ccdCallbackResponse = new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>());
+        //TODO:remove me
+        /**
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(System.out, ccdCallbackResponse);
         } catch (IOException e) {
 
             e.printStackTrace();
-        }
-
+        }*/
         return ResponseEntity.ok(ccdCallbackResponse);
     }
 

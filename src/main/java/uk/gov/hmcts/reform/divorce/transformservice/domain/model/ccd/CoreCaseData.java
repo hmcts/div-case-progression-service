@@ -427,5 +427,9 @@ public class CoreCaseData {
 
     @JsonProperty("D8SelectedDivorceCentreSiteId")
     private String d8SelectedDivorceCentreSiteId;
+
+    @JsonProperty("PetitionerSolicitorFirm")
+    private String petitionerSolicitorFirm;
+
 }
 

@@ -18,4 +18,6 @@ public class Fee {
     double amount;
 
     int  version;
+
+    String description;
 }

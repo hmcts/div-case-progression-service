@@ -32,16 +32,16 @@ public class OrderSummary {
                 FeesItem feesItem = new FeesItem();
                 Value value = new Value();
 
-                value.setFeeAmount(String.valueOf(formatter.format(fee.getAmount())));
+                value.setFeeAmount(String.valueOf(formatter.format(fee.getAmount() * 100)));
                 value.setFeeCode(fee.getFeeCode());
-                value.setFeeDescription("Issue Fee");
+                value.setFeeDescription(fee.getDescription());
                 value.setFeeVersion(String.valueOf(fee.getVersion()));
                 feesItem.setValue(value);
                 feesItems.add(feesItem);
             }
         }
         this.setFees(feesItems);
-        double sum = Arrays.asList(fees).stream().mapToDouble(Fee::getAmount).sum() * 1000;
+        double sum = Arrays.asList(fees).stream().mapToDouble(Fee::getAmount).sum() * 100;
         this.setPaymentTotal(String.valueOf(formatter.format(sum)));
     }
 
