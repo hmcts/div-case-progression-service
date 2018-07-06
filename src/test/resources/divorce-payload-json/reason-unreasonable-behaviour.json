@@ -51,7 +51,7 @@
   "petitionerNameChangedHow": [
     "marriageCertificate"
   ],
-  "petitionerEmail": "email@email.com",
+  "petitionerEmail": "simulate-delivered@notifications.service.gov.uk",
   "petitionerPhoneNumber": "01234567890",
   "petitionerHomeAddress": {
     "addressType": "postcode",
@@ -146,7 +146,9 @@
   "reasonForDivorceLimitReasons": false,
   "reasonForDivorceEnableAdultery": true,
   "reasonForDivorceBehaviourDetails": [
-    "My wife is having an affair this week."
+    "My wife is having an affair this week.",
+    "My wife is having an affair next week.",
+    "My wife is always having an affair."
   ],
   "legalProceedings": "Yes",
   "legalProceedingsRelated": [
