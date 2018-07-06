@@ -16,7 +16,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
-import uk.gov.hmcts.reform.divorce.errorhandler.JwtParsingException;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceEventSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
@@ -89,41 +88,6 @@ public class CcdSubmissionControllerUpdateTest {
             .andExpect(jsonPath("$.status", is("success")));
 
         verify(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-        verifyNoMoreInteractions(updateService);
-    }
-
-    @Test
-    public void shouldReturnErrorInResponseBodyWhenJwtParsingExceptionIsThrown() throws Exception {
-        final String errorMessage = "error-message JwtParsingException";
-        final String genericExceptionMessage = "Request Id : {0} and Exception message : {1}";
-        final String exceptionMessage = MessageFormat.format(genericExceptionMessage, "123", errorMessage);
-        final String jwt = "Bearer hgsdja87wegqeuf...";
-        final Long caseId = 123567L;
-        final DivorceSession divorceSession = new DivorceSession();
-        final DivorceEventSession divorceEventSession = new DivorceEventSession();
-
-        divorceSession.setPetitionerFirstName("Dan");
-
-        divorceEventSession.setEventData(divorceSession);
-        divorceEventSession.setEventId("paymentMade");
-
-        JwtParsingException exception = mock(JwtParsingException.class);
-
-        when(exception.getMessage()).thenReturn(errorMessage);
-
-        doThrow(exception).when(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-
-        mvc.perform(post(UPDATE_URL + "/" + caseId)
-            .content(requestContent)
-            .header("requestId", "123")
-            .header("Authorization", jwt)
-            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status()
-            .isOk())
-            .andExpect(jsonPath("$.error", is(exceptionMessage)))
-            .andExpect(jsonPath("$.status", is("error")));
-
-        verify(updateService).update(eq(caseId), eq(divorceEventSession), eq(jwt));
-        verify(exception).getMessage();
         verifyNoMoreInteractions(updateService);
     }
 

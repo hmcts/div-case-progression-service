@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
 import uk.gov.hmcts.reform.divorce.transformservice.client.CcdEventClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CaseEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -50,6 +52,9 @@ public class UpdateServiceTest {
     @Mock
     private PetitionValidatorService petitionValidatorService;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private UpdateService updateService;
 
@@ -62,7 +67,9 @@ public class UpdateServiceTest {
         final String eventSummary = "Update case";
         final Long caseId = 2893L;
         final String eventId = "paymentMade";
+        UserDetails userDetails = UserDetails.builder().build();
 
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         divorceEventSession.setEventId(eventId);
         divorceEventSession.setEventData(new DivorceSession());
 
@@ -71,16 +78,16 @@ public class UpdateServiceTest {
         CaseEvent caseEvent = new CaseEvent();
         caseEvent.setCaseId(caseId);
 
-        when(ccdEventClient.startEvent(jwt, caseId, eventId)).thenReturn(createEvent);
+        when(ccdEventClient.startEvent(userDetails, jwt, caseId, eventId)).thenReturn(createEvent);
         when(transformationService.transform(divorceEventSession.getEventData(), createEvent, eventSummary))
             .thenReturn(caseDataContent);
-        when(ccdEventClient.createCaseEvent(jwt, caseId, caseDataContent)).thenReturn(caseEvent);
+        when(ccdEventClient.createCaseEvent(userDetails, jwt, caseId, caseDataContent)).thenReturn(caseEvent);
 
         assertThat(updateService.update(caseId, divorceEventSession, jwt)).isEqualTo(caseId);
 
-        verify(ccdEventClient).startEvent(jwt, caseId, eventId);
+        verify(ccdEventClient).startEvent(userDetails, jwt, caseId, eventId);
         verify(transformationService).transform(divorceEventSession.getEventData(), createEvent, eventSummary);
-        verify(ccdEventClient).createCaseEvent(jwt, caseId, caseDataContent);
+        verify(ccdEventClient).createCaseEvent(userDetails, jwt, caseId, caseDataContent);
         verifyNoMoreInteractions(ccdEventClient, transformationService);
     }
 
@@ -112,7 +119,7 @@ public class UpdateServiceTest {
 
         CaseEvent caseEvent = new CaseEvent();
         caseEvent.setCaseId(1L);
-        when(ccdEventClient.createCaseEvent(anyString(), anyLong(), any()))
+        when(ccdEventClient.createCaseEvent(any(), anyString(), anyLong(), any()))
             .thenReturn(caseEvent);
 
         updateService.update(1L, divorceEventSession, jwt);
@@ -127,7 +134,7 @@ public class UpdateServiceTest {
 
         CaseEvent caseEvent = new CaseEvent();
         caseEvent.setCaseId(1L);
-        when(ccdEventClient.createCaseEvent(anyString(), anyLong(), any()))
+        when(ccdEventClient.createCaseEvent(any(), anyString(), anyLong(), any()))
             .thenReturn(caseEvent);
         doThrow(Exception.class).when(draftsService).deleteDraft(jwt);
 

@@ -11,9 +11,8 @@
   "screenHasRespondentAddress": "Yes",
   "screenHasMarriageCert": "Yes",
   "screenHasPrinter": "Yes",
-  "helpWithFeesNeedHelp": "Yes",
-  "helpWithFeesAppliedForFees": "Yes",
-  "helpWithFeesReferenceNumber": "HWF-123-456",
+  "helpWithFeesNeedHelp": "No",
+  "helpWithFeesAppliedForFees": "No",
   "divorceWho": "husband",
   "marriageIsSameSexCouple": "No",
   "marriageDateDay": 2,
@@ -51,7 +50,7 @@
   "petitionerNameChangedHow": [
     "marriageCertificate"
   ],
-  "petitionerEmail": "email@email.com",
+  "petitionerEmail": "simulate-delivered@notifications.service.gov.uk",
   "petitionerPhoneNumber": "01234567890",
   "petitionerHomeAddress": {
     "addressType": "postcode",

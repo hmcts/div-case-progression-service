@@ -6,7 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.service.DraftsService;
-import uk.gov.hmcts.reform.divorce.transformservice.client.CcdClient;
+import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
+import uk.gov.hmcts.reform.divorce.idam.services.UserService;
+import uk.gov.hmcts.reform.divorce.transformservice.client.SubmitCcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
@@ -14,8 +16,8 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -26,13 +28,16 @@ import static org.mockito.Mockito.when;
 public class SubmissionServiceTest {
 
     @Mock
-    private CcdClient ccdClient;
+    private SubmitCcdClient ccdClient;
 
     @Mock
     private TransformationService transformationService;
 
     @Mock
     private DraftsService draftsService;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private SubmissionService submissionService;
@@ -41,24 +46,27 @@ public class SubmissionServiceTest {
     public void submitReturnsCaseId() throws Exception {
         final DivorceSession divorceSession = new DivorceSession();
         final CaseDataContent caseDataContent = mock(CaseDataContent.class);
-        final String jwt = "_jwt";
-        final String token = "_token";
+        String jwt = "_jwt";
+        String token = "_token";
         final String eventSummary = "Create case";
-        final int caseId = 2893;
-        final CreateEvent createEvent = new CreateEvent();
+        int caseId = 2893;
+        String userId = "60";
+        UserDetails userDetails = UserDetails.builder().id(userId).build();
+        CreateEvent createEvent = new CreateEvent();
         createEvent.setToken(token);
-        final SubmitEvent submitEvent = new SubmitEvent();
+        SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(caseId);
 
-        when(ccdClient.createCase(jwt)).thenReturn(createEvent);
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
+        when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
         when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
-        when(ccdClient.submitCase(jwt, caseDataContent)).thenReturn(submitEvent);
+        when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
 
         assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
 
-        verify(ccdClient).createCase(jwt);
+        verify(ccdClient).createCase(userDetails, jwt, divorceSession);
         verify(transformationService).transform(divorceSession, createEvent, eventSummary);
-        verify(ccdClient).submitCase(jwt, caseDataContent);
+        verify(ccdClient).submitCase(userDetails, jwt, caseDataContent);
         verifyNoMoreInteractions(ccdClient, transformationService);
     }
 
@@ -70,7 +78,7 @@ public class SubmissionServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1);
 
-        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCase(any(), anyString(), any())).thenReturn(submitEvent);
 
         submissionService.submit(divorceSession, jwt);
 
@@ -85,7 +93,7 @@ public class SubmissionServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1);
 
-        when(ccdClient.submitCase(anyString(), any())).thenReturn(submitEvent);
+        when(ccdClient.submitCase(any(), anyString(), any())).thenReturn(submitEvent);
         doThrow(Exception.class).when(draftsService).deleteDraft(jwt);
 
         try {
