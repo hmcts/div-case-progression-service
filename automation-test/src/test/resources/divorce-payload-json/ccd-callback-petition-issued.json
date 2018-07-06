@@ -132,8 +132,7 @@
       "D8ReasonForDivorceClaiming5YearSeparatio": "NO",
       "D8Cohort": "onlineSubmissionPrivateBeta",
       "D8InferredPetitionerGender": "female",
-      "D8InferredRespondentGender": "female",
-      "D8StatementOfTruth": "YES"
+      "D8InferredRespondentGender": "female"
     }
   }
 }
