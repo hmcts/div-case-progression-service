@@ -2,13 +2,11 @@ package uk.gov.hmcts.reform.divorce.pay.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.divorce.pay.api.PaymentServiceClient;
 import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.pay.models.request.CreditAccountPaymentRequest;
-import uk.gov.hmcts.reform.divorce.pay.models.response.CreditAccountPaymentResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
@@ -43,36 +41,6 @@ public class PaymentService {
 
     public void processPBAPayments(String userJWT, CreateEvent caseEvent) {
 
-        //TODO: remove me
-//        userJWT = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZmVka3JsaDRldWVldjgxdWxqOG1lM2xpbiIsInN1YiI6IjExOSIsImlhdCI6MTUzMDgyODQyMCwiZXhwIjoxNTMwODU3MjIwLCJkYXRhIjoiY2FzZXdvcmtlci1kaXZvcmNlLGNhc2V3b3JrZXIsY2FzZXdvcmtlci1kaXZvcmNlLWxvYTEsY2FzZXdvcmtlci1sb2ExIiwidHlwZSI6IkFDQ0VTUyIsImlkIjoiMTE5IiwiZm9yZW5hbWUiOiJSaHlzIiwic3VybmFtZSI6IldpbGxpYW1zIiwiZGVmYXVsdC1zZXJ2aWNlIjoiQ0NEIiwibG9hIjoxLCJkZWZhdWx0LXVybCI6Imh0dHBzOi8vd3d3LmNjZC5kZW1vLnBsYXRmb3JtLmhtY3RzLm5ldCIsImdyb3VwIjoiY2FzZXdvcmtlciJ9.Uz-vI2oZ5oxvB3OxGzavmxa5a3C-dCjPImnz-FFyUgA";
-        /**
-         *
-         *{
-         *  “amount”: 0,  )
-         *  “description”: “string”, )
-         *  “ccd_case_number”: “string”, )
-         *  “case_reference”: “string”, ???
-         *  “service”: “CMC”, )
-         *  “currency”: “GBP”, )
-         *  “customer_reference”: “string”, )
-         *  “organisation_name”: “string”, )
-         *  “account_number”: “stri/ng”, )
-         *  “site_id”: “string”, _
-         *  “fees”: [
-         *    {
-         *      “calculated_amount”: 0,
-         *      “ccd_case_number”: “string”,
-         *      “code”: “string”,
-         *      “memo_line”: “string”,
-         *      “natural_account_code”: “string”,
-         *      “reference”: “string”,
-         *      “version”: “string”,
-         *      “volume”: 0
-         *    }
-         *  ]
-         * }
-         *
-         */
         CreditAccountPaymentRequest request = new CreditAccountPaymentRequest();
         CaseDetails caseDetails = caseEvent.getCaseDetails();
         CoreCaseData caseData = caseDetails.getCaseData();
@@ -81,7 +49,7 @@ public class PaymentService {
         try {
             //we always interesting in the first fee, future might require a change.
             FeesItem feesItem = orderSummary.getFees().get(0);
-            Value value = feesItem.getValue();
+            final Value value = feesItem.getValue();
             request.setService(SERVICE);
             request.setCurrency(CURRENCY);
             addToRequest(request::setAmount, orderSummary::getPaymentTotal);
@@ -94,7 +62,6 @@ public class PaymentService {
             addToRequest(request::setCustomerReference, caseData::getD8SolicitorReference);
             addToRequest(request::setDescription, value::getFeeDescription);
             //populate feesItem
-            List<uk.gov.hmcts.reform.divorce.pay.models.request.FeesItem> feesItems = new ArrayList<>();
             uk.gov.hmcts.reform.divorce.pay.models.request.FeesItem feesItemRequest;
             feesItemRequest = new uk.gov.hmcts.reform.divorce.pay.models.request.FeesItem();
             addToRequest(feesItemRequest::setCcdCaseNumber, caseDetails::getCaseId);
@@ -102,6 +69,7 @@ public class PaymentService {
             addToRequest(feesItemRequest::setCode, value::getFeeCode);
             addToRequest(feesItemRequest::setReference, caseData::getD8SolicitorReference);
             addToRequest(feesItemRequest::setVersion, value::getFeeVersion);
+            List<uk.gov.hmcts.reform.divorce.pay.models.request.FeesItem> feesItems = new ArrayList<>();
             feesItems.add(feesItemRequest);
             request.setFees(feesItems);
             paymentServiceClient.creditAccountPayment(userJWT, authTokenGenerator.generate(), request);
@@ -114,7 +82,7 @@ public class PaymentService {
         }
     }
 
-    private void addToRequest(Consumer<String> setter, Supplier<String> value)  {
+    private void addToRequest(Consumer<String> setter, Supplier<String> value) {
         Optional.ofNullable(value.get()).ifPresent(setter);
     }
 

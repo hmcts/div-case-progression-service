@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 @FeignClient(name = "fees-and-payment-api", url = "${fees.and.payments.baseUrl}")
 public interface FeesAnyPaymentApiClient {
 
-    @RequestMapping(method = RequestMethod.GET, consumes = "application/json", value = "/fees-and-payments/version/1/petition-issue-fee")
+    @RequestMapping(method = RequestMethod.GET, consumes = "application/json",
+        value = "/fees-and-payments/version/1/petition-issue-fee")
     ResponseEntity<Fee> getPetitionIssueFee();
 }
