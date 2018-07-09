@@ -6,12 +6,12 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Cancel {
+public class Cancel{
 
-    @JsonProperty("method")
-    private String method;
+	@JsonProperty("method")
+	private String method;
 
-    @JsonProperty("href")
-    private String href;
+	@JsonProperty("href")
+	private String href;
 
 }

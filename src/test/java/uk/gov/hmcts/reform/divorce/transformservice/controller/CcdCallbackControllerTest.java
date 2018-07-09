@@ -1,12 +1,9 @@
 package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
-import com.thoughtworks.selenium.webdriven.commands.Submit;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
@@ -36,14 +32,11 @@ import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -56,9 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -69,14 +60,14 @@ public class CcdCallbackControllerTest {
     private static final String ADD_PDF_URL = "/caseprogression/petition-issued";
     private static final String PETITION_SUBMITTED_URL = "/caseprogression/petition-submitted";
     private static final String PETITION_ISSUE_FEES_URL = "/caseprogression/petition-issue-fees";
-    private static final String PROCESS_PBA_PAYMENTS = "/caseprogression/process-pba-payment";
-    private static final String SOLICITOR_CREATE = "/caseprogression/solicitor-create";
     private static final String AUTH_TOKEN = "test";
     private static final String AUTH_HEADER = "Authorization";
-    @MockBean
-    public EmailService emailService;
+
     @Autowired
     private WebApplicationContext applicationContext;
+
+    @MockBean
+    public EmailService emailService;
     @MockBean
     private UpdateService updateService;
 
@@ -210,12 +201,12 @@ public class CcdCallbackControllerTest {
         CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setOrderSummary(orderSummary);
         caseDetails.setCaseData(coreCaseData);
         submittedCase.setCaseDetails(caseDetails);
 
-        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder()
-            .feeCode("2").amount(555.00).version(2).build());
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2").amount(555.00).version(2).build());
         mvc.perform(post(PETITION_ISSUE_FEES_URL)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .contentType(MediaType.APPLICATION_JSON_UTF8));
@@ -223,46 +214,24 @@ public class CcdCallbackControllerTest {
 
     }
 
+    //TODO: do some more code to add this test on positive and a negative scenario.
     @Test
     public void givenCallbackReceived_whenToProcessPBAPayments_thenExceptToSucceedWithPayment() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
         CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setOrderSummary(orderSummary);
         caseDetails.setCaseData(coreCaseData);
-        CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
-        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
-            .amount(555.00).version(2).build());
-        doNothing().when(paymentService).processPBAPayments("jwt-token", submittedCase);
-        mvc.perform(post(PROCESS_PBA_PAYMENTS)
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2").amount(555.00).version(2).build());
+        mvc.perform(post(PETITION_ISSUE_FEES_URL)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
-            .header("Authorization", "jwt-token")
             .contentType(MediaType.APPLICATION_JSON_UTF8));
-
         verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
-        verify(paymentService, times(1)).processPBAPayments(anyString(), any());
-    }
 
-    @Test
-    public void givenCallbackReceived_whenToSolicitorCreate_thenExceptToSucceedPopulateRequiredFields() throws
-        Exception {
-
-        CreateEvent submittedCase = new CreateEvent();
-        CaseDetails caseDetails = new CaseDetails();
-        submittedCase.setCaseDetails(caseDetails);
-        CoreCaseData coreCaseData = new CoreCaseData();
-        caseDetails.setCaseData(coreCaseData);
-        doNothing().when(paymentService).processPBAPayments("jwt-token", submittedCase);
-
-        mvc.perform(post(SOLICITOR_CREATE)
-            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
-            .contentType(MediaType.APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.data.createdDate").value(LocalDate.now().format(ofPattern("yyyy-MM-dd"))))
-            .andExpect(jsonPath("$.data.D8DivorceUnit").value("northWest"))
-            .andExpect(jsonPath("$.data.D8SelectedDivorceCentreSiteId").value("AA04"));
     }
 
     @Test
