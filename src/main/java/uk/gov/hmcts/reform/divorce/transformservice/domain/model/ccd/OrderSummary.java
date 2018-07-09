@@ -24,17 +24,18 @@ public class OrderSummary {
     @JsonProperty("Fees")
     private List<FeesItem> fees;
 
-    public void add(Fee... fees) {
+    public void add(Fee ... fees){
         NumberFormat formatter = new DecimalFormat("#0");
         List<FeesItem> feesItems = new ArrayList<>();
         for (Fee fee : fees) {
             if (fee != null) {
+                FeesItem feesItem = new FeesItem();
                 Value value = new Value();
+
                 value.setFeeAmount(String.valueOf(formatter.format(fee.getAmount() * 100)));
                 value.setFeeCode(fee.getFeeCode());
                 value.setFeeDescription(fee.getDescription());
                 value.setFeeVersion(String.valueOf(fee.getVersion()));
-                FeesItem feesItem = new FeesItem();
                 feesItem.setValue(value);
                 feesItems.add(feesItem);
             }
