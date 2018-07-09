@@ -110,17 +110,27 @@ public class CcdCallBackController {
             templateVars.put("RDC name",      Courts.valueOf(
                 caseData.getD8DivorceUnit().toUpperCase(Locale.UK)).getDisplayName()
             );
-            templateVars.put("CCD reference", caseDetailsRequest.getCaseDetails().getCaseId());
+            templateVars.put("CCD reference", formatReferenceId(caseDetailsRequest.getCaseDetails().getCaseId()));
+
             emailService.sendSubmissionNotificationEmail(petitionerEmail, templateVars);
         }
 
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
     }
+
     
     private boolean isNotValidCoreCaseData(ValidationResponse response) {
         boolean hasErrors = response.getErrors() != null && !response.getErrors().isEmpty();
         boolean hasWarnings = response.getWarnings() != null && !response.getWarnings().isEmpty();
         
         return hasErrors || hasWarnings;
+    }
+
+    private String formatReferenceId(String referenceId) {
+        return String.format("%s-%s-%s-%s",
+            referenceId.substring(0, 4),
+            referenceId.substring(4, 8),
+            referenceId.substring(8, 12),
+            referenceId.substring(12));
     }
 }

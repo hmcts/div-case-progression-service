@@ -214,7 +214,7 @@ public class CcdCallbackControllerTest {
         coreCaseData.setD8DivorceUnit("eastMidlands");
 
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseId("1000100010001000");
         caseDetails.setCaseData(coreCaseData);
 
         CreateEvent submittedCase = new CreateEvent();
@@ -239,7 +239,7 @@ public class CcdCallbackControllerTest {
         coreCaseData.setD8DivorceUnit("westMidlands");
 
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseId("1000100010001000");
         caseDetails.setCaseData(coreCaseData);
 
         CreateEvent submittedCase = new CreateEvent();
@@ -264,7 +264,7 @@ public class CcdCallbackControllerTest {
         coreCaseData.setD8DivorceUnit("southWest");
 
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseId("1000100010001000");
         caseDetails.setCaseData(coreCaseData);
 
         CreateEvent submittedCase = new CreateEvent();
@@ -289,7 +289,7 @@ public class CcdCallbackControllerTest {
         coreCaseData.setD8DivorceUnit("northWest");
 
         CaseDetails caseDetails = new CaseDetails();
-        caseDetails.setCaseId("1000-1000-1000-1000");
+        caseDetails.setCaseId("1000100010001000");
         caseDetails.setCaseData(coreCaseData);
 
         CreateEvent submittedCase = new CreateEvent();
@@ -354,7 +354,7 @@ public class CcdCallbackControllerTest {
 
     private Map<String, String> getTemplateVars(String divorceUnit) {
         Map<String, String> templateVars = new HashMap<>();
-        
+
         templateVars.put("email address", "example@email.com");
         templateVars.put("first name",    null);
         templateVars.put("last name",     null);
