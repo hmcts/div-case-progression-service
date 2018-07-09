@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
 import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdCallBackController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
@@ -43,6 +44,15 @@ public class CcdCallbackExceptionHandler {
 
         String customMessage = "The Document Type has not been set for one of the uploaded documents. "
             + "This must be set before a new PDF can be created";
+        return generateBadRequestResponse(customMessage, request);
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<CCDCallbackResponse> handleFailedPaymentException(
+        PaymentFailedException exception,
+        HttpServletRequest request) {
+
+        String customMessage = "Payment has failed, please try again.";
         return generateBadRequestResponse(customMessage, request);
     }
 
