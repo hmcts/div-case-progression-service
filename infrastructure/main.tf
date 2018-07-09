@@ -37,8 +37,10 @@ module "div-case-progression" {
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${local.idam_s2s_url}"
-        AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
-        AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+        AUTH_SERVICE_CLIENT_DIVORCE_CCD_SUBMISSION_NAME = "${var.auth_provider_service_client_microservice_div_ccd_submission}"
+        AUTH_SERVICE_CLIENT_DIVORCE_FRONTEND_NAME = "${var.auth_provider_service_client_microservice_div_frontend}"
+        AUTH_SERVICE_DIVORCE_CCD_SUBMISSION_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+        AUTH_SERVICE_DIVORCE_FRONTEND_KEY = "${data.vault_generic_secret.frontend_secret.data["value"]}"
         AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
         AUTH_PROVIDER_HEALTH_URI = "${local.idam_s2s_url}/health"
         CCD_CASEDATASTORE_BASEURL = "${local.ccd_casedatastore_baseurl}"
@@ -83,6 +85,10 @@ module "key-vault" {
 
 data "vault_generic_secret" "ccd-submission-s2s-auth-secret" {
     path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
+}
+
+data "vault_generic_secret" "frontend_secret" {
+    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorce-frontend"
 }
 
 data "vault_generic_secret" "div-doc-s2s-auth-secret" {
