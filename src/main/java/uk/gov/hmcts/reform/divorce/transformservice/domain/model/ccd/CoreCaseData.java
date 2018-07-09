@@ -418,5 +418,18 @@ public class CoreCaseData {
 
     @JsonProperty("D8InferredRespondentGender")
     private Gender d8InferredRespondentGender;
+
+    @JsonProperty("solApplicationFeeOrderSummary")
+    private OrderSummary orderSummary;
+
+    @JsonProperty("SolicitorFeeAccountNumber")
+    private String solicitorFeeAccountNumber;
+
+    @JsonProperty("D8SelectedDivorceCentreSiteId")
+    private String d8SelectedDivorceCentreSiteId;
+
+    @JsonProperty("PetitionerSolicitorFirm")
+    private String petitionerSolicitorFirm;
+
 }
 
