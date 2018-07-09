@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.annotation.Generated;
-
 @Data
 @ToString
-public class Self{
+public class Self {
 
-	@JsonProperty("method")
-	private String method;
+    @JsonProperty("method")
+    private String method;
 
-	@JsonProperty("href")
-	private String href;
+    @JsonProperty("href")
+    private String href;
 }

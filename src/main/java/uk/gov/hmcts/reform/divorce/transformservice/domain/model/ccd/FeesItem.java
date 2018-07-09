@@ -6,9 +6,9 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class FeesItem{
+public class FeesItem {
 
-	@JsonProperty("value")
-	private Value value;
+    @JsonProperty("value")
+    private Value value;
 
 }

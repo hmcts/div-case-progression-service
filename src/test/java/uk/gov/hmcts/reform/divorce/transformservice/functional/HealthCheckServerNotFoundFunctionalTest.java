@@ -30,9 +30,8 @@ public class HealthCheckServerNotFoundFunctionalTest {
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
         assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
-        //TODO:remove me
-//        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("DOWN");
-//        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }

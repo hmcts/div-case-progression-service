@@ -23,12 +23,14 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.OrderSummar
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
-import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 
@@ -39,29 +41,10 @@ public class CcdCallBackController {
 
     @Autowired
     private PaymentService paymentService;
-
-    private enum Courts {
-        EASTMIDLANDS("East Midlands Regional Divorce Centre"),
-        WESTMIDLANDS("West Midlands Regional Divorce Centre"),
-        SOUTHWEST("South West Regional Divorce Centre"),
-        NORTHWEST("North West Regional Divorce Centre");
-
-        private String displayName;
-
-        private Courts(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
-
     @Autowired
     private UpdateService updateService;
     @Autowired
     private EmailService emailService;
-
     @Autowired
     private FeesAndPaymentService feesAndPaymentService;
 
@@ -89,7 +72,7 @@ public class CcdCallBackController {
         @ApiResponse(code = 200, message = "An email notification has been generated and dispatched",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-    })
+        })
     public ResponseEntity<CCDCallbackResponse> petitionSubmitted(
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
@@ -98,12 +81,12 @@ public class CcdCallBackController {
 
         if (StringUtils.isNotBlank(petitionerEmail)) {
             Map<String, String> templateVars = new HashMap<>();
-            CoreCaseData        caseData     = caseDetailsRequest.getCaseDetails().getCaseData();
+            CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
 
             templateVars.put("email address", petitionerEmail);
-            templateVars.put("first name",    caseData.getD8PetitionerFirstName());
-            templateVars.put("last name",     caseData.getD8PetitionerLastName());
-            templateVars.put("RDC name",      Courts.valueOf(
+            templateVars.put("first name", caseData.getD8PetitionerFirstName());
+            templateVars.put("last name", caseData.getD8PetitionerLastName());
+            templateVars.put("RDC name", Courts.valueOf(
                 caseData.getD8DivorceUnit().toUpperCase(Locale.UK)).getDisplayName()
             );
             templateVars.put("CCD reference", formatReferenceId(caseDetailsRequest.getCaseDetails().getCaseId()));
@@ -130,50 +113,48 @@ public class CcdCallBackController {
         @ApiResponse(code = 200, message = "Petition issue fee amount is send to CCD as callback response",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-    })
-    public ResponseEntity<CCDCallbackResponse> getPetitionIssueFees(@RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
-                Fee issueFee = feesAndPaymentService.getPetitionIssueFee();
+        })
+    public ResponseEntity<CCDCallbackResponse> getPetitionIssueFees(@RequestBody @ApiParam("CaseData")
+                                                                        CreateEvent caseDetailsRequest) {
+        Fee issueFee = feesAndPaymentService.getPetitionIssueFee();
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.add(issueFee);
         caseData.setOrderSummary(orderSummary);
-        CCDCallbackResponse ccdCallbackResponse = new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>());
-        //TODO:remove me
-        /**
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(System.out, ccdCallbackResponse);
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }*/
+        CCDCallbackResponse ccdCallbackResponse = null;
+        ccdCallbackResponse = new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>());
         return ResponseEntity.ok(ccdCallbackResponse);
     }
 
-    @PostMapping(path = "/process-pba-payment", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @PostMapping(path = "/process-pba-payment", consumes = MediaType.APPLICATION_JSON,
+        produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Solicitor pay callback")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Callback to receive payment from the solicitor",
             response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-    })
-    public ResponseEntity<CCDCallbackResponse> processPBAPayment(  @RequestHeader(value = "Authorization") String authorizationToken,
-                                                                   @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+        })
+    public ResponseEntity<CCDCallbackResponse> processPBAPayment(
+        @RequestHeader(value = "Authorization") String authorizationToken,
+        @RequestBody @ApiParam("CaseData")
+            CreateEvent caseDetailsRequest) {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
         setOrderSummary(caseData); //TODO: please remove me.
         paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
         return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
     }
 
-    @PostMapping(path = "/solicitor-create", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @PostMapping(path = "/solicitor-create", consumes = MediaType.APPLICATION_JSON,
+        produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Solicitor pay callback")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Callback to populate missing requirement fields when creating solicitor cases.",
-            response = CCDCallbackResponse.class),
+        @ApiResponse(code = 200, message = "Callback to populate missing requirement fields when "
+            + "creating solicitor cases.", response = CCDCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")
-    })
-    public ResponseEntity<CCDCallbackResponse> solicitorCreate(  @RequestHeader(value = "Authorization") String authorizationToken,
-                                                                   @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+        })
+    public ResponseEntity<CCDCallbackResponse> solicitorCreate(
+        @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
+
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
         caseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
         caseData.setD8DivorceUnit("northWest");
@@ -186,6 +167,23 @@ public class CcdCallBackController {
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.add(issueFee);
         coreCaseData.setOrderSummary(orderSummary);
+    }
+
+    private enum Courts {
+        EASTMIDLANDS("East Midlands Regional Divorce Centre"),
+        WESTMIDLANDS("West Midlands Regional Divorce Centre"),
+        SOUTHWEST("South West Regional Divorce Centre"),
+        NORTHWEST("North West Regional Divorce Centre");
+
+        private String displayName;
+
+        private Courts(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
 

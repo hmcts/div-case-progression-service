@@ -12,12 +12,11 @@ public class FeesAndPaymentService {
 
     @Autowired
     public FeesAndPaymentService(FeesAnyPaymentApiClient feesAnyPaymentApiClient) {
-       this.feesAnyPaymentApiClient = feesAnyPaymentApiClient;
+        this.feesAnyPaymentApiClient = feesAnyPaymentApiClient;
     }
 
     public Fee getPetitionIssueFee() {
-        Fee petitionIssueFee = feesAnyPaymentApiClient.getPetitionIssueFee().getBody();
-        return petitionIssueFee;
+        return feesAnyPaymentApiClient.getPetitionIssueFee().getBody();
     }
 
 }
