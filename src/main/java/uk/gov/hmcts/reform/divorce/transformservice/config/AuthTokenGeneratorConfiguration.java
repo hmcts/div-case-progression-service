@@ -14,10 +14,19 @@ import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGeneratorFactory;
 @EnableFeignClients(basePackageClasses = ServiceAuthorisationApi.class)
 public class AuthTokenGeneratorConfiguration {
 
-    @Bean
-    public AuthTokenGenerator serviceAuthTokenGenerator(
-        @Value("${idam.s2s-auth.totp_secret}") final String secret,
-        @Value("${idam.s2s-auth.microservice}") final String microService,
+    @Bean(name = "ccd_submission")
+    public AuthTokenGenerator ccdSubmissionTokenGenerator(
+        @Value("${idam.s2s-auth.totp_divorce_ccd_submission_secret}") final String secret,
+        @Value("${idam.s2s-auth.microservice_divorce_ccd_submission}") final String microService,
+        final ServiceAuthorisationApi serviceAuthorisationApi) {
+
+        return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);
+    }
+
+    @Bean(name = "divorce_frontend")
+    public AuthTokenGenerator ccdDivorceFrontEndTokenGenerator(
+        @Value("${idam.s2s-auth.totp_divorce_frontend_secret}") final String secret,
+        @Value("${idam.s2s-auth.microservice_divorce_frontend}") final String microService,
         final ServiceAuthorisationApi serviceAuthorisationApi) {
 
         return AuthTokenGeneratorFactory.createDefaultGenerator(secret, microService, serviceAuthorisationApi);

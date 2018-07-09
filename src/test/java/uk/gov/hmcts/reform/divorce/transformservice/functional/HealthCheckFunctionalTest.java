@@ -72,6 +72,14 @@ public class HealthCheckFunctionalTest {
     public static WireMockClassRule pdfGeneratorServer = new WireMockClassRule(WireMockSpring.options().port(4007)
         .bindAddress("localhost"));
 
+    @ClassRule
+    public static WireMockClassRule feesAndPaymentsServer = new WireMockClassRule(WireMockSpring.options().port(4009)
+        .bindAddress("localhost"));
+
+    @ClassRule
+    public static WireMockClassRule paymentApiServer = new WireMockClassRule(WireMockSpring.options().port(4010)
+        .bindAddress("localhost"));
+
     @Value("${ccd.caseDataStore.health.path}")
     private String ccdHealthPath;
     @Value("${auth.provider.health.path}")
@@ -80,6 +88,10 @@ public class HealthCheckFunctionalTest {
     private String draftStoreApiHealthPath;
     @Value("${pdf.generator.healthPath}")
     private String pdfGeneratorHealthPath;
+    @Value("${fees.and.payments.healthPath}")
+    private String feesAndPaymentsHealthPath;
+    @Value("${payment.api.healthPath}")
+    private String paymentApiHealthUrl;
     @Value("${service.service-auth-provider.health.context-path}")
     private String serviceAuthHealthContextPath;
     @Autowired
@@ -91,6 +103,8 @@ public class HealthCheckFunctionalTest {
         authServer.verify(getRequestedFor(urlPathEqualTo("/health")));
         draftStoreServer.verify(getRequestedFor(urlPathEqualTo("/health")));
         pdfGeneratorServer.verify(getRequestedFor(urlPathEqualTo(pdfGeneratorHealthPath)));
+        feesAndPaymentsServer.verify(getRequestedFor(urlPathEqualTo(feesAndPaymentsHealthPath)));
+        paymentApiServer.verify(getRequestedFor(urlPathEqualTo(paymentApiHealthUrl)));
     }
 
     @Test
@@ -99,6 +113,8 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
         mockServiceAuthFeignHealthCheck();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
@@ -134,6 +150,8 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubPaymentApiServerHealthUp();
+        stubFeesServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -152,6 +170,8 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthDown();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -169,6 +189,8 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthDown();
         stubPDFGeneratorHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -185,6 +207,7 @@ public class HealthCheckFunctionalTest {
         stubAuthHealthUp();
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
+        stubPaymentApiServerHealthUp();
         stubPDFGeneratorHealthDown();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
@@ -233,6 +256,26 @@ public class HealthCheckFunctionalTest {
     private void stubPDFGeneratorHealthDown() throws Exception {
         stubServiceResponse(pdfGeneratorServer, pdfGeneratorHealthPath, 503,
             "/fixtures/pdf-generator/healthcheck-down.json");
+    }
+
+    private void stubFeesServerHealthUp() throws Exception {
+        stubServiceResponse(feesAndPaymentsServer, feesAndPaymentsHealthPath, 200,
+            "/fixtures/fees/healthcheck-up.json");
+    }
+
+    private void stubFeesServerHealthDown() throws Exception {
+        stubServiceResponse(feesAndPaymentsServer, feesAndPaymentsHealthPath, 503,
+            "/fixtures/fees/healthcheck-down.json");
+    }
+
+    private void stubPaymentApiServerHealthUp() throws Exception {
+        stubServiceResponse(paymentApiServer, paymentApiHealthUrl, 200,
+            "/fixtures/payment-api/healthcheck-up.json");
+    }
+
+    private void stubPaymentApiServerHealthDown() throws Exception {
+        stubServiceResponse(paymentApiServer, paymentApiHealthUrl, 503,
+            "/fixtures/payment-api/healthcheck-down.json");
     }
 
     private void stubServiceResponse(WireMockClassRule server, String healthPath, int statusCode, String fixturePath)
