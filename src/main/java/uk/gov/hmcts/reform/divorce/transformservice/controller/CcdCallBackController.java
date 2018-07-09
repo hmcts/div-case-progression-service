@@ -39,6 +39,8 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 @Api(value = "Transformation API", consumes = "application/json", produces = "application/json")
 public class CcdCallBackController {
 
+    public static final String EAST_MIDLANDS = "eastMidlands";
+    public static final String DIVORCE_CENTRE_SITE_ID = "AA01";
     @Autowired
     private PaymentService paymentService;
     @Autowired
@@ -157,8 +159,8 @@ public class CcdCallBackController {
 
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
         caseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
-        caseData.setD8DivorceUnit("northWest");
-        caseData.setD8SelectedDivorceCentreSiteId("AA04");
+        caseData.setD8DivorceUnit(EAST_MIDLANDS);
+        caseData.setD8SelectedDivorceCentreSiteId(DIVORCE_CENTRE_SITE_ID);
         return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
     }
 

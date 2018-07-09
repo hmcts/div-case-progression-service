@@ -43,7 +43,7 @@ variable "auth_provider_service_client_microservice_div_ccd_submission" {
 }
 
 variable "auth_provider_service_client_microservice_div_frontend" {
-    default = "divorce_ccd_submission"
+    default = "divorce_frontend"
 }
 
 variable "auth_provider_service_client_key" {
