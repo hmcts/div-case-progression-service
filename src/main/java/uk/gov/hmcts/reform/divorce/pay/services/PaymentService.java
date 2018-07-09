@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.pay.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.divorce.pay.api.PaymentServiceClient;
@@ -34,7 +35,8 @@ public class PaymentService {
 
 
     @Autowired
-    public PaymentService(PaymentServiceClient paymentServiceClient, AuthTokenGenerator authTokenGenerator) {
+    public PaymentService(PaymentServiceClient paymentServiceClient, @Qualifier("divorce_frontend") AuthTokenGenerator
+        authTokenGenerator) {
         this.paymentServiceClient = paymentServiceClient;
         this.authTokenGenerator = authTokenGenerator;
     }

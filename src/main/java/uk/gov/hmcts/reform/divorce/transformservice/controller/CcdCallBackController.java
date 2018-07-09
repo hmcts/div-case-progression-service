@@ -153,7 +153,6 @@ public class CcdCallBackController {
         @ApiResponse(code = 400, message = "Bad Request")
         })
     public ResponseEntity<CCDCallbackResponse> solicitorCreate(
-        @RequestHeader(value = "Authorization") String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
