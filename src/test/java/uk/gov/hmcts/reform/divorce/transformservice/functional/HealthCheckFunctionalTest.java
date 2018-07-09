@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.jayway.jsonpath.JsonPath;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ServerList;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +24,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 
 import java.io.File;
@@ -54,7 +52,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
         "feign.hystrix.enabled=true",
         "eureka.client.enabled=false"
     })
-@DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD, classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class HealthCheckFunctionalTest {
 
     private static final String HEALTH_UP_RESPONSE = "{ \"status\": \"UP\"}";
@@ -115,7 +113,7 @@ public class HealthCheckFunctionalTest {
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
         stubValidationServiceHealthUp();
-        
+
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -244,12 +242,12 @@ public class HealthCheckFunctionalTest {
     }
 
     private void stubCcdHealthUp() throws Exception {
-        stubServiceResponse(ccdServer, ccdHealthPath, 200, 
+        stubServiceResponse(ccdServer, ccdHealthPath, 200,
             "/fixtures/ccd/healthcheck-up.json");
     }
 
     private void stubCcdHealthDown() throws Exception {
-        stubServiceResponse(ccdServer, ccdHealthPath, 503, 
+        stubServiceResponse(ccdServer, ccdHealthPath, 503,
             "/fixtures/ccd/healthcheck-down.json");
     }
 
