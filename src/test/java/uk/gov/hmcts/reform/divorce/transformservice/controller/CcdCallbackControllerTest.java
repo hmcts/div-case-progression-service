@@ -261,8 +261,8 @@ public class CcdCallbackControllerTest {
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.data.createdDate").value(LocalDate.now().format(ofPattern("yyyy-MM-dd"))))
-            .andExpect(jsonPath("$.data.D8DivorceUnit").value("northWest"))
-            .andExpect(jsonPath("$.data.D8SelectedDivorceCentreSiteId").value("AA04"));
+            .andExpect(jsonPath("$.data.D8DivorceUnit").value("eastMidlands"))
+            .andExpect(jsonPath("$.data.D8SelectedDivorceCentreSiteId").value("AA01"));
     }
 
     @Test
