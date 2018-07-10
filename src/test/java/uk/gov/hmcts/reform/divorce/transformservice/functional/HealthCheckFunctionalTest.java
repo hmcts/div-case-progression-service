@@ -52,7 +52,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
         "feign.hystrix.enabled=true",
         "eureka.client.enabled=false"
     })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class HealthCheckFunctionalTest {
 
     private static final String HEALTH_UP_RESPONSE = "{ \"status\": \"UP\"}";
