@@ -30,7 +30,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
         String draft = "{\"message\": \"Hello World!\"}";
-        String token = generateNewUserAndReturnToken();
+        String token = getIdamTestUser();
         Response response = saveDivorceDraft(token, draft);
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatusCode());
@@ -40,7 +40,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
-        String token = generateNewUserAndReturnToken();
+        String token = getIdamTestUser();
         Response draftStoreResponse = draftStoreClient.createDraft(token, savedDraft);
 
         assertEquals(HttpStatus.CREATED.value(), draftStoreResponse.getStatusCode());
@@ -55,8 +55,6 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
 
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
-
-        regenerateIdamTestUser();
 
         Response response = getDivorceDraft();
 
@@ -79,11 +77,11 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         // only execute on preview as feature toggle is currently only enabled on preview and prod
         if ("preview".equalsIgnoreCase(environment)) {
             // given
-            regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
-            Response caseSubmissionResponse = submitCase("addresses.json");
+            String userToken = getIdamTestUser();
+            Response caseSubmissionResponse = submitCase("addresses.json", userToken);
 
             // when
-            Response draftResponse = getDivorceDraft();
+            Response draftResponse = getDivorceDraft(userToken);
 
             // then
             assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());

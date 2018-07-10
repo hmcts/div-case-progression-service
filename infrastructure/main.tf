@@ -8,6 +8,7 @@ locals {
     draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    idam_redirect_url = "http://div-pfe-${local.local_env}.service.core-compute-${local.local_env}.internal"
 
     previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
@@ -59,6 +60,7 @@ module "div-case-progression" {
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
+        IDAM_SECRET = "${data.vault_generic_secret.idam-secret.data["value"]}"
     }
 }
 
@@ -94,6 +96,10 @@ data "vault_generic_secret" "uk-gov-notify-api-key" {
     path = "secret/${var.vault_env}/divorce/notify/api_key"
 }
 
+data "vault_generic_secret" "idam-secret" {
+    path = "secret/${var.vault_env}/ccidam/idam-api/oauth2/client-secrets/divorce"
+}
+
 resource "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
     name      = "ccd-submission-s2s-auth-secret"
     value     = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
@@ -109,5 +115,11 @@ resource "azurerm_key_vault_secret" "div-doc-s2s-auth-secret" {
 resource "azurerm_key_vault_secret" "draft-store-api-encryption-key" {
     name      = "draft-store-api-encryption-key"
     value     = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
+    vault_uri = "${module.key-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "idam-secret" {
+    name      = "idam-secret"
+    value     = "${data.vault_generic_secret.idam-secret.data["value"]}"
     vault_uri = "${module.key-vault.key_vault_uri}"
 }

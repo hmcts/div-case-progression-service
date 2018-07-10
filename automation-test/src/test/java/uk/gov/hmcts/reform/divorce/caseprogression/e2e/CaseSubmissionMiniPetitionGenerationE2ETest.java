@@ -41,7 +41,8 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     @Test
     @WithTag("test-type:e2e")
     public void submittingCaseAndIssuePetitionOnCcdShouldGeneratePDF() throws Exception {
-        Response ccdResponse = submitCase("submit-complete-case.json");
+        String userToken = getIdamTestUser();
+        Response ccdResponse = submitCase("submit-complete-case.json", userToken);
         long caseId = assertAndGetCaseId(ccdResponse);
 
         Response ccdSubmitResponse = makePaymentAndIssuePetition(caseId);
@@ -91,10 +92,11 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         jsonObject.put("event", eventObject);
         jsonObject.put("event_token", eventToken);
 
-        String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
+        String caseWorkerToken = getIdamTestCaseWorkerUser();
+        String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(caseWorkerToken)),
                 caseId);
 
-        return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
+        return postToRestService(jsonObject.toString(), submitEventUrl, caseWorkerToken);
     }
 
     private String createEventAsCaseWorker(long caseId, String event) {

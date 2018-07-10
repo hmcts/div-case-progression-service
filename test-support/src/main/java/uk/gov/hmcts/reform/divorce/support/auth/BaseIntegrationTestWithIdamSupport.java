@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.support.auth;
 
 import com.nimbusds.jwt.JWTParser;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.divorce.support.IntegrationTest;
@@ -8,6 +9,7 @@ import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
 
 import java.text.ParseException;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest {
 
@@ -21,19 +23,17 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
     private ServiceAuthSupport serviceAuthSupport;
 
     protected String getIdamTestUser() {
-        return idamUserSupport.getIdamTestUser();
+        String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
+        String password = RandomStringUtils.random(32, 0, 20, true, true, "qw32rfHIJk9iQ8Ud7h0X".toCharArray());
+        return idamUserSupport.getIdamTestUser(username, password);
     }
 
-    protected void regenerateIdamTestUser() {
-        idamUserSupport.createUserAndToken();
-    }
-
-    protected String generateNewUserAndReturnToken() {
-        return idamUserSupport.generateNewUserAndReturnToken();
-    }
 
     protected String getIdamTestCaseWorkerUser() {
-        return idamUserSupport.getIdamTestCaseWorkerUser();
+        String username = "simulate-delivered-caseworker" + UUID.randomUUID() + "@notifications.service.gov.uk";
+        String password = RandomStringUtils.random(32, 0, 20, true, true, "qw32rfHIJk9iQ8Ud7h0X".toCharArray());
+
+        return idamUserSupport.getIdamTestCaseWorkerUser(username, password);
     }
 
     protected String getServiceToken() {

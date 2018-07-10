@@ -1,95 +1,85 @@
 package uk.gov.hmcts.reform.divorce.support.auth;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang3.StringUtils;
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class IdamUserSupport {
 
-    private static final String idamCaseworkerUser = "CaseWorkerTest";
-
-    private static final String idamCaseworkerPw = "password";
-
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
 
-    private String idamUsername;
+    @Value("${auth.idam.secret}")
+    private String idamSecret;
 
-    private String idamPassword;
+    @Value("${auth.idam.redirect.url}")
+    private String idamRedirectUrl;
 
-    private String testUserJwtToken;
-
-    private String testCaseworkerJwtToken;
-
-    public String generateNewUserAndReturnToken() {
-        String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        String password = UUID.randomUUID().toString();
-        createUserInIdam(username, password);
-        return generateUserTokenWithNoRoles(username, password);
+    public String getIdamTestUser(String username, String password) {
+        createCitizen(username, password);
+        return generateClientToken(username, password);
     }
 
-    public synchronized String getIdamTestUser() {
-        if (StringUtils.isBlank(testUserJwtToken)) {
-            createUserAndToken();
-        }
-        return testUserJwtToken;
+    public String getIdamTestCaseWorkerUser(String username, String password) {
+        createCaseworkerUserInIdam(username, password);
+        return generateClientToken(username, password);
     }
 
-    protected void createUserAndToken() {
-        createUserInIdam();
-        testUserJwtToken = generateUserTokenWithNoRoles(idamUsername, idamPassword);
-    }
-
-    public synchronized String getIdamTestCaseWorkerUser() {
-        if (StringUtils.isBlank(testCaseworkerJwtToken)) {
-            createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPw);
-        }
-
-        return testCaseworkerJwtToken;
-    }
-
-    private void createUserInIdam(String username, String password) {
-        RestAssured.given()
+    private void createCitizen(String username, String password) {
+        Response response = RestAssured.given()
             .header("Content-Type", "application/json")
             .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
             .post(idamCreateUrl());
+        System.out.println(String.format("Created citizen with response code %s and body %s", response.statusCode(), response.body().print()));
     }
 
-    private void createUserInIdam() {
-        idamUsername = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        idamPassword = UUID.randomUUID().toString();
-
-        createUserInIdam(idamUsername, idamPassword);
-    }
-
-    private void createCaseworkerUserInIdam() {
-        RestAssured.given()
-                .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPw + "\", "
-                        + "\"roles\":[\"caseworker-divorce.support\"], \"userGroup\":{\"code\":\"caseworker\"}}")
-                .post(idamCreateUrl());
+    private void createCaseworkerUserInIdam(String username, String password) {
+        Response response = RestAssured.given()
+            .header("Content-Type", "application/json")
+            .body("{\"email\":\"" + username + "\", "
+                + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + password + "\", "
+                + "\"roles\":[\"caseworker-divorce\"], \"userGroup\":{\"code\":\"caseworker\"}}")
+            .post(idamCreateUrl());
+        System.out.println(String.format("Created case worker with response code %s and body %s", response.statusCode(), response.body().print()));
     }
 
     private String idamCreateUrl() {
         return idamUserBaseUrl + "/testing-support/accounts";
     }
 
-    private String generateUserTokenWithNoRoles(String username, String password) {
-        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        final String token = RestAssured.given().baseUri(idamUserBaseUrl)
-            .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=token&client_id=divorce.support&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
-            .body()
-            .path("access-token");
+    private String generateClientToken(String username, String password) {
+        String code = generateClientCode(username, password);
+
+        ResponseBody res = RestAssured.given().post(idamUserBaseUrl + "/oauth2/token?code=" + code +
+            "&client_secret=" + idamSecret +
+            "&client_id=divorce" +
+            "&redirect_uri=" + idamRedirectUrl +
+            "&grant_type=authorization_code")
+            .body();
+        System.out.println("Generate client token response body");
+        System.out.println(res.print());
+        String token = res.path("access_token");
 
         return "Bearer " + token;
     }
+
+    private String generateClientCode(String username, String password) {
+        String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+
+        ResponseBody res = RestAssured.given().baseUri(idamUserBaseUrl)
+            .header("Authorization", "Basic " + encoded)
+            .post("/oauth2/authorize?response_type=code&client_id=divorce&redirect_uri=" + idamRedirectUrl)
+            .body();
+        System.out.println("Generate client code response body");
+        System.out.println(res.print());
+
+        return res.path("code");
+    }
+
 }
