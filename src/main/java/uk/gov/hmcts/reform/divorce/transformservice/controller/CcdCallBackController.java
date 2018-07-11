@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
+import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
+import uk.gov.hmcts.reform.divorce.validationservice.service.ValidationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +56,9 @@ public class CcdCallBackController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ValidationService validationService;
+
     @PostMapping(path = "/petition-issued", consumes = MediaType.APPLICATION_JSON,
         produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Generate and add a pdf of the petition to the case")
@@ -64,6 +71,16 @@ public class CcdCallBackController {
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
+        ValidationResponse validationResponse = validationService.validateCoreCaseData(
+            caseDetailsRequest.getCaseDetails().getCaseData()
+        );
+        if (isNotValidCoreCaseData(validationResponse)) {
+            return ResponseEntity.ok(new CCDCallbackResponse(
+                caseDetailsRequest.getCaseDetails().getCaseData(), 
+                validationResponse.getErrors(), 
+                validationResponse.getWarnings()
+            ));
+        }
         CoreCaseData coreCaseData = updateService.addPdf(caseDetailsRequest, authorizationToken);
         return ResponseEntity.ok(new CCDCallbackResponse(coreCaseData, new ArrayList<>(), new ArrayList<>()));
     }
@@ -99,6 +116,14 @@ public class CcdCallBackController {
         }
 
         return ResponseEntity.ok(new CCDCallbackResponse(null, new ArrayList<>(), new ArrayList<>()));
+    }
+
+    
+    private boolean isNotValidCoreCaseData(ValidationResponse response) {
+        boolean hasErrors = response.getErrors() != null && !response.getErrors().isEmpty();
+        boolean hasWarnings = response.getWarnings() != null && !response.getWarnings().isEmpty();
+        
+        return hasErrors || hasWarnings;
     }
 
     private String formatReferenceId(String referenceId) {
