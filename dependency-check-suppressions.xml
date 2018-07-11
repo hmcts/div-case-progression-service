@@ -19,7 +19,7 @@
         <notes><![CDATA[
    file name: spring-web-4.3.18.RELEASE.jar
    ]]></notes>
-        <filePath regex="true">.*tomcat-embed.*\.jar</filePath>
+        <filePath regex="true">spring-web-4.3.18.RELEASE.jar</filePath>
         <cve>CVE-2018-1258</cve>
     </suppress>
 </suppressions>
