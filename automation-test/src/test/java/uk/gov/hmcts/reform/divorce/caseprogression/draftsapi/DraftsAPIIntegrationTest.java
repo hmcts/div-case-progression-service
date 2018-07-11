@@ -74,6 +74,30 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     }
 
     @Test
+    public void shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade() throws Exception {
+
+        // only execute on preview as feature toggle is currently only enabled on preview and prod
+        if ("preview".equalsIgnoreCase(environment)) {
+            // given
+            regenerateIdamTestUser();
+            Long caseId = TestUtil.extractCaseId(submitCase("addresses.json"));
+            String updateUrl = getTransformationApiUrl() + getTransformationApiUpdateEndpoint() + "/" + caseId;
+            postToRestService(loadJSON("payment-made.json"), updateUrl);
+
+            // when
+            Response draftResponse = getDivorceDraft();
+
+            // then
+            assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
+            Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
+            String caseState = draftResponse.getBody().path("state").toString();
+
+            assertEquals(caseId, draftResponseCaseId);
+            assertEquals("Submitted", caseState);
+        }
+    }
+
+    @Test
     public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
 
         // only execute on preview as feature toggle is currently only enabled on preview and prod
