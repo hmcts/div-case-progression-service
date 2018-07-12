@@ -261,8 +261,7 @@ public class CcdCallbackControllerTest {
 
         when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
             .amount(555.00).version(2).build());
-        doThrow(new RuntimeException("some_error")).when(paymentService).processPBAPayments("jwt-token",
-            submittedCase);
+        doThrow(new PaymentFailedException("some_error")).when(paymentService).processPBAPayments(any(), any());
         mvc.perform(post(PROCESS_PBA_PAYMENTS)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .header("Authorization", "jwt-token")
