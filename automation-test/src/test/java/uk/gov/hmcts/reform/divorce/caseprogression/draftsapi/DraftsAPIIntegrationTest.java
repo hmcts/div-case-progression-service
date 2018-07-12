@@ -24,8 +24,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Autowired
     protected DraftStoreClient draftStoreClient;
 
-    @Value("${env}")
-    private String environment;
+    @Value("${draft_check_ccd_enabled}")
+    private String draftCheckCCdFeatureEnabled;
 
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
@@ -76,8 +76,12 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade() throws Exception {
 
+        System.out.println("Testing testing" + draftCheckCCdFeatureEnabled);
+
         // only execute on preview as feature toggle is currently only enabled on preview and prod
-        if ("preview".equalsIgnoreCase(environment)) {
+        if ("true".equalsIgnoreCase(draftCheckCCdFeatureEnabled)) {
+            System.out.println("Executing shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade");
+
             // given
             regenerateIdamTestUser();
             Long caseId = TestUtil.extractCaseId(submitCase("addresses.json"));
@@ -101,7 +105,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
 
         // only execute on preview as feature toggle is currently only enabled on preview and prod
-        if ("preview".equalsIgnoreCase(environment)) {
+        if ("true".equalsIgnoreCase(draftCheckCCdFeatureEnabled)) {
             // given
             regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
             Response caseSubmissionResponse = submitCase("addresses.json");
