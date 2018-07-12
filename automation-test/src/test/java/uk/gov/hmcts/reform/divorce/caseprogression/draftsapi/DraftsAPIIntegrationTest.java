@@ -76,12 +76,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Test
     public void shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade() throws Exception {
 
-        System.out.println("Testing testing" + draftCheckCCdFeatureEnabled);
-
         // only execute on preview as feature toggle is currently only enabled on preview and prod
         if ("true".equalsIgnoreCase(draftCheckCCdFeatureEnabled)) {
-            System.out.println("Executing shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade");
-
             // given
             regenerateIdamTestUser();
             Long caseId = TestUtil.extractCaseId(submitCase("addresses.json"));
