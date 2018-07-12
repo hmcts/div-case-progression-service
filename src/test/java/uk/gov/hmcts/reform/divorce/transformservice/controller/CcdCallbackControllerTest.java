@@ -90,6 +90,7 @@ public class CcdCallbackControllerTest {
         final Long caseId = 1235678L;
 
         CoreCaseData coreCaseData = new CoreCaseData();
+        coreCaseData.setD8StatementOfTruth("YES");
 
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setEventId("uploadDocument");

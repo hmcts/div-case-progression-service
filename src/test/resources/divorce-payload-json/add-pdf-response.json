@@ -173,7 +173,7 @@
       }
     ],
     "D8RejectDocumentsUploaded":null,
-    "D8StatementOfTruth":null,
+    "D8StatementOfTruth":"YES",
     "D8SolicitorReference":null,
     "D8DivorceUnit":"eastMidlands",
     "D8ReasonForDivorceShowAdultery":"YES",
