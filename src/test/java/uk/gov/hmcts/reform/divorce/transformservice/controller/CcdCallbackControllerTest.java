@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
 import com.thoughtworks.selenium.webdriven.commands.Submit;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.results.ResultMatchers;
@@ -23,6 +24,7 @@ import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.pay.services.PaymentService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
@@ -241,6 +243,31 @@ public class CcdCallbackControllerTest {
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .header("Authorization", "jwt-token")
             .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+        verify(paymentService, times(1)).processPBAPayments(anyString(), any());
+    }
+
+    @Test
+    public void givenCallbackReceived_whenToProcessPBAPaymentsWithError_thenExceptException() throws Exception {
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setOrderSummary(orderSummary);
+        caseDetails.setCaseData(coreCaseData);
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
+            .amount(555.00).version(2).build());
+        doThrow(new RuntimeException("some_error")).when(paymentService).processPBAPayments("jwt-token",
+            submittedCase);
+        mvc.perform(post(PROCESS_PBA_PAYMENTS)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .header("Authorization", "jwt-token")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                jsonPath("$.errors" , Matchers.hasSize(1)));
 
         verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
         verify(paymentService, times(1)).processPBAPayments(anyString(), any());
