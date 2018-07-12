@@ -24,7 +24,7 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
     @Test
     public void shouldReturnSuccessWhenApdfIsCreated() throws Exception {
 
-        Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
+        Response caseProgressionResponse = postToRestService(loadJson("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
 
         assertThat(caseProgressionResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertNotNull(caseProgressionResponse.getBody().path("data.D8DivorceWho"));
