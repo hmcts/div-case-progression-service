@@ -71,6 +71,12 @@ public class CcdCallBackController {
         @RequestHeader(value = "Authorization", required = false) String authorizationToken,
         @RequestBody @ApiParam("CaseData") CreateEvent caseDetailsRequest) {
 
+        // Temporary fix. The user should not be able to submit a case without confirming the statment of truth
+        // This fixes a bug where the statement of truth is not set properly when saved to CCD
+        if (caseDetailsRequest.getCaseDetails().getCaseData() != null) {
+            caseDetailsRequest.getCaseDetails().getCaseData().setD8StatementOfTruth("YES");
+        }
+
         ValidationResponse validationResponse = validationService.validateCoreCaseData(
             caseDetailsRequest.getCaseDetails().getCaseData()
         );
