@@ -3,15 +3,14 @@ package uk.gov.hmcts.reform.divorce.transformservice.service;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.Event;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
-import uk.gov.hmcts.reform.divorce.transformservice.mapping.DivorceCaseToCCDSubmissionMapper;
 import uk.gov.hmcts.reform.divorce.transformservice.mapping.DivorceCaseToCCDPaymentUpdateMapper;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.DivorceCaseToCCDSubmissionMapper;
 
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +34,9 @@ public class DivorceToCcdTransformationService implements TransformationService 
 
     @Override
     @SuppressWarnings("unchecked")
-    public CaseDataContent transformSubmission(DivorceSession divorceSession, CreateEvent createEvent, String eventSummary) {
+    public CaseDataContent transformSubmission(DivorceSession divorceSession,
+                                               CreateEvent createEvent,
+                                               String eventSummary) {
 
         CoreCaseData coreCaseData = divorceCaseToCCDSubmissionMapper.divorceCaseDataToCourtCaseData(divorceSession);
         return buildCaseDataContent(createEvent, eventSummary, coreCaseData);
@@ -43,7 +44,9 @@ public class DivorceToCcdTransformationService implements TransformationService 
 
     @Override
     @SuppressWarnings("unchecked")
-    public CaseDataContent transformUpdate(DivorceSession divorceSession, CreateEvent createEvent, String eventSummary) {
+    public CaseDataContent transformUpdate(DivorceSession divorceSession,
+                                           CreateEvent createEvent,
+                                           String eventSummary) {
 
         if (Objects.nonNull(createEvent.getCaseDetails().getCaseData())) {
             divorceSession.setExistingPayments(createEvent.getCaseDetails().getCaseData().getPayments());
@@ -53,7 +56,9 @@ public class DivorceToCcdTransformationService implements TransformationService 
         return buildCaseDataContent(createEvent, eventSummary, coreCaseData);
     }
 
-    private CaseDataContent buildCaseDataContent(CreateEvent createEvent, String eventSummary, CoreCaseData coreCaseData) {
+    private CaseDataContent buildCaseDataContent(CreateEvent createEvent,
+                                                 String eventSummary,
+                                                 CoreCaseData coreCaseData) {
         return CaseDataContent.builder()
             .data(objectMapper.convertValue(coreCaseData, Map.class))
             .token(createEvent.getToken())

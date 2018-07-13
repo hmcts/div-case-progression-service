@@ -6,5 +6,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 
 public interface TransformationService {
     CaseDataContent transformSubmission(DivorceSession divorceSession, CreateEvent createEvent, String eventSummary);
+
     CaseDataContent transformUpdate(DivorceSession divorceSession, CreateEvent createEvent, String eventSummary);
 }
