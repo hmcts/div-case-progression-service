@@ -25,8 +25,8 @@ public class DivorceToCcdTransformationService implements TransformationService 
     private final DivorceCaseToCCDPaymentUpdateMapper divorceCaseToCCDPaymentUpdateMapper;
 
     @Autowired
-    public DivorceToCcdTransformationService(@Qualifier("divorceCaseToCCDSubmissionMapperImpl") DivorceCaseToCCDSubmissionMapper divorceCaseToCCDSubmissionMapper,
-                                             @Qualifier("divorceCaseToCCDPaymentUpdateMapperImpl")DivorceCaseToCCDPaymentUpdateMapper divorceCaseToCCDPaymentUpdateMapper) {
+    public DivorceToCcdTransformationService(DivorceCaseToCCDSubmissionMapper divorceCaseToCCDSubmissionMapper,
+                                             DivorceCaseToCCDPaymentUpdateMapper divorceCaseToCCDPaymentUpdateMapper) {
         this.divorceCaseToCCDSubmissionMapper = divorceCaseToCCDSubmissionMapper;
         this.divorceCaseToCCDPaymentUpdateMapper = divorceCaseToCCDPaymentUpdateMapper;
         this.objectMapper = new ObjectMapper();

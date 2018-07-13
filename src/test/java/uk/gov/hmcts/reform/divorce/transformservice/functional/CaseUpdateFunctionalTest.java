@@ -452,7 +452,6 @@ public class CaseUpdateFunctionalTest {
     private void caseUpdateStub(final String filePath) throws Exception {
         String requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()),
             Charset.defaultCharset());
-        //JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
 
         String responseBody = FileUtils.readFileToString(
             new File(getClass().getResource("/fixtures/ccd/case-event-creation-201-response.json").toURI()),
