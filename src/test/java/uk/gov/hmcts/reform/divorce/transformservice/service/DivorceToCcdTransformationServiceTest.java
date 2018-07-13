@@ -40,12 +40,14 @@ public class DivorceToCcdTransformationServiceTest {
 
         CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
 
-        CaseDataContent caseDataContent = transformationService.transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
+        CaseDataContent caseDataContent = transformationService
+            .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
 
         assertThat(caseDataContent.getToken(), equalTo(TOKEN));
         assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
         assertThat(caseDataContent.getEvent().getSummary(), equalTo(EVENT_SUMMARY));
-        assertThat(caseDataContent.getData().get("createdDate"), equalTo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()));
+        assertThat(caseDataContent.getData().get("createdDate"),
+            equalTo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()));
     }
 
     @Test
@@ -60,7 +62,8 @@ public class DivorceToCcdTransformationServiceTest {
         CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
 
         // when
-        CaseDataContent caseDataContent = transformationService.transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
+        CaseDataContent caseDataContent = transformationService
+            .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
 
         // then
         assertNotNull(caseDataContent.getData().get("D8PetitionerPhoneNumber"));
@@ -74,7 +77,8 @@ public class DivorceToCcdTransformationServiceTest {
 
         CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
 
-        CaseDataContent caseDataContent = transformationService.transformUpdate(divorceSession, createEvent, EVENT_SUMMARY);
+        CaseDataContent caseDataContent = transformationService
+            .transformUpdate(divorceSession, createEvent, EVENT_SUMMARY);
 
         assertThat(caseDataContent.getToken(), equalTo(TOKEN));
         assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
