@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNull;
 @RunWith(MockitoJUnitRunner.class)
 public class DraftResponseFactoryTest {
 
-    private static final String CASE_STATUS = "state";
+    private static final String CASE_STATE = "state";
     private static final String AWAITING_PAYMENT_STATUS = "awaitingPayment";
 
     @Test
@@ -28,10 +28,10 @@ public class DraftResponseFactoryTest {
         List<Map<String, Object>> listOfCases = new ArrayList<>();
 
         Map<String, Object> caseData1 = new HashMap<>();
-        caseData1.put(CASE_STATUS, AWAITING_PAYMENT_STATUS);
+        caseData1.put(CASE_STATE, AWAITING_PAYMENT_STATUS);
 
         Map<String, Object> caseData2 = new HashMap<>();
-        caseData2.put(CASE_STATUS, AWAITING_PAYMENT_STATUS);
+        caseData2.put(CASE_STATE, AWAITING_PAYMENT_STATUS);
 
         listOfCases.add(caseData1);
         listOfCases.add(caseData2);
@@ -75,22 +75,24 @@ public class DraftResponseFactoryTest {
     }
 
     @Test
-    public void buildDraftResponseFromCaseData_should_return_draft_response_when_case_exists_in_awaiting_payment() {
+    public void buildDraftResponseFromCaseData_should_return_draft_response_when_case_exists_with_case_status() {
 
         // given
-        Map<String, Object> caseData2 = new HashMap<>();
-        caseData2.put(CASE_STATUS, "awaitingPayment");
+        Map<String, Object> caseData = new HashMap<>();
+        String status = "awaitingPayment";
+        caseData.put(CASE_STATE, status);
+
         Long caseId = 123L;
-        caseData2.put("id", caseId);
+        caseData.put("id", caseId);
 
         Map<String, Object> caseDetails = new HashMap<>();
         String courts = "courtsXYZz";
         caseDetails.put("D8DivorceUnit", courts);
 
-        caseData2.put("case_data", caseDetails);
+        caseData.put("case_data", caseDetails);
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
-        listOfCases.add(caseData2);
+        listOfCases.add(caseData);
 
         // when
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
@@ -101,5 +103,6 @@ public class DraftResponseFactoryTest {
         assertEquals(true, data.get("submissionStarted").asBoolean());
         assertEquals(courts, data.get("courts").asText());
         assertEquals(caseId, (Long) data.get("caseId").asLong());
+        assertEquals(status, data.get(CASE_STATE).asText());
     }
 }
