@@ -23,11 +23,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.join;
-import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Mapper(componentModel = "spring", uses = DocumentCollectionMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public abstract class DivorceCaseToCCDMapper {
+public abstract class DivorceCaseToCCDSubmissionMapper {
 
     private static final String BLANK_SPACE = " ";
     private static final String LINE_SEPARATOR = "\n";
@@ -91,12 +90,12 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "connectionSummary", target = "d8ConnectionSummary")
     @Mapping(source = "courts", target = "d8DivorceUnit")
     @Mapping(source = "marriageCertificateFiles", target = "d8DocumentsUploaded")
-    @Mapping(target = "createdDate",
-        expression =
-            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     @Mapping(source = "d8Documents", target = "d8Documents")
     @Mapping(source = "respondentSolicitorName", target = "d8RespondentSolicitorName")
     @Mapping(source = "respondentSolicitorCompany", target = "d8RespondentSolicitorCompany")
+    @Mapping(target = "createdDate",
+        expression =
+            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
     private String translateToStringYesNo(final String value) {

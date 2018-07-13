@@ -48,7 +48,7 @@ public class UpdateService {
             divorceEventSessionData.getEventId());
 
         CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(userDetails, jwt, caseId,
-            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+            transformationService.transformUpdate(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);
