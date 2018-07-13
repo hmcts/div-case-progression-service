@@ -27,7 +27,7 @@ public class ValidationServiceValidateIntegrationTest extends BaseIntegrationTes
     @SuppressWarnings("unchecked")
     public void shouldReturnSuccessOnValidationWithValidData() throws Exception {
 
-        Response validationResponse = postToRestService(loadJSON("validation-valid-request.json"), validateUrl);
+        Response validationResponse = postToRestService(loadJson("validation-valid-request.json"), validateUrl);
 
         assertThat(validationResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertEquals("success", validationResponse.getBody().path("validationStatus"));
@@ -38,7 +38,7 @@ public class ValidationServiceValidateIntegrationTest extends BaseIntegrationTes
     @SuppressWarnings("unchecked")
     public void shouldReturnFailedOnValidationWithInvalidData() throws Exception {
 
-        Response validationResponse = postToRestService(loadJSON("validation-invalid-request.json"), validateUrl);
+        Response validationResponse = postToRestService(loadJson("validation-invalid-request.json"), validateUrl);
 
         assertThat(validationResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertEquals("failed", validationResponse.getBody().path("validationStatus"));
