@@ -79,7 +79,8 @@ public class HealthCheckFunctionalTest {
 
     @ClassRule
     public static WireMockClassRule paymentApiServer = new WireMockClassRule(WireMockSpring.options().port(4010)
-    
+        .bindAddress("localhost"));
+
     @ClassRule
     public static WireMockClassRule validationServer = new WireMockClassRule(WireMockSpring.options().port(4008)
         .bindAddress("localhost"));
@@ -100,6 +101,7 @@ public class HealthCheckFunctionalTest {
     private String validationServiceHealthPath;
     @Value("${service.service-auth-provider.health.context-path}")
     private String serviceAuthHealthContextPath;
+    
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -321,6 +323,7 @@ public class HealthCheckFunctionalTest {
     private void stubPaymentApiServerHealthDown() throws Exception {
         stubServiceResponse(paymentApiServer, paymentApiHealthUrl, 503,
             "/fixtures/payment-api/healthcheck-down.json");
+    }
             
     private void stubValidationServiceHealthUp() throws Exception {
         stubServiceResponse(validationServer, validationServiceHealthPath, 200,
