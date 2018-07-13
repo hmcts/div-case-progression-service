@@ -10,6 +10,7 @@ locals {
     draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    div_validation_service_url = "http://div-vs-${local.local_env}.service.core-compute-${local.local_env}.internal"
 
     previewVaultName = "${var.product}-${var.reform_service_name}"
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
@@ -29,6 +30,7 @@ module "div-case-progression" {
     appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
     subscription                    = "${var.subscription}"
     capacity                        = "${var.capacity}"
+    common_tags                     = "${var.common_tags}"
 
     is_frontend = false
 
@@ -64,6 +66,7 @@ module "div-case-progression" {
         PAYMENT_API_BASEURL = "${local.payment_api_base_url}"
         FEES_AND_PAYMENTS_BASE_URL="${local.fees_and_payments_base_url}"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
+        DIV_VALIDATION_SERVICE_URL = "${local.div_validation_service_url}"
     }
 }
 

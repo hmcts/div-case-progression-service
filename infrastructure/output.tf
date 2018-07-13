@@ -13,3 +13,7 @@ output "idam_s2s_url" {
 output "draft_store_service_url" {
     value = "${local.draft_store_api_baseurl}"
 }
+
+output "draft_check_ccd_enabled" {
+    value = "${var.draft_check_ccd_enabled}"
+}
