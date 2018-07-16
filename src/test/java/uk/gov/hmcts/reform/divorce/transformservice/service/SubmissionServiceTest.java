@@ -59,7 +59,8 @@ public class SubmissionServiceTest {
 
         when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
-        when(transformationService.transformSubmission(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
+        when(transformationService
+            .transformSubmission(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
         when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
 
         assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
