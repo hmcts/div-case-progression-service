@@ -1,12 +1,10 @@
 package uk.gov.hmcts.reform.divorce.transformservice.controller;
 
-import com.thoughtworks.selenium.webdriven.commands.Submit;
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,13 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.pay.services.PaymentService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
@@ -32,12 +30,16 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.OrderSummary;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDCallbackResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
+import uk.gov.hmcts.reform.divorce.validationservice.domain.ValidationResponse;
+import uk.gov.hmcts.reform.divorce.validationservice.service.ValidationService;
 
 import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -56,9 +58,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -86,6 +86,9 @@ public class CcdCallbackControllerTest {
     @MockBean
     private PaymentService paymentService;
 
+    @MockBean
+    private ValidationService validationService;
+
     private MockMvc mvc;
 
     private String requestContent;
@@ -111,6 +114,7 @@ public class CcdCallbackControllerTest {
         caseDetails.setCaseId(caseId + "");
         submittedCase.setCaseDetails(caseDetails);
 
+        when(validationService.validateCoreCaseData(coreCaseData)).thenReturn(new ValidationResponse());
         when(updateService.addPdf(submittedCase, AUTH_TOKEN)).thenReturn(coreCaseData);
 
         MvcResult result = mvc.perform(post(ADD_PDF_URL)
@@ -126,8 +130,9 @@ public class CcdCallbackControllerTest {
 
         assertEquals(coreCaseData, response.getData());
 
+        verify(validationService).validateCoreCaseData(coreCaseData);
         verify(updateService).addPdf(submittedCase, AUTH_TOKEN);
-        verifyNoMoreInteractions(updateService);
+        verifyNoMoreInteractions(validationService, updateService);
     }
 
     @Test
@@ -151,6 +156,7 @@ public class CcdCallbackControllerTest {
 
         when(exception.getMessage()).thenReturn(errorMessage);
 
+        when(validationService.validateCoreCaseData(null)).thenReturn(new ValidationResponse());
         doThrow(exception).when(updateService).addPdf(submittedCase, AUTH_TOKEN);
 
         ResultActions perform = mvc.perform(post(ADD_PDF_URL)
@@ -162,30 +168,43 @@ public class CcdCallbackControllerTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.errors[0]", is(exceptionMessage)));
 
+        verify(validationService).validateCoreCaseData(null);
         verify(updateService).addPdf(eq(submittedCase), eq(AUTH_TOKEN));
         verify(exception).getMessage();
-        verifyNoMoreInteractions(updateService);
+        verifyNoMoreInteractions(validationService, updateService);
     }
 
 
     @Test
     public void givenCallbackIsReceivedFromCCD_thenProcessACallback_ExpectJWTTokenInTheHeader() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        submittedCase.setCaseDetails(caseDetails);
+
         String authorizationKey = "ZZZZZZZZZZZZZZ";
+        when(validationService.validateCoreCaseData(null)).thenReturn(new ValidationResponse());
         when(updateService.addPdf(anyObject(), anyString())).thenReturn(null);
         mvc.perform(post(ADD_PDF_URL)
-            .content(ObjectMapperTestUtil.convertObjectToJsonString(new CreateEvent()))
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .header(AUTH_HEADER, authorizationKey)
             .contentType(MediaType.APPLICATION_JSON_UTF8));
 
+        verify(validationService).validateCoreCaseData(null);
         verify(updateService).addPdf(anyObject(), eq(authorizationKey));
     }
 
     @Test
     public void givenCallbackIsReceivedFromCCD_thenProcessACallbackWithNullAuthHeader_ExpectToPass() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        submittedCase.setCaseDetails(caseDetails);
+
+        when(validationService.validateCoreCaseData(null)).thenReturn(new ValidationResponse());
         when(updateService.addPdf(anyObject(), anyString())).thenReturn(null);
         mvc.perform(post(ADD_PDF_URL)
-            .content(ObjectMapperTestUtil.convertObjectToJsonString(new CreateEvent()))
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .contentType(MediaType.APPLICATION_JSON_UTF8));
+        verify(validationService).validateCoreCaseData(null);
         verify(updateService).addPdf(anyObject(), eq(null));
     }
 
@@ -241,6 +260,30 @@ public class CcdCallbackControllerTest {
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .header("Authorization", "jwt-token")
             .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+        verify(paymentService, times(1)).processPBAPayments(anyString(), any());
+    }
+
+    @Test
+    public void givenCallbackReceived_whenToProcessPBAPaymentsWithError_thenExceptException() throws Exception {
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setOrderSummary(orderSummary);
+        caseDetails.setCaseData(coreCaseData);
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
+            .amount(555.00).version(2).build());
+        doThrow(new PaymentFailedException("some_error")).when(paymentService).processPBAPayments(any(), any());
+        mvc.perform(post(PROCESS_PBA_PAYMENTS)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .header("Authorization", "jwt-token")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                jsonPath("$.errors" , Matchers.hasSize(1)));
 
         verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
         verify(paymentService, times(1)).processPBAPayments(anyString(), any());
@@ -363,6 +406,51 @@ public class CcdCallbackControllerTest {
 
         verify(emailService).sendSubmissionNotificationEmail(anyObject(), eq(templateVars));
         verifyNoMoreInteractions(emailService);
+    }
+
+    public void givenErrorCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToNotAddPdf() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        submittedCase.setCaseDetails(caseDetails);
+
+        List<String> errors = new ArrayList<>();
+        errors.add("error");
+
+        ValidationResponse validationResponse = new ValidationResponse();
+        validationResponse.setValidationStatus("failed");
+        validationResponse.setErrors(errors);
+
+        when(validationService.validateCoreCaseData(null)).thenReturn(validationResponse);
+
+        mvc.perform(post(ADD_PDF_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(validationService).validateCoreCaseData(null);
+        verify(updateService, never()).addPdf(anyObject(), eq(null));
+    }
+
+    @Test
+    public void givenWarningsCallbackIsReceivedFromCCD_thenValidateTheRequest_ExpectToNotAddPdf() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        submittedCase.setCaseDetails(caseDetails);
+
+        List<String> warnings = new ArrayList<>();
+        warnings.add("warning");
+
+        ValidationResponse validationResponse = new ValidationResponse();
+        validationResponse.setValidationStatus("failed");
+        validationResponse.setWarnings(warnings);
+
+        when(validationService.validateCoreCaseData(null)).thenReturn(validationResponse);
+
+        mvc.perform(post(ADD_PDF_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
+        verify(validationService).validateCoreCaseData(null);
+        verify(updateService, never()).addPdf(anyObject(), eq(null));
     }
 
     private Map<String, String> getTemplateVars(String divorceUnit) {

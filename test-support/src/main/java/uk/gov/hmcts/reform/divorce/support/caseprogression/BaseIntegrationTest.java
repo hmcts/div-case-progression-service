@@ -5,14 +5,10 @@ import io.restassured.config.SSLConfig;
 import io.restassured.response.Response;
 import lombok.Getter;
 import net.serenitybdd.rest.SerenityRest;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.divorce.support.auth.BaseIntegrationTestWithIdamSupport;
 import uk.gov.hmcts.reform.divorce.support.auth.model.ServiceAuthTokenFor;
 import uk.gov.hmcts.reform.divorce.support.util.ResourceLoader;
@@ -38,9 +34,12 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.endpoint.update}")
     private String transformationApiUpdateEndpoint;
 
+    @Value("${transformation.api.endpoint.validate}")
+    private String transformationApiValidateEndpoint;
+
     private JSONArray fileUploadResponse = null;
 
-    public String loadJSON(final String fileName) throws Exception {
+    public String loadJson(final String fileName) throws Exception {
         String jsonPayload = ResourceLoader.loadAsText("divorce-payload-json/" + fileName);
         return replaceMockFileMetadataWithActualMetadata(jsonPayload);
     }
@@ -85,9 +84,9 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.put("Authorization", token);
-       // if (serviceToken) {
-            headers.put("ServiceAuthorization", getServiceToken());
-       // }
+        // if (serviceToken) {
+        headers.put("ServiceAuthorization", getServiceToken());
+        // }
         return headers;
     }
 
@@ -106,7 +105,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     }
 
     protected Response submitCase(String fileName) throws Exception {
-        return postToRestService(loadJSON(fileName), transformationApiSubmitUrl);
+        return postToRestService(loadJson(fileName), transformationApiSubmitUrl);
     }
 
     @Override

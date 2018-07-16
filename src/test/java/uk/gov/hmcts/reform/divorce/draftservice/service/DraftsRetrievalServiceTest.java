@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftList;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ public class DraftsRetrievalServiceTest {
     @Mock
     private DraftStoreClient mockDraftStoreClient;
     @Mock
-    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+    private RetrieveCcdClient mockRetrieveCcdClient;
     @Mock
     private DraftList draftList;
     @Mock
@@ -53,11 +54,11 @@ public class DraftsRetrievalServiceTest {
     private DraftsRetrievalService underTest;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         underTest = new DraftsRetrievalService(mockModelFactory,
-                mockDraftStoreClient,
-                mockAwaitingPaymentCaseRetriever);
+            mockDraftStoreClient,
+            mockRetrieveCcdClient);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
@@ -102,9 +103,9 @@ public class DraftsRetrievalServiceTest {
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(ccdResponseData);
-        when(mockAwaitingPaymentCaseRetriever
-                .getCases(USER_ID, JWT))
-                .thenReturn(listOfCases);
+        when(mockRetrieveCcdClient
+            .getCases(USER_ID, JWT))
+            .thenReturn(listOfCases);
 
         // when
         DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
