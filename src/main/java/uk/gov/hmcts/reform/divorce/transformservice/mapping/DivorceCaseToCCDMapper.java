@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,25 +13,20 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.YesNoAnswer;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.payments.PaymentContext;
-import uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce.ReasonForDivorceContext;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Mapper(componentModel = "spring", uses = DocumentCollectionMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class DivorceCaseToCCDMapper {
 
-    private static final String BLANK_SPACE = " ";
     private static final String LINE_SEPARATOR = "\n";
 
-    private ReasonForDivorceContext reasonForDivorceContext = new ReasonForDivorceContext();
     private PaymentContext paymentContext = new PaymentContext();
 
     @Value("${cohort}")
@@ -468,15 +462,6 @@ public abstract class DivorceCaseToCCDMapper {
     }
 
     @AfterMapping
-    protected void mapDerivedReasonForDivorceAdulteryThirdPartyName(DivorceSession divorceSession,
-                                                                    @MappingTarget CoreCaseData result) {
-        String adulteryThirdPartyName = StringUtils.join(divorceSession.getReasonForDivorceAdultery3rdPartyFirstName(),
-            BLANK_SPACE, divorceSession.getReasonForDivorceAdultery3rdPartyLastName());
-        result.setD8DerivedReasonForDivorceAdultery3dPtyNm(
-            isNotBlank(adulteryThirdPartyName) ? adulteryThirdPartyName : null);
-    }
-
-    @AfterMapping
     protected void mapReasonForDivorceHasMarriage(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
         result.setD8ReasonForDivorceHasMarriage(
             translateToStringYesNo(divorceSession.getReasonForDivorceHasMarriageDate()));
@@ -504,40 +489,11 @@ public abstract class DivorceCaseToCCDMapper {
     }
 
     @AfterMapping
-    protected void mapDerivedPetitionerCurrentFullName(DivorceSession divorceSession,
-                                                       @MappingTarget CoreCaseData result) {
-        String petitionerFullName = StringUtils.join(divorceSession.getPetitionerFirstName(), BLANK_SPACE,
-            divorceSession.getPetitionerLastName());
-        result.setD8DerivedPetitionerCurrentFullName(isNotBlank(petitionerFullName) ? petitionerFullName : null);
-    }
-
-    @AfterMapping
     protected void mapRespondentSolicitorAddress(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
         if (Objects.nonNull(divorceSession.getRespondentSolicitorAddress())) {
             result.setD8DerivedRespondentSolicitorAddr(
                 join(LINE_SEPARATOR, divorceSession.getRespondentSolicitorAddress().getAddressField()));
         }
-    }
-
-    @AfterMapping
-    protected void mapDerivedRespondentSolicitorDetails(DivorceSession divorceSession,
-                                                        @MappingTarget CoreCaseData result) {
-        if (Objects.nonNull(divorceSession.getRespondentSolicitorName())) {
-            String solicitorAddress = join(LINE_SEPARATOR,
-                divorceSession.getRespondentSolicitorAddress().getAddressField());
-
-            String solictorDetails = join(LINE_SEPARATOR, Arrays.asList(divorceSession.getRespondentSolicitorName(),
-                divorceSession.getRespondentSolicitorCompany()));
-
-            result.setD8DerivedRespondentSolicitorDetails(join(LINE_SEPARATOR, solictorDetails, solicitorAddress));
-        }
-    }
-
-    @AfterMapping
-    protected void mapDerivedRespondentCurrentName(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
-        String respondentFullName = StringUtils.join(divorceSession.getRespondentFirstName(), BLANK_SPACE,
-            divorceSession.getRespondentLastName());
-        result.setD8DerivedRespondentCurrentName(isNotBlank(respondentFullName) ? respondentFullName : null);
     }
 
     @AfterMapping
@@ -552,13 +508,6 @@ public abstract class DivorceCaseToCCDMapper {
     @AfterMapping
     protected void mapStatementOfTruth(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
         result.setD8StatementOfTruth(translateToStringYesNo(divorceSession.getConfirmPrayer()));
-    }
-
-    @AfterMapping
-    protected void mapDerivedStatementOfCase(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
-        if (Objects.nonNull(divorceSession.getReasonForDivorce())) {
-            result.setD8DerivedStatementOfCase(reasonForDivorceContext.deriveStatementOfWork(divorceSession));
-        }
     }
 
     @AfterMapping

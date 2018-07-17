@@ -17,7 +17,6 @@
     "D8PetitionerPhoneNumber" : "01234567890",
     "D8PetitionerFirstName" : "John",
     "D8PetitionerLastName" : "Smith",
-    "D8DerivedPetitionerCurrentFullName" : "John Smith",
     "D8PetitionerNameChangedHow" : [ "marriageCertificate" ],
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
@@ -31,7 +30,6 @@
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
     "D8RespondentFirstName" : "Jane",
     "D8RespondentLastName" : "Jamed",
-    "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8RespondentHomeAddress" : {
       "PostCode" : "SW9 9PE"
     },
@@ -46,7 +44,6 @@
     "D8LegalProceedingsRelated" : [ "children" ],
     "D8LegalProceedingsDetails" : "The legal proceeding details",
     "D8ReasonForDivorce" : "adultery",
-    "D8DerivedStatementOfCase" : "On a washing machine.\nSome time ago.\nIt hurts inside.",
     "D8ReasonForDivorceAdultery3rdPartyFName" : "Jennifer",
     "D8ReasonForDivorceAdultery3rdPartyLName" : "Lawrence",
     "D8ReasonForDivorceAdulteryDetails" : "It hurts inside.",
@@ -107,7 +104,6 @@
     "D8MarriageCanDivorce" : "YES",
     "D8MarriagePetitionerName" : "John Doe",
     "D8MarriageRespondentName" : "Jenny Benny",
-    "D8DerivedReasonForDivorceAdultery3dPtyNm" : "Jennifer Lawrence",
     "D8Connections" : {
       "A" : "The Petitioner and the Respondent are habitually resident in England and Wales",
       "C" : "The Respondent is habitually resident in England and Wales"
