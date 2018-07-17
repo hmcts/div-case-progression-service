@@ -114,17 +114,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
-
-    @Test
-    public void shouldReturnErrorForInvalidSessionData() throws Exception {
-
-        String caseId = getCaseIdFromSubmittingANewCase();
-
-        Response ccdResponse = postToRestService(loadJSON("invalid-update-session.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
-
-        assertResponseErrorsAreAsExpected(ccdResponse, CASE_VALIDATION_EXCEPTION, "\"details\":{\"field_errors\":[{\"id\":\"D8DivorceWho\",\"message\":\"notAValidValue is not a valid value\"}]}");
-    }
-
+    
     @Test
     public void shouldReturnErrorForInvalidUserJwtToken() throws Exception {
 

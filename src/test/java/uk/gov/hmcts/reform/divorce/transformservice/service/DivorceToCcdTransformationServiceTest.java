@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
@@ -33,7 +32,7 @@ public class DivorceToCcdTransformationServiceTest {
     private static final String EVENT_SUMMARY = "event-summary";
 
     @Test
-    public void shouldTransformDivorceSessionToCaseDataContentWhenSubmitting() {
+    public void shouldTransformDivorceSessionTokenAndEventDetailsToCaseDataContentWhenSubmitting() {
 
         DivorceSession divorceSession = mock(DivorceSession.class);
         CaseDetails caseDetails = new CaseDetails();
@@ -46,8 +45,57 @@ public class DivorceToCcdTransformationServiceTest {
         assertThat(caseDataContent.getToken(), equalTo(TOKEN));
         assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
         assertThat(caseDataContent.getEvent().getSummary(), equalTo(EVENT_SUMMARY));
+    }
+
+    @Test
+    public void shouldTransformDivorceSessionTokenAndEventDetailsToCaseDataContentWhenUpdating() {
+
+        DivorceSession divorceSession = mock(DivorceSession.class);
+        CaseDetails caseDetails = new CaseDetails();
+
+        CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
+
+        CaseDataContent caseDataContent = transformationService
+            .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
+
+        assertThat(caseDataContent.getToken(), equalTo(TOKEN));
+        assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
+        assertThat(caseDataContent.getEvent().getSummary(), equalTo(EVENT_SUMMARY));
+    }
+
+    @Test
+    public void shouldSetCurrentDateWhenTransformingSubmissionData() {
+
+        // given
+        DivorceSession divorceSession = mock(DivorceSession.class);
+        CaseDetails caseDetails = new CaseDetails();
+
+        CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
+
+        // when
+        CaseDataContent caseDataContent = transformationService
+            .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
+
+        // then
         assertThat(caseDataContent.getData().get("createdDate"),
             equalTo(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString()));
+    }
+
+    @Test
+    public void shouldNotSetCurrentDateWhenTransformingUpdateData() {
+
+        // given
+        DivorceSession divorceSession = mock(DivorceSession.class);
+        CaseDetails caseDetails = new CaseDetails();
+
+        CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
+
+        // when
+        CaseDataContent caseDataContent = transformationService
+            .transformUpdate(divorceSession, createEvent, EVENT_SUMMARY);
+
+        // then
+        assertNull(caseDataContent.getData().get("createdDate"));
     }
 
     @Test
@@ -55,7 +103,8 @@ public class DivorceToCcdTransformationServiceTest {
 
         // given
         DivorceSession divorceSession = new DivorceSession();
-        divorceSession.setPetitionerPhoneNumber("07724879304");
+        String petitionerPhoneNumber = "07724879304";
+        divorceSession.setPetitionerPhoneNumber(petitionerPhoneNumber);
 
         CaseDetails caseDetails = new CaseDetails();
 
@@ -66,23 +115,6 @@ public class DivorceToCcdTransformationServiceTest {
             .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
 
         // then
-        assertNotNull(caseDataContent.getData().get("D8PetitionerPhoneNumber"));
-    }
-
-    @Test
-    public void shouldTransformDivorceSessionToCaseDataContentWhenUpdating() {
-
-        DivorceSession divorceSession = mock(DivorceSession.class);
-        CaseDetails caseDetails = new CaseDetails();
-
-        CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
-
-        CaseDataContent caseDataContent = transformationService
-            .transformUpdate(divorceSession, createEvent, EVENT_SUMMARY);
-
-        assertThat(caseDataContent.getToken(), equalTo(TOKEN));
-        assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
-        assertThat(caseDataContent.getEvent().getSummary(), equalTo(EVENT_SUMMARY));
-        assertNull(caseDataContent.getData().get("createdDate"));
+        assertEquals(petitionerPhoneNumber, caseDataContent.getData().get("D8PetitionerPhoneNumber"));
     }
 }
