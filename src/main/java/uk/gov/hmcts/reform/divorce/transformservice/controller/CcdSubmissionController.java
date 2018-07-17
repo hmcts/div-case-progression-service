@@ -61,6 +61,7 @@ public class CcdSubmissionController {
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
 
+        System.out.print(divorceEventSession);
         return ResponseEntity.ok(new CCDResponse(updateService.update(caseId, divorceEventSession, jwt),
             null, STATUS));
     }
