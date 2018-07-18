@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.EncryptionKeyFactory;
 import uk.gov.hmcts.reform.divorce.idam.models.UserDetails;
 import uk.gov.hmcts.reform.divorce.idam.services.UserService;
+import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -71,7 +72,7 @@ public class DraftsServiceTest {
     private UserService mockUserService;
 
     @Mock
-    private AwaitingPaymentCaseRetriever mockAwaitingPaymentCaseRetriever;
+    private RetrieveCcdClient mockRetrieveCcdClient;
 
     private JsonNode requestContent;
 
@@ -97,7 +98,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT)).thenReturn(UserDetails.builder().id(USER_ID).build());
 
         underTest = new DraftsService(mockDraftsRetrievalService, mockUserService, mockEncryptionKeyFactory,
-                mockDraftStoreClient, mockDraftModelFactory, mockAwaitingPaymentCaseRetriever);
+                mockDraftStoreClient, mockDraftModelFactory, mockRetrieveCcdClient);
     }
 
     @Test
@@ -173,7 +174,7 @@ public class DraftsServiceTest {
 
         underTest.saveDraft(JWT, requestContent);
 
-        verify(mockAwaitingPaymentCaseRetriever).getCases(USER_ID, JWT);
+        verify(mockRetrieveCcdClient).getCases(USER_ID, JWT);
     }
 
     @Test
@@ -185,7 +186,7 @@ public class DraftsServiceTest {
         given(mockUserService.getUserDetails(JWT))
             .willReturn(mockUserDetails);
 
-        given(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        given(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .willReturn(ImmutableList.of(ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
 
         underTest.saveDraft(JWT, requestContent);
@@ -202,7 +203,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        when(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .thenReturn(ImmutableList.of(
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap()),
                 ImmutableMap.of("AWAITING_PAYMENT", Collections.emptyMap())));
@@ -226,7 +227,7 @@ public class DraftsServiceTest {
         when(mockUserService.getUserDetails(JWT))
             .thenReturn(mockUserDetails);
 
-        when(mockAwaitingPaymentCaseRetriever.getCases(USER_ID, JWT))
+        when(mockRetrieveCcdClient.getCases(USER_ID, JWT))
             .thenReturn(Collections.emptyList());
 
         when(mockDraftModelFactory.createDraft(requestContent)).thenReturn(createDraft);

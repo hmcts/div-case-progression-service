@@ -6,6 +6,7 @@
     "httpOnly": true,
     "path": "/"
   },
+    "confirmPrayer" : "Yes",
   "expires": 1507916960537,
   "screenHasMarriageBroken": "Yes",
   "screenHasRespondentAddress": "Yes",

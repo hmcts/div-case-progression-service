@@ -24,8 +24,8 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     @Autowired
     protected DraftStoreClient draftStoreClient;
 
-    @Value("${env}")
-    private String environment;
+    @Value("${draft_check_ccd_enabled}")
+    private boolean draftCheckCCdFeatureEnabled;
 
     @Test
     public void shouldSaveTheDraftAndReturnOKWhenThereIsNoDraftSaved() {
@@ -74,10 +74,34 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
     }
 
     @Test
+    public void shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade() throws Exception {
+
+        // only execute on preview as feature toggle is currently only enabled on preview and prod
+        if (draftCheckCCdFeatureEnabled) {
+            // given
+            regenerateIdamTestUser();
+            Long caseId = TestUtil.extractCaseId(submitCase("addresses.json"));
+            String updateUrl = getTransformationApiUrl() + getTransformationApiUpdateEndpoint() + "/" + caseId;
+            postToRestService(loadJSON("payment-made.json"), updateUrl);
+
+            // when
+            Response draftResponse = getDivorceDraft();
+
+            // then
+            assertEquals(HttpStatus.OK.value(), draftResponse.getStatusCode());
+            Long draftResponseCaseId = new Long(draftResponse.getBody().path("caseId").toString());
+            String caseState = draftResponse.getBody().path("state").toString();
+
+            assertEquals(caseId, draftResponseCaseId);
+            assertEquals("Submitted", caseState);
+        }
+    }
+
+    @Test
     public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
 
         // only execute on preview as feature toggle is currently only enabled on preview and prod
-        if ("preview".equalsIgnoreCase(environment)) {
+        if (draftCheckCCdFeatureEnabled) {
             // given
             regenerateIdamTestUser(); // generate a new idam user so previous test cases don't affect this one
             Response caseSubmissionResponse = submitCase("addresses.json");
