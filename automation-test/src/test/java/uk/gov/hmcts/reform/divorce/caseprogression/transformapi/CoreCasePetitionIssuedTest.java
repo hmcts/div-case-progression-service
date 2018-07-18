@@ -27,7 +27,9 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnSuccessWhenAPdfIsCreated() throws Exception {
 
-        Response caseProgressionResponse = postToRestService(loadJson("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
+        Response caseProgressionResponse = postToRestService(
+            loadJson("ccd-callback-petition-issued.json"), petitionIssuedApiUrl
+        );
 
         assertThat(caseProgressionResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertNotNull(caseProgressionResponse.getBody().path("data.D8DivorceWho"));

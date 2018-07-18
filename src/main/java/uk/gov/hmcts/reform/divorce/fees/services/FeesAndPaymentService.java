@@ -8,7 +8,7 @@ import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 @Component
 public class FeesAndPaymentService {
 
-    private FeesAnyPaymentApiClient feesAnyPaymentApiClient;
+    private final FeesAnyPaymentApiClient feesAnyPaymentApiClient;
 
     @Autowired
     public FeesAndPaymentService(FeesAnyPaymentApiClient feesAnyPaymentApiClient) {

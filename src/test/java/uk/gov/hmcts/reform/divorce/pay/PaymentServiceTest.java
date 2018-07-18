@@ -26,13 +26,10 @@ public class PaymentServiceTest {
 
     private PaymentServiceClient paymentServiceClient;
 
-    private AuthTokenGenerator authTokenGenerator;
-
     @Before
     public void setup() {
         this.paymentService =  mock(PaymentService.class);
-        this.authTokenGenerator = mock(AuthTokenGenerator.class);
-        this.paymentService = new PaymentService(paymentServiceClient, authTokenGenerator);
+        this.paymentService = new PaymentService(paymentServiceClient, mock(AuthTokenGenerator.class));
     }
 
     @Test

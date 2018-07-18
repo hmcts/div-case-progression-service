@@ -27,14 +27,16 @@ public class OrderSummary {
     public void add(Fee... fees) {
         NumberFormat formatter = new DecimalFormat("#0");
         List<FeesItem> feesItems = new ArrayList<>();
+        Value value = new Value();
+        FeesItem feesItem = new FeesItem();
         for (Fee fee : fees) {
             if (fee != null) {
-                Value value = new Value();
+                value = new Value();
                 value.setFeeAmount(String.valueOf(formatter.format(fee.getAmount() * 100)));
                 value.setFeeCode(fee.getFeeCode());
                 value.setFeeDescription(fee.getDescription());
                 value.setFeeVersion(String.valueOf(fee.getVersion()));
-                FeesItem feesItem = new FeesItem();
+                feesItem = new FeesItem();
                 feesItem.setValue(value);
                 feesItems.add(feesItem);
             }

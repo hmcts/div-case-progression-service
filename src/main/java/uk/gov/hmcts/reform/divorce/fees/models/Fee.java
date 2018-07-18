@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.fees.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 /**
