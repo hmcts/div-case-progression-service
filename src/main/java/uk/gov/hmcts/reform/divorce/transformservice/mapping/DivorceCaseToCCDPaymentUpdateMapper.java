@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Value;

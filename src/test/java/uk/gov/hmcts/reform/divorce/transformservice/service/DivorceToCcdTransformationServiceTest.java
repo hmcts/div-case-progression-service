@@ -56,7 +56,7 @@ public class DivorceToCcdTransformationServiceTest {
         CreateEvent createEvent = new CreateEvent(TOKEN, EVENT_ID, caseDetails);
 
         CaseDataContent caseDataContent = transformationService
-            .transformSubmission(divorceSession, createEvent, EVENT_SUMMARY);
+            .transformUpdate(divorceSession, createEvent, EVENT_SUMMARY);
 
         assertThat(caseDataContent.getToken(), equalTo(TOKEN));
         assertThat(caseDataContent.getEvent().getEventId(), equalTo(EVENT_ID));
