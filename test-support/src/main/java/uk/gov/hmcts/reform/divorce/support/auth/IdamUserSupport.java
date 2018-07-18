@@ -57,7 +57,8 @@ public class IdamUserSupport {
     private void createUserInIdam(String username, String password) {
         RestAssured.given()
             .header("Content-Type", "application/json")
-            .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\"" + password + "\"}")
+            .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\""
+                + password + "\"}")
             .post(idamCreateUrl());
     }
 
@@ -72,8 +73,9 @@ public class IdamUserSupport {
         RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\"" + idamCaseworkerPw + "\", "
-                        + "\"roles\":[\"caseworker-divorce.support\"], \"userGroup\":{\"code\":\"caseworker\"}}")
+                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\""
+                    + idamCaseworkerPw + "\", " + "\"roles\":[\"caseworker-divorce.support\"],"
+                    + " \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
     }
 

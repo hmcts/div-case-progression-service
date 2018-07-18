@@ -219,7 +219,20 @@
         "D8DerivedReasonForDivorceAdultery3rdAddr":null,
         "D8Cohort":"onlineSubmissionPrivateBeta",
         "D8InferredPetitionerGender":"female",
-        "D8InferredRespondentGender":"female"
+        "D8InferredRespondentGender":"female",
+        "solApplicationFeeOrderSummary" : null,
+        "SolicitorFeeAccountNumber" : null,
+        "D8SelectedDivorceCentreSiteId" : null,
+        "PetitionerSolicitorFirm" : null,
+        "PetitionerSolicitorPhone" : null,
+        "PetitionerSolicitorName" : null,
+        "PetitionerSolicitorEmail" : null,
+        "SolicitorAgreeToReceiveEmails" : null,
+        "SolStatementOfReconciliationCertify" : null,
+        "SolStatementOfReconciliationDiscussed" : null,
+        "StatementOfReconciliationComments" : null,
+        "SolStatementOfReconciliationName" : null,
+        "SolStatementOfReconciliationFirm" : null
     },
     "formId": "case-progression",
     "sectionId": null
