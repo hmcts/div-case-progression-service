@@ -207,6 +207,7 @@
     }
   },
   "courts": "southWest",
+  "confirmPrayer": "Yes",
   "reasonForDivorceDesertionDay": 1,
   "reasonForDivorceDesertionMonth": 2,
   "reasonForDivorceDesertionYear": 2015,

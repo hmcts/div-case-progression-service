@@ -145,6 +145,7 @@
     }
   },
   "courts": "eastMidlands",
+  "confirmPrayer": "Yes",
   "jurisdictionConnection": [
     "A",
     "C"

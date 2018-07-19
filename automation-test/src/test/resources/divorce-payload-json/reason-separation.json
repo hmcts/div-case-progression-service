@@ -207,6 +207,7 @@
     }
   },
   "courts": "westMidlands",
+  "confirmPrayer": "Yes",
   "postcodeLookup": {
     "postcodeError": "false"
   },

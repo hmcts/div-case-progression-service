@@ -208,6 +208,7 @@
     }
   },
   "courts": "eastMidlands",
+  "confirmPrayer": "Yes",
   "paymentMethod": "card-phone-court",
   "paymentTimeToCall": "afternoon",
   "paymentPhoneNumber": "01234567890",

@@ -211,6 +211,7 @@
     }
   },
   "courts": "eastMidlands",
+  "confirmPrayer": "Yes",
   "helpWithFeesAppliedForFees": "Yes",
   "helpWithFeesReferenceNumber": "HWF-123-123",
   "jurisdictionConnection": [
