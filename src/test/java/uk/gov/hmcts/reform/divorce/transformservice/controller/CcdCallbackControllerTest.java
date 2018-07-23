@@ -243,25 +243,45 @@ public class CcdCallbackControllerTest {
     }
 
     @Test
-    public void givenCallbackReceived_whenToProcessPBAPayments_thenExceptToSucceedWithPayment() throws Exception {
+    public void givenCallbackReceived_whenHWFPayments_thenExpectToSkipPayment() throws Exception {
+
         CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setOrderSummary(orderSummary);
+        coreCaseData.setSolPaymentHowToPay("HwfPayment");
         caseDetails.setCaseData(coreCaseData);
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
-        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
-            .amount(555.00).version(2).build());
         doNothing().when(paymentService).processPBAPayments("jwt-token", submittedCase);
         mvc.perform(post(PROCESS_PBA_PAYMENTS)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .header("Authorization", "jwt-token")
             .contentType(MediaType.APPLICATION_JSON_UTF8));
 
-        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+        verify(paymentService, times(0)).processPBAPayments(anyString(), any());
+    }
+
+    @Test
+    public void givenCallbackReceived_whenToProcessPBAPayments_thenExceptToSucceedWithPayment() throws Exception {
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setOrderSummary(orderSummary);
+        coreCaseData.setSolPaymentHowToPay("feePayByAccount");
+        caseDetails.setCaseData(coreCaseData);
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        doNothing().when(paymentService).processPBAPayments("jwt-token", submittedCase);
+        mvc.perform(post(PROCESS_PBA_PAYMENTS)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .header("Authorization", "jwt-token")
+            .contentType(MediaType.APPLICATION_JSON_UTF8));
+
         verify(paymentService, times(1)).processPBAPayments(anyString(), any());
     }
 
@@ -272,12 +292,11 @@ public class CcdCallbackControllerTest {
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setOrderSummary(orderSummary);
+        coreCaseData.setSolPaymentHowToPay("feePayByAccount");
         caseDetails.setCaseData(coreCaseData);
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
 
-        when(feesAndPaymentService.getPetitionIssueFee()).thenReturn(Fee.builder().feeCode("2")
-            .amount(555.00).version(2).build());
         doThrow(new PaymentFailedException("some_error")).when(paymentService).processPBAPayments(any(), any());
         mvc.perform(post(PROCESS_PBA_PAYMENTS)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
@@ -285,7 +304,6 @@ public class CcdCallbackControllerTest {
             .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
                 jsonPath("$.errors" , Matchers.hasSize(1)));
 
-        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
         verify(paymentService, times(1)).processPBAPayments(anyString(), any());
     }
 
