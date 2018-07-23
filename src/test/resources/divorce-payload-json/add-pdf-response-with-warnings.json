@@ -230,6 +230,7 @@
       "PetitionerSolicitorFirm" : null,
       "PetitionerSolicitorPhone" : null,
       "PetitionerSolicitorName" : null,
+      "DerivedPetitionerSolicitorAddr" : null,
       "PetitionerSolicitorEmail" : null,
       "SolicitorAgreeToReceiveEmails" : null,
       "SolStatementOfReconciliationCertify" : null,

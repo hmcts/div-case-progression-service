@@ -437,6 +437,9 @@ public class CoreCaseData {
     @JsonProperty("PetitionerSolicitorName")
     private String petitionerSolicitorName;
 
+    @JsonProperty("DerivedPetitionerSolicitorAddr")
+    private String derivedPetitionerSolicitorAddr;
+
     @JsonProperty("PetitionerSolicitorEmail")
     private String petitionerSolicitorEmail;
 
