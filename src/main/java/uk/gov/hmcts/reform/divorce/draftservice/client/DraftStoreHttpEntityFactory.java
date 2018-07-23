@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.draftservice.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ public class DraftStoreHttpEntityFactory {
     private static final String SECRET_HEADER_NAME = "Secret";
 
     @Autowired
+    @Qualifier("ccd_submission")
     private AuthTokenGenerator serviceTokenGenerator;
 
 

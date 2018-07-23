@@ -418,5 +418,47 @@ public class CoreCaseData {
 
     @JsonProperty("D8InferredRespondentGender")
     private Gender d8InferredRespondentGender;
+
+    @JsonProperty("solApplicationFeeOrderSummary")
+    private OrderSummary orderSummary;
+
+    @JsonProperty("SolicitorFeeAccountNumber")
+    private String solicitorFeeAccountNumber;
+
+    @JsonProperty("D8SelectedDivorceCentreSiteId")
+    private String d8SelectedDivorceCentreSiteId;
+
+    @JsonProperty("PetitionerSolicitorFirm")
+    private String petitionerSolicitorFirm;
+
+    @JsonProperty("PetitionerSolicitorPhone")
+    private String petitionerSolicitorPhone;
+
+    @JsonProperty("PetitionerSolicitorName")
+    private String petitionerSolicitorName;
+
+    @JsonProperty("DerivedPetitionerSolicitorAddr")
+    private String derivedPetitionerSolicitorAddr;
+
+    @JsonProperty("PetitionerSolicitorEmail")
+    private String petitionerSolicitorEmail;
+
+    @JsonProperty("SolicitorAgreeToReceiveEmails")
+    private String solicitorAgreeToReceiveEmails;
+
+    @JsonProperty("SolStatementOfReconciliationCertify")
+    private String solStatementOfReconciliationCertify;
+
+    @JsonProperty("SolStatementOfReconciliationDiscussed")
+    private String solStatementOfReconciliationDiscussed;
+
+    @JsonProperty("StatementOfReconciliationComments")
+    private String statementOfReconciliationComments;
+
+    @JsonProperty("SolStatementOfReconciliationName")
+    private String solStatementOfReconciliationName;
+
+    @JsonProperty("SolStatementOfReconciliationFirm")
+    private String solStatementOfReconciliationFirm;
 }
 
