@@ -245,12 +245,12 @@ public class CcdCallbackControllerTest {
     @Test
     public void givenCallbackReceived_whenNonPBAPaymentMethodIsUsed_thenExpectToSkipPBAPayment() throws Exception {
 
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setOrderSummary(orderSummary);
         coreCaseData.setSolPaymentHowToPay("HwfPayment");
+        CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(coreCaseData);
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
@@ -267,12 +267,12 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenCallbackReceived_whenToProcessPBAPayments_thenExceptToSucceedWithPayment() throws Exception {
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setSolPaymentHowToPay("feePayByAccount");
         coreCaseData.setOrderSummary(orderSummary);
+        CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(coreCaseData);
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
@@ -288,12 +288,12 @@ public class CcdCallbackControllerTest {
 
     @Test
     public void givenCallbackReceived_whenToProcessPBAPaymentsWithError_thenExceptException() throws Exception {
-        CaseDetails caseDetails = new CaseDetails();
         CoreCaseData coreCaseData = new CoreCaseData();
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setSolPaymentHowToPay("feePayByAccount");
         coreCaseData.setOrderSummary(orderSummary);
+        CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(coreCaseData);
         CreateEvent submittedCase = new CreateEvent();
         submittedCase.setCaseDetails(caseDetails);
