@@ -166,8 +166,9 @@ public class CcdCallBackController {
         @RequestBody @ApiParam("CaseData")
             CreateEvent caseDetailsRequest) {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
-        boolean processPba = Optional.ofNullable(caseData.getSolPaymentHowToPay()).map(i -> i.equals
-            (FEE_PAY_BY_ACCOUNT)).orElse(false);
+        boolean processPba = Optional.ofNullable(caseData.getSolPaymentHowToPay())
+            .map(i -> i.equals(FEE_PAY_BY_ACCOUNT))
+            .orElse(false);
         if (processPba) {
             paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
         }
