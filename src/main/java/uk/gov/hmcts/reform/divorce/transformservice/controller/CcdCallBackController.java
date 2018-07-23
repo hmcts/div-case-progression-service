@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.core.MediaType;
 
@@ -43,6 +44,7 @@ public class CcdCallBackController {
 
     public static final String EAST_MIDLANDS = "eastMidlands";
     public static final String DIVORCE_CENTRE_SITE_ID = "AA01";
+    public static final String FEE_PAY_BY_ACCOUNT = "feePayByAccount";
     @Autowired
     private PaymentService paymentService;
     @Autowired
@@ -164,8 +166,11 @@ public class CcdCallBackController {
         @RequestBody @ApiParam("CaseData")
             CreateEvent caseDetailsRequest) {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
-        setOrderSummary(caseData); //TODO: please remove me.
-        paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
+        boolean processPba = Optional.ofNullable(caseData.getSolPaymentHowToPay()).map(i -> i.equals
+            (FEE_PAY_BY_ACCOUNT)).orElse(false);
+        if (processPba) {
+            paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
+        }
         return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
     }
 
@@ -185,13 +190,6 @@ public class CcdCallBackController {
         caseData.setD8DivorceUnit(EAST_MIDLANDS);
         caseData.setD8SelectedDivorceCentreSiteId(DIVORCE_CENTRE_SITE_ID);
         return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
-    }
-
-    private void setOrderSummary(CoreCaseData coreCaseData) {
-        Fee issueFee = feesAndPaymentService.getPetitionIssueFee();
-        OrderSummary orderSummary = new OrderSummary();
-        orderSummary.add(issueFee);
-        coreCaseData.setOrderSummary(orderSummary);
     }
 
     private enum Courts {
