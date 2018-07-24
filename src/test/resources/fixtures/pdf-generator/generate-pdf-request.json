@@ -236,7 +236,8 @@
                 "SolStatementOfReconciliationDiscussed" : null,
                 "StatementOfReconciliationComments" : null,
                 "SolStatementOfReconciliationName" : null,
-                "SolStatementOfReconciliationFirm" : null
+                "SolStatementOfReconciliationFirm" : null,
+                "SolPaymentHowToPay" : null
             },
             "id":"667788",
             "state":"awaitingAdminCheck"

@@ -146,7 +146,8 @@
       "SolStatementOfReconciliationDiscussed" : null,
       "StatementOfReconciliationComments" : null,
       "SolStatementOfReconciliationName" : null,
-      "SolStatementOfReconciliationFirm" : null
+      "SolStatementOfReconciliationFirm" : null,
+      "SolPaymentHowToPay" : null
     }
   }
 }
