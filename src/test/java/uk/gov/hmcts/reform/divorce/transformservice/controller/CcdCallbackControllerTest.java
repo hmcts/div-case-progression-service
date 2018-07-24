@@ -290,6 +290,8 @@ public class CcdCallbackControllerTest {
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setSolPaymentHowToPay("feePayByAccount");
+        coreCaseData.setD8StatementOfTruth("YES");
+        coreCaseData.setSolSignStatementofTruth("YES");
         coreCaseData.setOrderSummary(orderSummary);
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(coreCaseData);
@@ -311,6 +313,9 @@ public class CcdCallbackControllerTest {
         OrderSummary orderSummary = new OrderSummary();
         orderSummary.setPaymentReference("PBA1234567");
         coreCaseData.setSolPaymentHowToPay("feePayByAccount");
+        coreCaseData.setSolPaymentHowToPay("feePayByAccount");
+        coreCaseData.setSolSignStatementofTruth("YES");
+        coreCaseData.setD8StatementOfTruth("YES");
         coreCaseData.setOrderSummary(orderSummary);
         CaseDetails caseDetails = new CaseDetails();
         caseDetails.setCaseData(coreCaseData);
@@ -326,6 +331,29 @@ public class CcdCallbackControllerTest {
 
         verify(paymentService, times(1)).processPBAPayments(anyString(), any());
     }
+
+    @Test
+    public void givenCallbackReceived_whenToProcessPBAPaymentsIfNotAckStatementOfTruth_thenErrorCCD() throws
+        Exception {
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        orderSummary.setPaymentReference("PBA1234567");
+        coreCaseData.setSolPaymentHowToPay("feePayByAccount");
+        coreCaseData.setSolSignStatementofTruth("NO");
+        coreCaseData.setOrderSummary(orderSummary);
+        CaseDetails caseDetails = new CaseDetails();
+        caseDetails.setCaseData(coreCaseData);
+        CreateEvent submittedCase = new CreateEvent();
+        submittedCase.setCaseDetails(caseDetails);
+
+        mvc.perform(post(PROCESS_PBA_PAYMENTS)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .header("Authorization", "jwt-token")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+            jsonPath("$.errors" , Matchers.hasSize(1)));
+
+    }
+
 
     @Test
     public void givenCallbackReceived_whenToSolicitorCreate_thenExceptToSucceedPopulateRequiredFields() throws

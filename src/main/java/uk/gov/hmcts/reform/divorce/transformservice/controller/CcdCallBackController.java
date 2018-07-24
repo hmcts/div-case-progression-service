@@ -29,6 +29,7 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -166,6 +167,15 @@ public class CcdCallBackController {
         @RequestBody @ApiParam("CaseData")
             CreateEvent caseDetailsRequest) {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
+        
+        boolean petitionStatmentOfTruth = valueEqualsYes(caseData.getD8StatementOfTruth());
+        boolean solStatmentOfTruth = valueEqualsYes(caseData.getSolSignStatementofTruth());
+        if (!petitionStatmentOfTruth || !solStatmentOfTruth) {
+            List<String> errors = new ArrayList<>();
+            errors.add("Statement of truth for solicitor and petitioner needs to be accepted");
+            return ResponseEntity.ok(new CCDCallbackResponse(caseData, errors, new ArrayList<>()));
+        }
+
         boolean processPba = Optional.ofNullable(caseData.getSolPaymentHowToPay())
             .map(i -> i.equals(FEE_PAY_BY_ACCOUNT))
             .orElse(false);
@@ -210,5 +220,9 @@ public class CcdCallBackController {
         }
     }
 
-
+    private boolean valueEqualsYes(String value) {
+        return Optional.ofNullable(value)
+            .map(i -> ("YES").equalsIgnoreCase(i))
+            .orElse(false);
+    }
 }

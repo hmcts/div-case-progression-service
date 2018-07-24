@@ -31,12 +31,10 @@ public class OrderSummary {
         FeesItem feesItem = new FeesItem();
         for (Fee fee : fees) {
             if (fee != null) {
-                value = new Value();
                 value.setFeeAmount(String.valueOf(formatter.format(fee.getAmount() * 100)));
                 value.setFeeCode(fee.getFeeCode());
                 value.setFeeDescription(fee.getDescription());
                 value.setFeeVersion(String.valueOf(fee.getVersion()));
-                feesItem = new FeesItem();
                 feesItem.setValue(value);
                 feesItems.add(feesItem);
             }
