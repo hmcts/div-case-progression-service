@@ -167,15 +167,11 @@ public class CcdCallBackController {
         @RequestBody @ApiParam("CaseData")
             CreateEvent caseDetailsRequest) {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
-
-        List<String> errors = new ArrayList<>();
-        boolean petitionStatmentOfTruth = Optional.ofNullable(caseData.getD8StatementOfTruth())
-            .map(i -> i.equals("YES"))
-            .orElse(false);
-        boolean solStatmentOfTruth = Optional.ofNullable(caseData.getSolSignStatementofTruth())
-            .map(i -> i.equals("YES"))
-            .orElse(false);
+        
+        boolean petitionStatmentOfTruth = valueEqualsYes(caseData.getD8StatementOfTruth());
+        boolean solStatmentOfTruth = valueEqualsYes(caseData.getSolSignStatementofTruth());
         if (!petitionStatmentOfTruth || !solStatmentOfTruth) {
+            List<String> errors = new ArrayList<>();
             errors.add("Statement of truth for solicitor and petitioner needs to be accepted");
             return ResponseEntity.ok(new CCDCallbackResponse(caseData, errors, new ArrayList<>()));
         }
@@ -186,7 +182,7 @@ public class CcdCallBackController {
         if (processPba) {
             paymentService.processPBAPayments(authorizationToken, caseDetailsRequest);
         }
-        return ResponseEntity.ok(new CCDCallbackResponse(caseData, errors, new ArrayList<>()));
+        return ResponseEntity.ok(new CCDCallbackResponse(caseData, new ArrayList<>(), new ArrayList<>()));
     }
 
     @PostMapping(path = "/solicitor-create", consumes = MediaType.APPLICATION_JSON,
@@ -224,5 +220,9 @@ public class CcdCallBackController {
         }
     }
 
-
+    private boolean valueEqualsYes(String value) {
+        return Optional.ofNullable(value)
+            .map(i -> ("YES").equalsIgnoreCase(i))
+            .orElse(false);
+    }
 }
