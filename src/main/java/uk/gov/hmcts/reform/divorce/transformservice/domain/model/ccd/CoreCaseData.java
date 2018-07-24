@@ -463,5 +463,8 @@ public class CoreCaseData {
 
     @JsonProperty("SolPaymentHowToPay")
     private String solPaymentHowToPay;
+
+    @JsonProperty("solSignStatementofTruth")
+    private String solSignStatementofTruth;
 }
 

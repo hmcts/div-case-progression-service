@@ -234,7 +234,8 @@
         "StatementOfReconciliationComments" : null,
         "SolStatementOfReconciliationName" : null,
         "SolStatementOfReconciliationFirm" : null,
-        "SolPaymentHowToPay" : null
+        "SolPaymentHowToPay" : null,
+        "solSignStatementofTruth" : null
     },
     "formId": "case-progression",
     "sectionId": null
