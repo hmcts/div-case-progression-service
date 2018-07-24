@@ -169,9 +169,11 @@ public class CcdCallBackController {
         CoreCaseData caseData = caseDetailsRequest.getCaseDetails().getCaseData();
 
         List<String> errors = new ArrayList<>();
-        boolean petitionStatmentOfTruth = Optional.ofNullable(caseData.getD8StatementOfTruth()).map(i-> i.equals("YES"))
+        boolean petitionStatmentOfTruth = Optional.ofNullable(caseData.getD8StatementOfTruth())
+            .map(i -> i.equals("YES"))
             .orElse(false);
-        boolean solStatmentOfTruth = Optional.ofNullable(caseData.getSolSignStatementofTruth()).map(i-> i.equals("YES"))
+        boolean solStatmentOfTruth = Optional.ofNullable(caseData.getSolSignStatementofTruth())
+            .map(i -> i.equals("YES"))
             .orElse(false);
         if (!petitionStatmentOfTruth || !solStatmentOfTruth) {
             errors.add("Statement of truth for solicitor and petitioner needs to be accepted");
