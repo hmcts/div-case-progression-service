@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
 import uk.gov.hmcts.reform.divorce.fees.models.Fee;
 import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.notifications.service.EmailService;
+import uk.gov.hmcts.reform.divorce.pay.exceptions.FeesNotFoundException;
 import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.pay.services.PaymentService;
 import uk.gov.hmcts.reform.divorce.testutils.ObjectMapperTestUtil;
@@ -238,6 +239,24 @@ public class CcdCallbackControllerTest {
         mvc.perform(post(PETITION_ISSUE_FEES_URL)
             .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
             .contentType(MediaType.APPLICATION_JSON_UTF8));
+        verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
+
+    }
+
+    @Test
+    public void givenFeesNotAvailable_whenSolicitorFeesIsCalled_thenExpectException() throws Exception {
+        CreateEvent submittedCase = new CreateEvent();
+        CaseDetails caseDetails = new CaseDetails();
+        CoreCaseData coreCaseData = new CoreCaseData();
+        OrderSummary orderSummary = new OrderSummary();
+        coreCaseData.setOrderSummary(orderSummary);
+        caseDetails.setCaseData(coreCaseData);
+        submittedCase.setCaseDetails(caseDetails);
+        doThrow(new FeesNotFoundException("some_error")).when(feesAndPaymentService).getPetitionIssueFee();
+        mvc.perform(post(PETITION_ISSUE_FEES_URL)
+            .content(ObjectMapperTestUtil.convertObjectToJsonString(submittedCase))
+            .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+            jsonPath("$.errors" , Matchers.hasSize(1)));
         verify(feesAndPaymentService, times(1)).getPetitionIssueFee();
 
     }
