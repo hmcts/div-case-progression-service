@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.fees.api.FeesAnyPaymentApiClient;
 import uk.gov.hmcts.reform.divorce.fees.models.Fee;
+import uk.gov.hmcts.reform.divorce.pay.exceptions.FeesNotFoundException;
 
 @Component
 public class FeesAndPaymentService {
@@ -16,7 +17,11 @@ public class FeesAndPaymentService {
     }
 
     public Fee getPetitionIssueFee() {
-        return feesAnyPaymentApiClient.getPetitionIssueFee().getBody();
+        Fee fee = feesAnyPaymentApiClient.getPetitionIssueFee().getBody();
+        if (fee.getAmount() < 1) {
+            throw new FeesNotFoundException("Fees not found !");
+        }
+        return fee;
     }
 
 }
