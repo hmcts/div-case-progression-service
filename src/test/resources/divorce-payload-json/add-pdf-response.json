@@ -255,7 +255,12 @@
     "SolStatementOfReconciliationName" : null,
     "SolStatementOfReconciliationFirm" : null,
     "SolPaymentHowToPay" : null,
-    "solSignStatementofTruth" : null
+    "solSignStatementofTruth" : null,
+    "respNameDifferentToMarriageCertExplain" : null,
+    "petitionerSolicitorToEffectService" : null,
+    "solClaimCostsDetails" : null,
+    "separationLivedTogetherAsCoupleAgain" : null,
+    "separationLivedTogetherAsCoupleAgainDetails" : null
   },
   "errors":[
 

@@ -148,7 +148,12 @@
       "SolStatementOfReconciliationName" : null,
       "SolStatementOfReconciliationFirm" : null,
       "SolPaymentHowToPay" : null,
-      "solSignStatementofTruth" : null
+      "solSignStatementofTruth" : null,
+      "RespNameDifferentToMarriageCertExplain" : null,
+      "PetitionerSolicitorToEffectService" : null,
+      "SolClaimCostsDetails" : null,
+      "SeparationLivedTogetherAsCoupleAgain" : null,
+      "SeparationLivedTogetherAsCoupleAgainDetails" : null
     }
   }
 }
