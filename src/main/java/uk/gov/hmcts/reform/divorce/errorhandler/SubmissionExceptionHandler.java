@@ -17,13 +17,13 @@ import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableE
 import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdSubmissionController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDResponse;
 
-import java.text.MessageFormat;
-import java.time.format.DateTimeParseException;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.text.MessageFormat;
+import java.time.format.DateTimeParseException;
+import java.util.Map;
 
 
 @ControllerAdvice(basePackageClasses = {CcdSubmissionController.class, DraftsController.class})
@@ -130,6 +130,11 @@ public class SubmissionExceptionHandler {
     @ExceptionHandler(DraftStoreUnavailableException.class)
     public ResponseEntity<Void> handleDraftStoreUnavailable() {
         return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Void> handleValidationException() {
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean isDraftsRequest(HttpServletRequest request) {
