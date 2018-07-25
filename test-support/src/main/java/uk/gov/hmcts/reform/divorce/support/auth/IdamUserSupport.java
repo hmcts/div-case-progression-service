@@ -74,7 +74,7 @@ public class IdamUserSupport {
                 .header("Content-Type", "application/json")
                 .body("{\"email\":\"" + idamCaseworkerUser + "\", "
                         + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\""
-                    + idamCaseworkerPw + "\", " + "\"roles\":[\"caseworker-divorce.support\"],"
+                    + idamCaseworkerPw + "\", " + "\"roles\":[\"caseworker-divorce-courtadmin\"],"
                     + " \"userGroup\":{\"code\":\"caseworker\"}}")
                 .post(idamCreateUrl());
     }
