@@ -127,11 +127,10 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
         stubFeesServerHealthUp();
         stubPaymentApiServerHealthUp();
         mockServiceAuthFeignHealthCheck();
-        stubValidationServiceHealthUp();
-
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -141,6 +140,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -151,6 +152,8 @@ public class HealthCheckFunctionalTest {
         stubDraftStoreApiHealthDown();
         stubPDFGeneratorHealthDown();
         stubValidationServiceHealthDown();
+        stubFeesServerHealthDown();
+        stubPaymentApiServerHealthDown();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -160,6 +163,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -169,9 +174,9 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
-        stubPaymentApiServerHealthUp();
-        stubFeesServerHealthUp();
         stubValidationServiceHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -181,6 +186,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -191,9 +198,9 @@ public class HealthCheckFunctionalTest {
         stubCcdHealthDown();
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
         stubFeesServerHealthUp();
         stubPaymentApiServerHealthUp();
-        stubValidationServiceHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -203,6 +210,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -224,6 +233,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -232,9 +243,10 @@ public class HealthCheckFunctionalTest {
         stubAuthHealthUp();
         stubCcdHealthUp();
         stubDraftStoreApiHealthUp();
-        stubPaymentApiServerHealthUp();
         stubPDFGeneratorHealthDown();
         stubValidationServiceHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -244,6 +256,8 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 
@@ -254,6 +268,8 @@ public class HealthCheckFunctionalTest {
         stubDraftStoreApiHealthUp();
         stubPDFGeneratorHealthUp();
         stubValidationServiceHealthDown();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthUp();
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
@@ -263,6 +279,54 @@ public class HealthCheckFunctionalTest {
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
+    }
+
+    @Test
+    public void shouldReturnStatusDownWhenFeesServerIsDown() throws Exception {
+        stubAuthHealthUp();
+        stubCcdHealthUp();
+        stubDraftStoreApiHealthUp();
+        stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
+        stubFeesServerHealthDown();
+        stubPaymentApiServerHealthUp();
+
+        String body = this.restTemplate.getForObject("/status/health", String.class);
+
+        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
+    }
+
+    @Test
+    public void shouldReturnStatusDownWhenPaymentApiServerIsDown() throws Exception {
+        stubAuthHealthUp();
+        stubCcdHealthUp();
+        stubDraftStoreApiHealthUp();
+        stubPDFGeneratorHealthUp();
+        stubValidationServiceHealthUp();
+        stubFeesServerHealthUp();
+        stubPaymentApiServerHealthDown();
+
+        String body = this.restTemplate.getForObject("/status/health", String.class);
+
+        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
+        assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divDocumentGenerator.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.divValidationService.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.feesAndPaymentsApi.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.paymentApi.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.diskSpace.status").toString()).isEqualTo("UP");
     }
 

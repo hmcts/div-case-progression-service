@@ -466,5 +466,20 @@ public class CoreCaseData {
 
     @JsonProperty("solSignStatementofTruth")
     private String solSignStatementofTruth;
+
+    @JsonProperty("RespNameDifferentToMarriageCertExplain")
+    private String respNameDifferentToMarriageCertExplain;
+
+    @JsonProperty("PetitionerSolicitorToEffectService")
+    private String petitionerSolicitorToEffectService;
+
+    @JsonProperty("SolClaimCostsDetails")
+    private String solClaimCostsDetails;
+
+    @JsonProperty("SeparationLivedTogetherAsCoupleAgain")
+    private String separationLivedTogetherAsCoupleAgain;
+
+    @JsonProperty("SeparationLivedTogetherAsCoupleAgainDetails")
+    private String separationLivedTogetherAsCoupleAgainDetails;
 }
 

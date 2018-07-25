@@ -222,7 +222,7 @@ public class CcdCallBackController {
 
     private boolean valueEqualsYes(String value) {
         return Optional.ofNullable(value)
-            .map(i -> ("YES").equalsIgnoreCase(i))
+            .map(i -> "YES".equalsIgnoreCase(i))
             .orElse(false);
     }
 }

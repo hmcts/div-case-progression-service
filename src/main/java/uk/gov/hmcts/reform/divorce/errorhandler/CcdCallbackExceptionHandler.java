@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import uk.gov.hmcts.reform.divorce.fees.services.FeesAndPaymentService;
 import uk.gov.hmcts.reform.divorce.pay.exceptions.FeesNotFoundException;
 import uk.gov.hmcts.reform.divorce.pay.exceptions.PaymentFailedException;
 import uk.gov.hmcts.reform.divorce.transformservice.client.pdf.PdfGeneratorException;
