@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Setter;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentCollection;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -124,6 +125,7 @@ public class DivorceSession {
     private Address petitionerHomeAddress;
     @ApiModelProperty(value = "Use petitioners home address as address for service?", allowableValues = "Yes, No")
     private String petitionerCorrespondenceUseHomeAddress;
+    @NotNull
     @ApiModelProperty(value = "Petitioner's correspondence address.")
     private Address petitionerCorrespondenceAddress;
     @ApiModelProperty(value = "Are petitioner and respondent living together?", allowableValues = "Yes, No")

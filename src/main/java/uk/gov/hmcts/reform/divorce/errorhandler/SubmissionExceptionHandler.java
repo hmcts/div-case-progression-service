@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -20,7 +21,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDR
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -132,8 +132,9 @@ public class SubmissionExceptionHandler {
         return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Void> handleValidationException() {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Void> handleValidationException(MethodArgumentNotValidException e) {
+        log.warn(String.format("Caught validation exception during submission %s", e.getBindingResult().getAllErrors().get(0).toString()));
         return ResponseEntity.badRequest().build();
     }
 

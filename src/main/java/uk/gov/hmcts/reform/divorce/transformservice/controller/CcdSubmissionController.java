@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDR
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
+import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
 
 @RestController
@@ -40,7 +41,7 @@ public class CcdSubmissionController {
             + "submit has been successful.", response = CCDResponse.class),
         })
     public ResponseEntity<CCDResponse> submitCase(
-        @RequestBody @ApiParam(value = "The divorce session.", required = true) DivorceSession divorceSession,
+        @Valid @RequestBody @ApiParam(value = "The divorce session.", required = true) DivorceSession divorceSession,
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
 

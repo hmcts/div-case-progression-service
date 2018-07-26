@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,9 +13,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
-import uk.gov.hmcts.reform.divorce.transformservice.service.validation.SubmissionValidation;
-
-import javax.validation.ValidationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -43,36 +39,9 @@ public class SubmissionServiceTest {
     @Mock
     private UserService userService;
 
-    @Mock
-    private SubmissionValidation mockSubmissionValidation;
-
     @InjectMocks
     private SubmissionService submissionService;
     private static final String JWT = "_jwt";
-
-    @Before
-    public void setUp() throws Exception {
-        when(mockSubmissionValidation
-            .validate(any(DivorceSession.class)))
-            .thenReturn(true);
-    }
-
-    @Test(expected = ValidationException.class)
-    public void submitThrowsValidationExceptionWhenValidationFails() {
-
-        // given
-        when(mockSubmissionValidation
-            .validate(any(DivorceSession.class)))
-            .thenReturn(false);
-
-        DivorceSession mockDivorceSession = mock(DivorceSession.class);
-
-        // when
-        submissionService.submit(mockDivorceSession, JWT);
-
-        // then
-        // expected exception
-    }
 
     @Test
     public void submitReturnsCaseId() throws Exception {

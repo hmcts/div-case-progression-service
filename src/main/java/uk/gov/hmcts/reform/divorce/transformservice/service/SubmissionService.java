@@ -10,9 +10,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.SubmitCcdClient;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.SubmitEvent;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
-import uk.gov.hmcts.reform.divorce.transformservice.service.validation.SubmissionValidation;
-
-import javax.validation.ValidationException;
 
 @Component
 @Slf4j
@@ -31,14 +28,7 @@ public class SubmissionService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SubmissionValidation submissionValidation;
-
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
-
-        if (!submissionValidation.validate(divorceSessionData)) {
-            throw new ValidationException("Submitted data failed validation");
-        }
 
         UserDetails userDetails = userService.getUserDetails(jwt);
         CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
