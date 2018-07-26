@@ -4,6 +4,8 @@ locals {
     local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
 
     pdf_generator_base_url = "http://div-dgs-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    fees_and_payments_base_url= "http://div-fps-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    payment_api_base_url= "http://payment-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
@@ -37,8 +39,10 @@ module "div-case-progression" {
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${local.idam_s2s_url}"
-        AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
-        AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+        AUTH_SERVICE_CLIENT_DIVORCE_CCD_SUBMISSION_NAME = "${var.auth_provider_service_client_microservice_div_ccd_submission}"
+        AUTH_SERVICE_CLIENT_DIVORCE_FRONTEND_NAME = "${var.auth_provider_service_client_microservice_div_frontend}"
+        AUTH_SERVICE_DIVORCE_CCD_SUBMISSION_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+        AUTH_SERVICE_DIVORCE_FRONTEND_KEY = "${data.vault_generic_secret.frontend_secret.data["value"]}"
         AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
         AUTH_PROVIDER_HEALTH_URI = "${local.idam_s2s_url}/health"
         CCD_CASEDATASTORE_BASEURL = "${local.ccd_casedatastore_baseurl}"
@@ -59,6 +63,8 @@ module "div-case-progression" {
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        PAYMENT_API_BASEURL = "${local.payment_api_base_url}"
+        FEES_AND_PAYMENTS_BASE_URL="${local.fees_and_payments_base_url}"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
         DIV_VALIDATION_SERVICE_URL = "${local.div_validation_service_url}"
     }
@@ -82,6 +88,10 @@ module "key-vault" {
 
 data "vault_generic_secret" "ccd-submission-s2s-auth-secret" {
     path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
+}
+
+data "vault_generic_secret" "frontend_secret" {
+    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorce-frontend"
 }
 
 data "vault_generic_secret" "div-doc-s2s-auth-secret" {
