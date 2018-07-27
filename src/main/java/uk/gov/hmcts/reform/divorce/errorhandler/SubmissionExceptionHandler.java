@@ -18,12 +18,12 @@ import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableE
 import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdSubmissionController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 
 @ControllerAdvice(basePackageClasses = {CcdSubmissionController.class, DraftsController.class})
@@ -133,8 +133,9 @@ public class SubmissionExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Void> handleValidationException(MethodArgumentNotValidException e) {
-        log.warn(String.format("Caught validation exception during submission %s", e.getBindingResult().getAllErrors().get(0).toString()));
+    public ResponseEntity<Void> handleValidationException(MethodArgumentNotValidException exception) {
+        log.warn(String.format("Caught validation exception during submission %s",
+            exception.getBindingResult().getAllErrors().get(0).toString()));
         return ResponseEntity.badRequest().build();
     }
 

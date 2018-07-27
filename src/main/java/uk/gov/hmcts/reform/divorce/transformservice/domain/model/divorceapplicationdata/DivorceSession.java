@@ -8,9 +8,9 @@ import lombok.Data;
 import lombok.Setter;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentCollection;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
