@@ -1,6 +1,8 @@
 {
   "petitionerFirstName": "Danny",
-    "petitionerCorrespondenceAddress" : {
+  "petitionerCorrespondenceAddress": {
+        "address": [
 
+        ]
     }
 }
