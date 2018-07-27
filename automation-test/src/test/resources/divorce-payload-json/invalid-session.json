@@ -1,3 +1,23 @@
 {
-    "divorceWho" : "notAValidValue"
+    "divorceWho" : "notAValidValue",
+    "petitionerCorrespondenceAddress": {
+        "addressType": "postcode",
+        "postcode": "SW9 9PE",
+        "address": [
+            "82 Landor Road",
+            "London",
+            "SW9 9PE"
+        ],
+        "addressConfirmed": "true",
+        "validPostcode": true,
+        "postcodeError": "false",
+        "url": "/petitioner-respondent/address",
+        "formattedAddress": {
+            "whereabouts": [
+                "82 Landor Road",
+                "London"
+            ],
+            "postcode": "SW9 9PE"
+        }
+    }
 }
