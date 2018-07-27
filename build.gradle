@@ -120,10 +120,7 @@ pitest {
                        'uk.gov.hmcts.reform.divorce.common.*',
                        'uk.gov.hmcts.reform.divorce.transformservice.config.*',
                        'uk.gov.hmcts.reform.divorce.transformservice.domain.*',
-                       'uk.gov.hmcts.reform.divorce.transformservice.mapping.*',
-                       'uk.gov.hmcts.reform.divorce.errorhandler.*',
-                       'uk.gov.hmcts.reform.divorce.idam.*',
-                       'uk.gov.hmcts.reform.divorce.insights.*']
+                       'uk.gov.hmcts.reform.divorce.errorhandler.*']
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
@@ -226,7 +223,6 @@ sonarqube {
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.projectKey", "DivorceCaseProgressionService"
         property "sonar.projectName", "Divorce :: case-progression-service"
-        property "sonar.host.url", "https://sonar.reform.hmcts.net/"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
     }
