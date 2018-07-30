@@ -40,6 +40,10 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
         return getServiceToken(getServiceAuthTokenFor());
     }
 
+    protected String getServiceToken(ServiceAuthTokenFor serviceAuthTokenFor) {
+        return serviceAuthSupport.getServiceAuthTokenFor(serviceAuthTokenFor);
+    }
+
     protected String getUserId(String encodedJwt) {
         String jwt = encodedJwt.replaceFirst("Bearer ", "");
         Map<String, Object> claims;
@@ -50,10 +54,6 @@ public abstract class BaseIntegrationTestWithIdamSupport extends IntegrationTest
             throw new IllegalStateException("Cannot find user from authorization token ", e);
         }
         return (String) claims.get("id");
-    }
-
-    protected String getServiceToken(ServiceAuthTokenFor serviceAuthTokenFor) {
-        return serviceAuthSupport.getServiceAuthTokenFor(serviceAuthTokenFor);
     }
 
     protected ServiceAuthTokenFor getServiceAuthTokenFor() {

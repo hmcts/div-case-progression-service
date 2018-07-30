@@ -25,9 +25,11 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldReturnSuccessWhenAPDFIsCreated() throws Exception {
+    public void shouldReturnSuccessWhenAPdfIsCreated() throws Exception {
 
-        Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-petition-issued.json"), petitionIssuedApiUrl);
+        Response caseProgressionResponse = postToRestService(
+            loadJson("ccd-callback-petition-issued.json"), petitionIssuedApiUrl
+        );
 
         assertThat(caseProgressionResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertNotNull(caseProgressionResponse.getBody().path("data.D8DivorceWho"));
@@ -39,7 +41,9 @@ public class CoreCasePetitionIssuedTest extends BaseIntegrationTest {
     @SuppressWarnings("unchecked")
     public void shouldReturnResponseWithErrorsWhenThereIsInvalidD8MarriageDate() throws Exception {
 
-        Response caseProgressionResponse = postToRestService(loadJSON("ccd-callback-invalid-marriage-date.json"), petitionIssuedApiUrl);
+        Response caseProgressionResponse = postToRestService(
+            loadJson("ccd-callback-invalid-marriage-date.json"), petitionIssuedApiUrl
+        );
 
         assertThat(caseProgressionResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertNotNull(caseProgressionResponse.getBody().path("data.D8DivorceWho"));

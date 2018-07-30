@@ -41,7 +41,8 @@ public class ServiceAuthSupport {
             String serviceToken = CACHED_TOKENS.get(serviceAuthTokenFor);
 
             if (StringUtils.isBlank(serviceToken)) {
-                AuthTokenGenerator caseProgressionAuthTokenGenerator = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor);
+                AuthTokenGenerator caseProgressionAuthTokenGenerator
+                    = getCaseProgressionAuthTokenGenerator(serviceAuthTokenFor);
                 if (caseProgressionAuthTokenGenerator != null) {
                     serviceToken = caseProgressionAuthTokenGenerator.generate();
                 }
@@ -54,9 +55,11 @@ public class ServiceAuthSupport {
 
     private AuthTokenGenerator getCaseProgressionAuthTokenGenerator(ServiceAuthTokenFor serviceAuthTokenFor) {
         if (serviceAuthTokenFor == ServiceAuthTokenFor.CASE_PROGRESSION) {
-            return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret, caseProgressionMicroserviceName, serviceAuthorisationApi);
+            return AuthTokenGeneratorFactory.createDefaultGenerator(caseProgressionSecret,
+                caseProgressionMicroserviceName, serviceAuthorisationApi);
         } else if (serviceAuthTokenFor == ServiceAuthTokenFor.DIV_DOCUMENT_GENERATOR) {
-            return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret, documentGeneratorMicroserviceName, serviceAuthorisationApi);
+            return AuthTokenGeneratorFactory.createDefaultGenerator(documentGeneratorSecret,
+                documentGeneratorMicroserviceName, serviceAuthorisationApi);
         }
 
         return null;
