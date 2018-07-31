@@ -37,7 +37,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        Response ccdResponse = postToRestService(loadJSON("update-addresses.json"),
+        Response ccdResponse = postToRestService(loadJson("update-addresses.json"),
                 String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
@@ -48,9 +48,11 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        postToRestService(loadJSON("update-payment-reference.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        postToRestService(loadJson("update-payment-reference.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
-        Response ccdResponse = postToRestService(loadJSON("payment-update.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJson("payment-update.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertOkResponseAndCaseIdIsNotZero(ccdResponse);
     }
@@ -60,7 +62,8 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        Response ccdResponse = postToRestService(loadJSON("addresses.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJson("addresses.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event null for case type DIVORCE\"");
     }
@@ -68,7 +71,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
     @Test
     public void shouldReturnNotFoundForNoCaseId() throws Exception {
 
-        Response ccdResponse = postToRestService(loadJSON("payment-update.json"), transformationApiUpdateUrl);
+        Response ccdResponse = postToRestService(loadJson("payment-update.json"), transformationApiUpdateUrl);
 
         assertEquals(Integer.valueOf(HttpStatus.NOT_FOUND.toString()).intValue(), ccdResponse.getStatusCode());
 
@@ -78,7 +81,8 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
     @Test
     public void shouldReturnBadRequestForNonExistingCaseReference() throws Exception {
 
-        Response ccdResponse = postToRestService(loadJSON("payment-update.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, "123"));
+        Response ccdResponse = postToRestService(loadJson("payment-update.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, "123"));
 
         assertResponseErrorsAreAsExpected(ccdResponse, BAD_REQUEST_EXCEPTION, "\"message\":\"Case reference is not valid\"");
     }
@@ -88,7 +92,8 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        Response ccdResponse = postToRestService(loadJSON("update-invalid-event-id.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJson("update-invalid-event-id.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertResponseErrorsAreAsExpected(ccdResponse, RESOURCE_NOT_FOUND_EXCEPTION, "\"message\":\"Cannot findCaseEvent event invalidId for case type DIVORCE\"");
     }
@@ -98,7 +103,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        String updatePaymentJson = loadJSON("payment-update.json");
+        String updatePaymentJson = loadJson("payment-update.json");
         postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
         Response ccdResponse = postToRestService(updatePaymentJson, String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
@@ -110,11 +115,12 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        Response ccdResponse = postToRestService(loadJSON("update-with-pending-rejection.json"), String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService(loadJson("update-with-pending-rejection.json"),
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertResponseErrorsAreAsExpected(ccdResponse, VALIDATION_EXCEPTION, "\"message\":\"The case status did not qualify for the event\"");
     }
-    
+
     @Test
     public void shouldReturnErrorForInvalidUserJwtToken() throws Exception {
 
@@ -123,7 +129,7 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
         Response ccdResponse = given()
                 .header("Authorization", getInvalidToken())
                 .contentType("application/json")
-                .body(loadJSON("update-addresses.json"))
+                .body(loadJson("update-addresses.json"))
                 .when()
                 .post(String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId))
                 .andReturn();
@@ -136,13 +142,14 @@ public class CoreCaseDataUpdateIntegrationTest extends BaseIntegrationTest {
 
         String caseId = getCaseIdFromSubmittingANewCase();
 
-        Response ccdResponse = postToRestService("", String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
+        Response ccdResponse = postToRestService("",
+            String.join(URL_SEPARATOR, transformationApiUpdateUrl, caseId));
 
         assertEquals(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()).intValue(), ccdResponse.getStatusCode());
     }
 
     private String getCaseIdFromSubmittingANewCase() throws Exception {
-        return postToRestService(loadJSON("addresses.json"), transformationApiSubmitUrl)
+        return postToRestService(loadJson("addresses.json"), transformationApiSubmitUrl)
                 .getBody().path("caseId").toString();
     }
 }
