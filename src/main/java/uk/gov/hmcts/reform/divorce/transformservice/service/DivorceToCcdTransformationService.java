@@ -41,7 +41,7 @@ public class DivorceToCcdTransformationService implements TransformationService 
 
         CoreCaseData coreCaseData = divorceCaseToCCDMapper.divorceCaseDataToCourtCaseData(divorceSession);
 
-        log.debug("AddressBaseUK Mapping - coreCaseData mapped details"+coreCaseData.toString());
+        log.debug("AddressBaseUK Mapping - coreCaseData mapped details {}",coreCaseData.toString());
         return CaseDataContent.builder()
             .data(objectMapper.convertValue(coreCaseData, Map.class))
             .token(createEvent.getToken())

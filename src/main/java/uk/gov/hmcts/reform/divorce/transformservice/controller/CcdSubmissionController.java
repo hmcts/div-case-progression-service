@@ -46,7 +46,7 @@ public class CcdSubmissionController {
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
 
-        log.debug("AddressBaseUK Mapping - submitted case details:"+ divorceSession.toString());
+        log.debug("AddressBaseUK Mapping - submitted case details {}", divorceSession.toString());
 
         return ResponseEntity.ok(new CCDResponse(submissionService.submit(divorceSession, jwt), null, STATUS));
     }
