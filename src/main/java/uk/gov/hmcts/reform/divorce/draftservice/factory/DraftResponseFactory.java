@@ -41,10 +41,11 @@ public class DraftResponseFactory {
             return DraftsResponse.emptyResponse();
         }
 
-        log.debug("Building draft response from existing case in CCD");
+        Map caseDetails = listOfCasesInCCD.get(0);
+
+        log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
-        Map caseDetails = listOfCasesInCCD.get(0);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
         Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
