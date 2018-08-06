@@ -39,7 +39,8 @@ public class SubmissionService {
             draftsService.deleteDraft(jwt);
         } catch (Exception e) {
             // we do not want to send an error response to the front end if deleting the draft fails
-            log.warn("Could not delete the draft for userId {} with case id {}", userDetails.getId(), submitEvent.getCaseId());
+            log.warn("Could not delete the draft for userId {} with case id {}",
+                    userDetails.getId(), submitEvent.getCaseId());
         }
 
         log.info("Case Id: {} ", submitEvent.getCaseId());

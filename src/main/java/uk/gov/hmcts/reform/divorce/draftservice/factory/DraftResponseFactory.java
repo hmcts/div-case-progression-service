@@ -41,7 +41,7 @@ public class DraftResponseFactory {
             return DraftsResponse.emptyResponse();
         }
 
-        Map caseDetails = listOfCasesInCCD.get(0);
+        Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
 
         log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
