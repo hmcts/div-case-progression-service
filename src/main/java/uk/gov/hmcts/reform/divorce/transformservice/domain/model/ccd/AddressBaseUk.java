@@ -8,17 +8,17 @@ import lombok.Data;
 @Data
 public class AddressBaseUk {
 
-    private String addressLine1;
+    private String AddressLine1;
 
-    private String addressLine2;
+    private String AddressLine2;
 
-    private String addressLine3;
+    private String AddressLine3;
 
-    private String postTown;
+    private String PostTown;
 
-    private String postCode;
+    private String PostCode;
 
-    private String county;
+    private String County;
 
-    private String country;
+    private String Country;
 }
