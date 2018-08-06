@@ -7,18 +7,18 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class AddressBaseUk {
-
-    private String AddressLine1;
-
-    private String AddressLine2;
-
-    private String AddressLine3;
-
-    private String PostTown;
-
-    private String PostCode;
-
-    private String County;
-
-    private String Country;
+    @JsonProperty (value = "AddressLine1")
+    private String addressLine1;
+    @JsonProperty (value = "AddressLine2")
+    private String addressLine2;
+    @JsonProperty (value = "AddressLine3")
+    private String addressLine3;
+    @JsonProperty (value = "PostTown")
+    private String postTown;
+    @JsonProperty (value = "PostCode")
+    private String postCode;
+    @JsonProperty (value = "County")
+    private String county;
+    @JsonProperty (value = "Country")
+    private String country;
 }
