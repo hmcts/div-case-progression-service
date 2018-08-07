@@ -227,7 +227,8 @@ test {
     doFirst {
         project.ext.automatedTest = false
     }
-    exclude '**/*'
+    exclude 'uk.gov.hmcts.reform.divorce.transformservice.functional/**'
+    exclude 'uk.gov.hmcts.reform.divorce.transformservice.mapping/**'
 }
 
 jacocoTestReport {
