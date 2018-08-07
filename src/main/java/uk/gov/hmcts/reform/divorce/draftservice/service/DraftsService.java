@@ -49,13 +49,13 @@ public class DraftsService {
             String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
             DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
             if (draftsResponse == null || !draftsResponse.isDraft()) {
-                log.debug("Creating a new divorce session draft");
+                log.debug("Creating a new divorce session draft for userId {}", userDetails.getId());
                 draftStoreClient.createDraft(
                     jwt,
                     secret,
                     draftModelFactory.createDraft(data));
             } else if (draftsResponse.isDraft()) {
-                log.debug("Updating the existing divorce session draft");
+                log.debug("Updating the existing divorce session draft for userId {}", userDetails.getId());
                 draftStoreClient.updateDraft(
                     jwt,
                     draftsResponse.getDraftId(),
@@ -66,8 +66,8 @@ public class DraftsService {
     }
 
     public void deleteDraft(String jwt) {
-        log.debug("Deleting the divorce session draft");
         UserDetails userDetails = userService.getUserDetails(jwt);
+        log.debug("Deleting the divorce session draft for userId {}", userDetails.getId());
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt,
             userDetails.getId(),
             encryptionKeyFactory.createEncryptionKey(userDetails.getId()));

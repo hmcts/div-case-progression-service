@@ -42,11 +42,11 @@ public class RetrieveCcdClient {
         List<Map<String, Object>> cases = restTemplate.exchange(url, HttpMethod.GET, httpEntity, List.class).getBody();
 
         if (cases.isEmpty()) {
-            log.debug("No cases found");
+            log.debug("No cases found for userId {}", userId);
             return Collections.emptyList();
         }
 
-        log.info(String.format("Found %s cases", cases.size()));
+        log.info(String.format("Found %s cases for userId %s", cases.size(), userId));
 
         return cases;
     }
