@@ -82,8 +82,7 @@ task functional(type:GradleBuild) {
     group = 'Delivery pipeline'
     description = 'Executes non-destructive smoke tests against a running Case Prgression Instance'
 
-    tasks = ['enableFunctionalTest', 'case-progression-automation-test:clean', 'case-progression-automation-test:test', 'case-progression-automation-test:aggregate']
-}
+    tasks = []
 
 mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
 
