@@ -41,6 +41,7 @@ public class SubmitCcdClient {
 
         String url = ccdClientConfiguration.getSubmitCaseUrl(userDetails.getId());
         log.info("Formatted url submit case {} ", url);
+        log.debug("Submit case full entity {} ", httpEntity);
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, SubmitEvent.class).getBody();
     }
 }
