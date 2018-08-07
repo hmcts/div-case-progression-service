@@ -20,42 +20,43 @@
 ## Project setup
 > * git clone [https://github.com/hmcts/div-div-case-progression-service.git](https://github.com/hmcts/div-div-case-progression-service.git)
 > * cd div-case-progression-service
-> * Run `make run-transformationservice` This command will start the spring boot application in an embedded tomcat on port 4003.To change the port change the configuration in `application.properties`
+> * Run `./gradlew clean spring-boot:run` This command will start the spring boot application in an embedded tomcat on port 4003.To change the port change the configuration in `application.properties`
 
-## Below commands are available in the make file
+## Below commands are available for gradle
 
 
 This command will create a dependency check report to identify the use of known vulnerable components.
 ```
-make dependency-check
+./gradlew dependency-check:check
 ```
 
 This command will check to see if the code is adheres to the code linting specification
 ```
-make lint-all
+./gradlew -DcompilerArgument=-Xlint:all compile
 ```
     
 This command creates a local SonarQube instance which can accessed at http://localhost:9000/ 
 ```
-make create-sonar-local
+docker pull sonarqube:latest
+docker run -d --restart=always -p9000:9000 sonarqube:latest
 ```
 
-This generates sonar reports and updates the local sonar qube instance. (Before executing this make command make sure make create-sonar-local is executed.)
+This generates sonar reports and updates the local sonar qube instance. Make sure the local sonarQube instance is running before using this command.
 
 ```
-make generate-sonar-report-local
+./gradlew clean install -DskipITs=true sonar:sonar -Dsonar.host.url=http://localhost:9000
 ```
 
 This command will run unit tests.
 
 ```
-make run-unit-tests
+./gradlew test
 ```
 
 This command will run service locally on port 4003. e.g post to url http://localhost:4003/transformationapi/version/1/submit
 
 ```
-make run-transformationservice
+./gradlew clean spring-boot:run
 ```
 
  
