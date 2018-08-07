@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(path = "/petition/version/1")
-@Api(value = "Case Maintenance Services", consumes = "application/json", produces = "application/json")
+@Api(value = "DN Petition Service", consumes = "application/json", produces = "application/json")
 public class PetitionController {
 
     private final PetitionService petitionService;
