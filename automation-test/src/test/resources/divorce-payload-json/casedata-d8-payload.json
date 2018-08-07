@@ -144,7 +144,8 @@
     "D8ReasonForDivorce": "unreasonable-behaviour",
     "D8DerivedPetitionerCurrentFullName": "John Smith",
     "D8InferredPetitionerGender": "female",
-    "D8JurisdictionHabituallyResLast6Months": "NO"
+    "D8JurisdictionHabituallyResLast6Months": "NO",
+    "D8StatementOfTruth": "YES"
   },
   "data_classification": {
     "D8DerivedRespondentHomeAddress": "PUBLIC",
@@ -280,7 +281,8 @@
     "D8ReasonForDivorce": "PUBLIC",
     "D8DerivedPetitionerCurrentFullName": "PUBLIC",
     "D8InferredPetitionerGender": "PUBLIC",
-    "D8JurisdictionHabituallyResLast6Months": "PUBLIC"
+    "D8JurisdictionHabituallyResLast6Months": "PUBLIC",
+    "D8StatementOfTruth": "PUBLIC"
   },
   "after_submit_callback_response": null,
   "callback_response_status_code": null,
@@ -419,6 +421,7 @@
     "D8ReasonForDivorce": "PUBLIC",
     "D8DerivedPetitionerCurrentFullName": "PUBLIC",
     "D8InferredPetitionerGender": "PUBLIC",
-    "D8JurisdictionHabituallyResLast6Months": "PUBLIC"
+    "D8JurisdictionHabituallyResLast6Months": "PUBLIC",
+    "D8StatementOfTruth": "PUBLIC"
   }
 }

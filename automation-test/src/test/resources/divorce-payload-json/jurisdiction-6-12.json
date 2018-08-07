@@ -209,6 +209,7 @@
     }
   },
   "courts": "eastMidlands",
+  "confirmPrayer": "Yes",
   "postcodeLookup": {
     "postcodeError": "false"
   },
