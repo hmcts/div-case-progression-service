@@ -2,12 +2,10 @@ package uk.gov.hmcts.reform.divorce.petition.service;
 
 import feign.FeignException;
 import lombok.extern.java.Log;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.petition.domain.Petition;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDetails;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 
 @Service
@@ -16,7 +14,6 @@ public class PetitionService  {
 
     private final CmsApiClient cmsApiClient;
     private final CfsApiClient cfsApiClient;
-
 
     @Autowired
     public PetitionService(CmsApiClient cmsApiClient, CfsApiClient cfsApiClient) {
