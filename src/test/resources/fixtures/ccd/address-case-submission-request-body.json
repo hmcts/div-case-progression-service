@@ -21,23 +21,23 @@
     "D8PetitionerNameChangedHow" : [ "marriageCertificate" ],
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
-        "addressLine1": "82 Landor Road",
-        "addressLine2": "",
-        "addressLine3": "",
-        "postCode": "SW9 9PE",
-        "postTown": "London",
-        "county": "",
-        "country": "UK"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
-        "addressLine1": "84 Landor Road",
-        "addressLine2": "",
-        "addressLine3": "",
-        "postCode": "SW9 9PE",
-        "postTown": "London",
-        "county": "",
-        "country": "UK"
+        "AddressLine1": "84 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "84 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "NO",
@@ -48,23 +48,23 @@
     "D8RespondentSolicitorCompany": "Case",
     "D8DerivedRespondentSolicitorDetails" : "Justin\nCase\n90 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentHomeAddress" : {
-        "addressLine1": "88 Landor Road",
-        "addressLine2": "",
-        "addressLine3": "",
-        "postCode": "SW9 9PE",
-        "postTown": "London",
-        "county": "",
-        "country": "UK"
+        "AddressLine1": "88 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentHomeAddress" : "88 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
-        "addressLine1": "82 Landor Road",
-        "addressLine2": "",
-        "addressLine3": "",
-        "postCode": "SW9 9PE",
-        "postTown": "London",
-        "county": "",
-        "country": "UK"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceUseHomeAddress" : "Solicitor",
@@ -130,23 +130,23 @@
     "D8MarriagePetitionerName" : "John Doe",
     "D8MarriageRespondentName" : "Jenny Benny",
     "D8RespondentSolicitorAddress" : {
-          "addressLine1": "90 Landor Road",
-          "addressLine2": "",
-          "addressLine3": "",
-          "postCode": "SW9 9PE",
-          "postTown": "London",
-          "county": "",
-          "country": "UK"
+          "AddressLine1": "90 Landor Road",
+          "AddressLine2": "",
+          "AddressLine3": "",
+          "PostCode": "SW9 9PE",
+          "PostTown": "London",
+          "County": "",
+          "Country": "UK"
      },
     "D8DerivedRespondentSolicitorAddr" : "90 Landor Road\nLondon\nSW9 9PE",
     "D8LivingArrangementsLastLivedTogethAddr" : {
-        "addressLine1": "Flat A-B",
-        "addressLine2": "86 Landor Road",
-        "addressLine3": "",
-        "postCode": "SW9 9PE",
-        "postTown": "London",
-        "county": "",
-        "country": "UK"
+        "AddressLine1": "Flat A-B",
+        "AddressLine2": "86 Landor Road",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedLivingArrangementsLastLivedAddr" : "Flat A-B\n86 Landor Road\nLondon\nSW9 9PE",
     "D8Connections" : {
