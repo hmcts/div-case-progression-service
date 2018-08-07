@@ -83,6 +83,7 @@ task functional(type:GradleBuild) {
     description = 'Executes non-destructive smoke tests against a running Case Prgression Instance'
 
     tasks = []
+}
 
 mainClassName = 'uk.gov.hmcts.reform.divorce.CaseProgressionApplication'
 
