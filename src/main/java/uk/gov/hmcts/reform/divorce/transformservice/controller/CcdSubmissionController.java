@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
 
 import javax.ws.rs.core.MediaType;
 
-@Slf4j
 @RestController
 @RequestMapping(path = "/transformationapi")
 @Api(value = "Transformation API", consumes = "application/json", produces = "application/json")
@@ -45,8 +43,6 @@ public class CcdSubmissionController {
         @RequestBody @ApiParam(value = "The divorce session.", required = true) DivorceSession divorceSession,
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwt) {
-
-        log.debug("AddressBaseUK Mapping - submitted case details {}", divorceSession.toString());
 
         return ResponseEntity.ok(new CCDResponse(submissionService.submit(divorceSession, jwt), null, STATUS));
     }

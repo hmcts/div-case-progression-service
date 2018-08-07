@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce.transformservice.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.ccd.CreateEvent;
@@ -15,7 +14,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.mapping.DivorceCaseToCCDMapp
 import java.util.Map;
 import java.util.Objects;
 
-@Slf4j
 @Component
 public class DivorceToCcdTransformationService implements TransformationService {
 
@@ -41,7 +39,6 @@ public class DivorceToCcdTransformationService implements TransformationService 
 
         CoreCaseData coreCaseData = divorceCaseToCCDMapper.divorceCaseDataToCourtCaseData(divorceSession);
 
-        log.debug("AddressBaseUK Mapping - coreCaseData mapped details {}",coreCaseData.toString());
         return CaseDataContent.builder()
             .data(objectMapper.convertValue(coreCaseData, Map.class))
             .token(createEvent.getToken())

@@ -38,11 +38,7 @@ public class SubmitCcdClient {
 
         HttpEntity<CaseDataContent> httpEntity = httpEntityFactory.createRequestEntityForSubmitCase(userToken,
             caseDataContent);
-        log.debug("AddressBaseUK Mapping - caseDataContent httpEntity {}", httpEntity);
-        if (httpEntity != null && httpEntity.getBody() != null) {
-            log.debug("AddressBaseUK Mapping - caseDataContent httpEntity details body {}",
-                httpEntity.getBody().toString());
-        }
+
         String url = ccdClientConfiguration.getSubmitCaseUrl(userDetails.getId());
         log.info("Formatted url submit case {} ", url);
         return restTemplate.exchange(url, HttpMethod.POST, httpEntity, SubmitEvent.class).getBody();
