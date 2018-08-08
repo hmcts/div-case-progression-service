@@ -32,12 +32,12 @@
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
       "County" : null,
-      "postcode" : "SW9 9PE"
+      "Postcode" : "SW9 9PE"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
       "County" : null,
-      "postcode" : "SW9 9PE"
+      "Postcode" : "SW9 9PE"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
@@ -48,12 +48,12 @@
     "D8DerivedRespondentSolicitorDetails" : null,
     "D8RespondentHomeAddress" : {
       "County" : null,
-      "postcode" : "SW9 9PE"
+      "Postcode" : "SW9 9PE"
     },
     "D8DerivedRespondentHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
       "County" : null,
-      "postcode" : "SW9 9PE"
+      "Postcode" : "SW9 9PE"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentSolicitorName" : null,
