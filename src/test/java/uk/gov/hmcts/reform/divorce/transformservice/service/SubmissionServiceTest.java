@@ -91,6 +91,9 @@ public class SubmissionServiceTest {
         DivorceSession divorceSession = new DivorceSession();
         String jwt = "_jwt";
 
+        UserDetails userDetails = UserDetails.builder().id("1").build();
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
+
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(1);
 

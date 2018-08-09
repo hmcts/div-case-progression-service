@@ -31,16 +31,16 @@ class DraftsRetrievalService {
     }
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
-        log.info("Retrieving a divorce session draft");
+        log.info("Retrieving a divorce session draft for userId {}", userId);
         DraftList draftList = draftStoreClient.getAll(jwt, secret);
 
         Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
 
         if (divorceDraft.isPresent()) {
-            log.info("Returning the saved draft data");
+            log.info("Returning the saved draft data for userId {}", userId);
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
         } else {
-            log.info("Checking CCD for an existing case as draft not found");
+            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
             return DraftResponseFactory.buildDraftResponseFromCaseData(
                 retrieveCcdClient.getCases(userId, jwt));
         }

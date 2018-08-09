@@ -132,6 +132,8 @@ public class UpdateServiceTest {
         DivorceEventSession divorceEventSession = new DivorceEventSession();
         String jwt = "_jwt";
 
+        UserDetails userDetails = UserDetails.builder().id("1").build();
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         CaseEvent caseEvent = new CaseEvent();
         caseEvent.setCaseId(1L);
         when(ccdEventClient.createCaseEvent(any(), anyString(), anyLong(), any()))
