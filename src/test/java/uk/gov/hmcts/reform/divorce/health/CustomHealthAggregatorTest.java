@@ -47,15 +47,27 @@ public class CustomHealthAggregatorTest {
     }
 
     @Test
-    public void aggregateShouldIgnoreTheStatusOfTheDraftStoreAPI() {
+    public void aggregateShouldNotIgnoreTheStatusOfTheDraftStoreAPI() {
         Map<String, Health> healts = ImmutableMap.of("service1", Health.up().build(),
             "draftStoreApi", Health.down().build());
+
+        Health health = underTest.aggregate(healts);
+        assertEquals(Status.DOWN, health.getStatus());
+        assertEquals(2, health.getDetails().entrySet().size());
+        assertEquals(Status.UP, ((Health) health.getDetails().get("service1")).getStatus());
+        assertEquals(Status.DOWN, ((Health) health.getDetails().get("draftStoreApi")).getStatus());
+    }
+
+    @Test
+    public void aggregateShouldBeUpIfAllServicesAreUp() {
+        Map<String, Health> healts = ImmutableMap.of("service1", Health.up().build(),
+            "draftStoreApi", Health.up().build());
 
         Health health = underTest.aggregate(healts);
         assertEquals(Status.UP, health.getStatus());
         assertEquals(2, health.getDetails().entrySet().size());
         assertEquals(Status.UP, ((Health) health.getDetails().get("service1")).getStatus());
-        assertEquals(Status.DOWN, ((Health) health.getDetails().get("draftStoreApi")).getStatus());
+        assertEquals(Status.UP, ((Health) health.getDetails().get("draftStoreApi")).getStatus());
     }
 
 
