@@ -22,6 +22,7 @@ public class DraftResponseFactory {
     private static final String ID = "id";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
+        //check if draft is null
         if (draft == null) {
             return DraftsResponse.emptyResponse();
         } else {
