@@ -25,5 +25,6 @@ dependencies {
 repositories {
     mavenLocal()
     maven { url "http://artifactory.reform.hmcts.net/artifactory/libs-release" }
+    maven { url "https://dl.bintray.com/hmcts/hmcts-maven" }
     jcenter()
 }
