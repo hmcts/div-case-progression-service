@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
@@ -11,6 +12,8 @@ import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -32,17 +35,17 @@ class DraftsRetrievalService {
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
         log.info("Retrieving a divorce session draft for userId {}", userId);
-        DraftList draftList = draftStoreClient.getAll(jwt, secret);
 
-        Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
+        List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
 
-        if (divorceDraft.isPresent()) {
-            log.info("Returning the saved draft data for userId {}", userId);
-            return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
-        } else {
+        if (CollectionUtils.isNotEmpty(caseData)) {
             log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
-            return DraftResponseFactory.buildDraftResponseFromCaseData(
-                retrieveCcdClient.getCases(userId, jwt));
+            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData);
+        } else {
+            DraftList draftList = draftStoreClient.getAll(jwt, secret);
+            Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
+            log.info("Returning the saved draft data for userId {}", userId);
+            return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.orElse(null));
         }
     }
 
