@@ -175,6 +175,7 @@ dependencies {
         exclude(module: 'mapstruct')
     }
 
+    compile group: 'uk.gov.hmcts.reform.divorce', name:'div-common-utils', version: '1.0.5'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: versions.commonsCollections4
     compile group: 'org.apache.commons', name: 'commons-lang3', version: versions.commonsLang3
     compile group: 'org.mapstruct', name: 'mapstruct-jdk8', version: versions.mapstruct

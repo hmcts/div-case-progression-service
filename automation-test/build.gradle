@@ -46,6 +46,7 @@ dependencies {
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-cucumber', version: versions.serenityCucumber
+    testCompile group: 'uk.gov.hmcts.reform.divorce', name:'div-common-utils', version: '1.0.5'
 
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: versions.commonsLang3
     testCompile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.8'

@@ -9,6 +9,7 @@ def versions = [
 
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile group: 'uk.gov.hmcts.reform.divorce', name:'div-common-utils', version: '1.0.5'
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '5.1'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     compile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
