@@ -22,11 +22,15 @@ public class DraftResponseFactory {
     private static final String ID = "id";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
-        return DraftsResponse.builder()
+        if (draft == null) {
+            return DraftsResponse.emptyResponse();
+        } else {
+            return DraftsResponse.builder()
                 .isDraft(true)
                 .data(draft.getDocument())
                 .draftId(draft.getId())
                 .build();
+        }
     }
 
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
