@@ -28,13 +28,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
-before('buildinfra:prod') {
-    error('Halting pipeline before prod stages')
-}
 
-before('deploy:prod') {
-    error('Halting pipeline before prod stages')
-}
 
 List<LinkedHashMap<String, Object>> secrets = [
     secret("ccd-submission-s2s-auth-secret", "AUTH_PROVIDER_SERVICE_CLIENT_KEY"),
@@ -44,6 +38,14 @@ List<LinkedHashMap<String, Object>> secrets = [
 
 withPipeline(type , product, component) {
     loadVaultSecrets(secrets)
+
+    before('buildinfra:prod') {
+        error('Halting pipeline before prod stages')
+    }
+
+    before('deploy:prod') {
+        error('Halting pipeline before prod stages')
+    }
 
     before('functionalTest:aat') {
         env.ITEST_ENVIRONMENT = "aat"
