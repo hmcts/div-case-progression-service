@@ -4,10 +4,8 @@ import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.divorce.utils.IDAMUtils;
-import uk.gov.hmcts.reform.divorce.utils.impl.IDAMUtilsImpl;
+import uk.gov.hmcts.reform.divorce.support.auth.impl.IDAMUtilsImpl;
 
-import java.util.Base64;
 import java.util.UUID;
 
 @Service
