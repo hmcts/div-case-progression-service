@@ -91,11 +91,6 @@ data "azurerm_key_vault" "div_key_vault" {
     resource_group_name = "${local.vaultName}"
 }
 
-data "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
-    name      = "ccd-submission-s2s-auth-secret"
-    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
-}
-
 data "azurerm_key_vault_secret" "frontend_secret" {
     name      = "frontend-secret"
     vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
