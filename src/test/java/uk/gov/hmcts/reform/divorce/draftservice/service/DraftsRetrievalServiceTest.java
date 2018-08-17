@@ -118,8 +118,10 @@ public class DraftsRetrievalServiceTest {
         assertEquals(courts, data.get("courts").asText());
         assertEquals(caseId, (Long) data.get("caseId").asLong());
     }
+
     @Test
     public void getDraftShouldReturnCaseWhenBothCaseAndDraftExist() {
+
         //given
         when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
         when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
