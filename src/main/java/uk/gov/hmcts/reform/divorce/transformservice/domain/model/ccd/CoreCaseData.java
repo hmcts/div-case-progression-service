@@ -87,13 +87,13 @@ public class CoreCaseData {
     private String d8PetitionerContactDetailsConfidential;
 
     @JsonProperty("D8PetitionerHomeAddress")
-    private Address d8PetitionerHomeAddress;
+    private AddressBaseUk d8PetitionerHomeAddress;
 
     @JsonProperty("D8DerivedPetitionerHomeAddress")
     private String d8DerivedPetitionerHomeAddress;
 
     @JsonProperty("D8PetitionerCorrespondenceAddress")
-    private Address d8PetitionerCorrespondenceAddress;
+    private AddressBaseUk d8PetitionerCorrespondenceAddress;
 
     @JsonProperty("D8DerivedPetitionerCorrespondenceAddr")
     private String d8DerivedPetitionerCorrespondenceAddress;
@@ -117,13 +117,13 @@ public class CoreCaseData {
     private String d8DerivedRespondentSolicitorDetails;
 
     @JsonProperty("D8RespondentHomeAddress")
-    private Address d8RespondentHomeAddress;
+    private AddressBaseUk d8RespondentHomeAddress;
 
     @JsonProperty("D8DerivedRespondentHomeAddress")
     private String d8DerivedRespondentHomeAddress;
 
     @JsonProperty("D8RespondentCorrespondenceAddress")
-    private Address d8RespondentCorrespondenceAddress;
+    private AddressBaseUk d8RespondentCorrespondenceAddress;
 
     @JsonProperty("D8DerivedRespondentCorrespondenceAddr")
     private String d8DerivedRespondentCorrespondenceAddr;
@@ -138,7 +138,7 @@ public class CoreCaseData {
     private String d8RespondentCorrespondenceSendToSol;
 
     @JsonProperty("D8RespondentSolicitorAddress")
-    private Address d8RespondentSolicitorAddress;
+    private AddressBaseUk d8RespondentSolicitorAddress;
 
     @JsonProperty("D8RespondentCorrespondenceUseHomeAddress")
     private String d8RespondentCorrespondenceUseHomeAddress;
@@ -162,7 +162,7 @@ public class CoreCaseData {
     private String d8LivingArrangementsLiveTogether;
 
     @JsonProperty("D8LivingArrangementsLastLivedTogethAddr")
-    private Address d8LivingArrangementsLastLivedTogethAddr;
+    private AddressBaseUk d8LivingArrangementsLastLivedTogethAddr;
 
     @JsonProperty("D8LegalProceedings")
     private String d8LegalProceedings;
@@ -225,7 +225,7 @@ public class CoreCaseData {
     private String d8ReasonForDivorceAdulteryIsNamed;
 
     @JsonProperty("D8ReasonForDivorceAdultery3rdAddress")
-    private Address d8ReasonForDivorceAdultery3rdAddress;
+    private AddressBaseUk d8ReasonForDivorceAdultery3rdAddress;
 
     @JsonProperty("D8FinancialOrder")
     private String d8FinancialOrder;

@@ -51,6 +51,15 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
+      "addressBaseUK": {
+          "addressLine1": "82 Landor Road",
+          "addressLine2": "",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
+      },
     "url": "/petitioner-respondent/address",
     "formattedAddress": {
       "whereabouts": [
@@ -168,6 +177,15 @@
 	    "addressConfirmed": "true",
 	    "validPostcode": true,
 	    "postcodeError": "false",
+       "addressBaseUK": {
+           "addressLine1": "82 Landor Road",
+           "addressLine2": "",
+           "addressLine3": "",
+           "postCode": "SW9 9PE",
+           "postTown": "London",
+           "county": "",
+           "country": "UK"
+       },
 	    "url": "/petitioner-respondent/respondent-correspondence-address",
 	    "formattedAddress": {
 	      "whereabouts": [
@@ -188,6 +206,15 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
+      "addressBaseUK": {
+          "addressLine1": "84 Landor Road",
+          "addressLine2": "",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
+      },
     "url": "/petitioner-respondent/petitioner-correspondence-address",
     "formattedAddress": {
       "whereabouts": [
@@ -211,6 +238,15 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
+      "addressBaseUK": {
+          "addressLine1": "86 Landor Road",
+          "addressLine2": "",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
+      },
     "url": "/petitioner-respondent/last-lived-together-address",
     "formattedAddress": {
       "whereabouts": [
@@ -234,6 +270,15 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
+      "addressBaseUK": {
+          "addressLine1": "88 Landor Road",
+          "addressLine2": "",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
+      },
     "url": "/petitioner-respondent/home-address",
     "formattedAddress": {
       "whereabouts": [
@@ -257,6 +302,15 @@
     "addressConfirmed": "true",
     "validPostcode": true,
     "postcodeError": "false",
+      "addressBaseUK": {
+          "addressLine1": "90 Landor Road",
+          "addressLine2": "",
+          "addressLine3": "",
+          "postCode": "SW9 9PE",
+          "postTown": "London",
+          "county": "",
+          "country": "UK"
+      },
     "url": "/petitioner-respondent/solicitor/address",
     "formattedAddress": {
       "whereabouts": [

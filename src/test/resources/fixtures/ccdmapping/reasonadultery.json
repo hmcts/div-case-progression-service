@@ -25,13 +25,23 @@
     "D8PetitionerNameChangedHowOtherDetails" : null,
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
@@ -41,13 +51,23 @@
     "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8DerivedRespondentSolicitorDetails" : null,
     "D8RespondentHomeAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
-      "County" : null,
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentSolicitorName" : null,
@@ -82,16 +102,7 @@
     "D8ReasonForDivorceAdulteryWhereDetails" : "On a washing machine.",
     "D8ReasonForDivorceAdulteryWhenDetails" : "Some time ago.",
     "D8ReasonForDivorceAdulteryIsNamed" : "YES",
-    "D8ReasonForDivorceAdultery3rdAddress": {
-        "addressType": "abroad",
-        "address": [
-            "Headquarters 1120 N Street Sacramento 916-654-5266\t",
-            "P.O. Box 942873 Sacramento, CA 94273-0001"
-        ],
-        "addressConfirmed": "true",
-        "addressAbroad": "Headquarters 1120 N Street Sacramento 916-654-5266\t\r\nP.O. Box 942873 Sacramento, CA 94273-0001\r\n",
-        "url": "/about-divorce/reason-for-divorce/adultery/co-respondent-address"
-    },
+    "D8ReasonForDivorceAdultery3rdAddress": null,
     "D8DerivedReasonForDivorceAdultery3rdAddr" : "Headquarters 1120 N Street Sacramento 916-654-5266\t\nP.O. Box 942873 Sacramento, CA 94273-0001",
     "D8FinancialOrder" : "YES",
     "D8FinancialOrderFor" : [ "petitioner", "children" ],
