@@ -63,6 +63,7 @@ public class CaseRetriveDraftFunctionalTest {
 
     private static final String SERVICE_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaXZvcmNlX2NjZF9zdWJtaXNzaW9uIiwiZXh"
         + "wIjoxNTA2NDUwNTUyfQ.IvB5-Rtywc9_pDlLkk3wMnWFT5ACu9FU2av4Z4xjCi7NRuDlvLy78TIDC2KzIVSqyJL4IklHOUPG7FCBT3SoIQ";
+    public static final String DRAFTS_API_ENDPOINT = "/draftsapi/version/1";
 
     @ClassRule
     public static WireMockClassRule authTokenServer = new WireMockClassRule(WireMockSpring.options().port(4502)
@@ -98,7 +99,7 @@ public class CaseRetriveDraftFunctionalTest {
 
         ResponseEntity<String> response = restTemplate
             .exchange(
-                "/draftsapi/version/1",
+                DRAFTS_API_ENDPOINT,
                 HttpMethod.GET,
                 entity,
                 String.class
@@ -119,7 +120,7 @@ public class CaseRetriveDraftFunctionalTest {
 
         ResponseEntity<String> response = restTemplate
             .exchange(
-                "/draftsapi/version/1",
+                DRAFTS_API_ENDPOINT,
                 HttpMethod.GET,
                 entity,
                 String.class
@@ -145,7 +146,7 @@ public class CaseRetriveDraftFunctionalTest {
         draftStoreServer.stubFor(
             get(anyUrl())
                 .willReturn(ok()
-                    .withHeader("Content-type", "application/json;charset=UTF-8")
+                    .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                     .withBody(objectMapper.writeValueAsBytes(draftList))));
     }
 
@@ -168,7 +169,7 @@ public class CaseRetriveDraftFunctionalTest {
         authTokenServer.stubFor(post(urlPathMatching("/lease.*"))
             .willReturn(aResponse()
                 .withStatus(200)
-                .withHeader("Content-type", "text/plain")
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
                 .withBody(SERVICE_TOKEN)
             ));
     }
@@ -186,8 +187,8 @@ public class CaseRetriveDraftFunctionalTest {
         idamServer.stubFor(get("/details")
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
             .willReturn(aResponse()
-                .withHeader("Content-type", "application/json;charset=UTF-8")
-                .withStatus(200)
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .withStatus(HttpStatus.OK.value())
                 .withBody(idamResponseBody)));
     }
 }
