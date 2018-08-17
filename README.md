@@ -109,6 +109,7 @@ Create a user in IDAM and return a JWT (requires jq)
 ```
 ./scripts/divorce-user-jwt.sh
 ```
+
 ##  License
 ```The MIT License (MIT)
 
