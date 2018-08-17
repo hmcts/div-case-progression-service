@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +68,7 @@ public class DraftsRetrievalServiceTest {
     }
 
     @Test
-    public void getDraftShouldReturnTheDraftContentWhenTheDraftExists() {
+    public void getDraftShouldReturnTheDraftContentWhenTheDraftExistsAndCaseDoesnt() {
 
         // given
         when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
@@ -116,6 +117,43 @@ public class DraftsRetrievalServiceTest {
         assertEquals(true, data.get("submissionStarted").asBoolean());
         assertEquals(courts, data.get("courts").asText());
         assertEquals(caseId, (Long) data.get("caseId").asLong());
+    }
+    @Test
+    public void getDraftShouldReturnCaseWhenBothCaseAndDraftExist() {
+        //given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockDraft.getId()).thenReturn(DRAFT_ID);
+        when(mockDraft.getDocument()).thenReturn(mockData);
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(true);
+
+        Map<String, Object> caseData = new HashMap();
+        String courts = "courtsXYZz";
+        caseData.put("D8DivorceUnit", courts);
+
+        Map<String, Object> ccdResponseData = new HashMap();
+        Long caseId = 123L;
+        ccdResponseData.put("id", caseId);
+        ccdResponseData.put("state", "awaitingPayment");
+        ccdResponseData.put("case_data", caseData);
+
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
+        listOfCases.add(ccdResponseData);
+        when(mockRetrieveCcdClient
+            .getCases(USER_ID, JWT))
+            .thenReturn(listOfCases);
+
+        // when
+        DraftsResponse draftsResponse = underTest.getDraft(JWT, USER_ID, SECRET);
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertEquals(courts, data.get("courts").asText());
+        assertEquals(caseId, (Long) data.get("caseId").asLong());
+        //should not call draft at all since case has been found
+        verify(mockDraftStoreClient, never()).getAll(JWT, SECRET);
     }
 
     @Test
