@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.divorce.CaseProgressionApplication;
+import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.Address;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.service.SubmissionService;
 import uk.gov.hmcts.reform.divorce.transformservice.service.UpdateService;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
@@ -44,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CcdSubmissionControllerTest {
 
     private static final String SUBMIT_URL = "/transformationapi/version/1/submit";
+    private Address petitionerCorrespondenceAddress;
 
     @Autowired
     private WebApplicationContext applicationContext;
@@ -64,6 +67,10 @@ public class CcdSubmissionControllerTest {
 
         requestContent = FileUtils.readFileToString(new File(getClass()
             .getResource("/fixtures/divorce/submit-request-body.json").toURI()), Charset.defaultCharset());
+
+        Address petitionerCorrespondenceAddress = new Address();
+        petitionerCorrespondenceAddress.setAddressField(new ArrayList<>());
+        this.petitionerCorrespondenceAddress = petitionerCorrespondenceAddress;
     }
 
     @Test
@@ -73,7 +80,7 @@ public class CcdSubmissionControllerTest {
         final Long caseId = 123567L;
         final DivorceSession divorceSession = new DivorceSession();
         divorceSession.setPetitionerFirstName(petitionerFirstName);
-
+        divorceSession.setPetitionerCorrespondenceAddress(petitionerCorrespondenceAddress);
         when(submissionService.submit(eq(divorceSession), eq(jwt))).thenReturn(caseId);
 
         mvc.perform(post(SUBMIT_URL)
@@ -147,7 +154,7 @@ public class CcdSubmissionControllerTest {
 
         DivorceSession divorceSession = new DivorceSession();
         divorceSession.setPetitionerFirstName(petitionerFirstName);
-
+        divorceSession.setPetitionerCorrespondenceAddress(petitionerCorrespondenceAddress);
         when(exception.getMessage()).thenReturn(errorMessage);
 
         doThrow(exception).when(submissionService).submit(eq(divorceSession), eq(jwt));

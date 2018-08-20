@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.PaymentColl
 
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -124,6 +125,7 @@ public class DivorceSession {
     private Address petitionerHomeAddress;
     @ApiModelProperty(value = "Use petitioners home address as address for service?", allowableValues = "Yes, No")
     private String petitionerCorrespondenceUseHomeAddress;
+    @NotNull
     @ApiModelProperty(value = "Petitioner's correspondence address.")
     private Address petitionerCorrespondenceAddress;
     @ApiModelProperty(value = "Are petitioner and respondent living together?", allowableValues = "Yes, No")

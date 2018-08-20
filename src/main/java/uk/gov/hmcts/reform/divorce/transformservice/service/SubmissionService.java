@@ -29,6 +29,7 @@ public class SubmissionService {
     private UserService userService;
 
     public long submit(final DivorceSession divorceSessionData, final String jwt) {
+
         UserDetails userDetails = userService.getUserDetails(jwt);
         CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
 

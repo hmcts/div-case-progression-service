@@ -41,12 +41,12 @@ public class SubmissionServiceTest {
 
     @InjectMocks
     private SubmissionService submissionService;
+    private static final String JWT = "_jwt";
 
     @Test
     public void submitReturnsCaseId() throws Exception {
         final DivorceSession divorceSession = new DivorceSession();
         final CaseDataContent caseDataContent = mock(CaseDataContent.class);
-        String jwt = "_jwt";
         String token = "_token";
         final String eventSummary = "Create case";
         int caseId = 2893;
@@ -57,16 +57,16 @@ public class SubmissionServiceTest {
         SubmitEvent submitEvent = new SubmitEvent();
         submitEvent.setCaseId(caseId);
 
-        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
-        when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
+        when(userService.getUserDetails(JWT)).thenReturn(userDetails);
+        when(ccdClient.createCase(userDetails, JWT, divorceSession)).thenReturn(createEvent);
         when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
-        when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
+        when(ccdClient.submitCase(userDetails, JWT, caseDataContent)).thenReturn(submitEvent);
 
-        assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
+        assertThat(submissionService.submit(divorceSession, JWT)).isEqualTo(caseId);
 
-        verify(ccdClient).createCase(userDetails, jwt, divorceSession);
+        verify(ccdClient).createCase(userDetails, JWT, divorceSession);
         verify(transformationService).transform(divorceSession, createEvent, eventSummary);
-        verify(ccdClient).submitCase(userDetails, jwt, caseDataContent);
+        verify(ccdClient).submitCase(userDetails, JWT, caseDataContent);
         verifyNoMoreInteractions(ccdClient, transformationService);
     }
 

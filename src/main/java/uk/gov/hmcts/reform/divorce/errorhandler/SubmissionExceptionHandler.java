@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
@@ -20,7 +21,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDR
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -130,6 +130,13 @@ public class SubmissionExceptionHandler {
     @ExceptionHandler(DraftStoreUnavailableException.class)
     public ResponseEntity<Void> handleDraftStoreUnavailable() {
         return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Void> handleValidationException(MethodArgumentNotValidException exception) {
+        log.warn(String.format("Caught validation exception during submission %s",
+            exception.getBindingResult().getAllErrors().get(0).toString()));
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean isDraftsRequest(HttpServletRequest request) {

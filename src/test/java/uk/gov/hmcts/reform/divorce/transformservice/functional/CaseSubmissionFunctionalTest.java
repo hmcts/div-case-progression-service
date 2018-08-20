@@ -51,6 +51,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -78,6 +79,7 @@ public class CaseSubmissionFunctionalTest {
 
     private static final String HWF_APPLICATION_SUBMITTED_EVENT_ID = "hwfCreate";
     private static final String CREATE = "create";
+    private static final String SUBMIT_URL = "/transformationapi/version/1/submit";
 
     @ClassRule
     public static WireMockClassRule authTokenServer = new WireMockClassRule(WireMockSpring.options().port(4502)
@@ -116,7 +118,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -139,7 +141,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -162,7 +164,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -185,7 +187,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -208,7 +210,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -231,7 +233,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -254,7 +256,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -277,7 +279,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -300,7 +302,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -323,7 +325,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -346,7 +348,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -368,7 +370,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -391,7 +393,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
         CCDResponse body = response.getBody();
 
@@ -417,7 +419,7 @@ public class CaseSubmissionFunctionalTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<CCDResponse> response = restTemplate.postForEntity("/transformationapi/version/1/submit",
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
             entity, CCDResponse.class, new HashMap<>());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -438,7 +440,7 @@ public class CaseSubmissionFunctionalTest {
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<CCDResponse> response =
-            restTemplate.postForEntity("/transformationapi/version/1/submit", entity, CCDResponse.class,
+            restTemplate.postForEntity(SUBMIT_URL, entity, CCDResponse.class,
                 new HashMap<>());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -451,6 +453,23 @@ public class CaseSubmissionFunctionalTest {
         submitAddressesReturnsCaseId();
 
         draftStoreServer.verify(deleteRequestedFor(urlEqualTo("/drafts/1")));
+    }
+
+    @Test
+    public void submitReturnsErrorIfValidationFails() throws Exception {
+
+        // given
+        loadDivorceSessionData("/divorce-payload-json/petitioner-correspondence-address-is-null.json");
+
+        HttpHeaders headers = setHttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<CCDResponse> response = restTemplate.postForEntity(SUBMIT_URL,
+            entity, CCDResponse.class, new HashMap<>());
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     private void setUpDraftStore() throws IOException {

@@ -7,7 +7,12 @@
   "data" : {
     "D8PetitionerFirstName" : "Danny",
     "D8DerivedPetitionerCurrentFullName" : "Danny ",
-    "D8Cohort" : "onlineSubmissionPrivateBeta"
+    "D8Cohort" : "onlineSubmissionPrivateBeta",
+      "D8PetitionerCorrespondenceAddress" : {
+
+      },
+      "D8DerivedPetitionerCorrespondenceAddr" : ""
+
   },
   "security_classification" : null,
   "event_token" : "abcde",
