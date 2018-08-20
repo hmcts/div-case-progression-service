@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.divorce.caseprogression.e2e;
 
 import io.restassured.response.Response;
-import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.WithTag;
 import org.json.JSONObject;
@@ -16,7 +15,6 @@ import uk.gov.hmcts.reform.divorce.support.emclient.EvidenceManagementUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Slf4j
 @RunWith(SerenityRunner.class)
 public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegrationTest {
 
@@ -80,7 +78,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         assertNotNull(response.getBody().path("id"));
 
         response = submitEvent(caseId, "issueFromSubmitted");
-        log.error("Response: " + response.toString(), new Exception("dummy exception"));
         assertNotNull(response.getBody().path("id"));
 
         return response;
