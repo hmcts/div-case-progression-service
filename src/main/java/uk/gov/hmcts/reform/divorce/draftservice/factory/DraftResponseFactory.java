@@ -41,22 +41,21 @@ public class DraftResponseFactory {
         int numberOfPetNotRejectedCases = 0;
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
-            log.debug("No case found to build draft response");
 
+            log.debug("No case found to build draft response");
             return DraftsResponse.emptyResponse();
-        }
-        else if (listOfCasesInCCD.size() == 1) {
+
+        } else if (listOfCasesInCCD.size() == 1) {
 
             return draftResponseBuilder(listOfCasesInCCD);
-        }
-        else if (listOfCasesInCCD.size() > 1){
+        } else if (listOfCasesInCCD.size() > 1){
+
             for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                 String caseState = (String) caseDetails.get(CASE_STATE);
 
-                if (caseState == "Rejected") {
+                if (caseState.equals("Rejected")) {
                     numberOfPetRejectedCases += 1;
-                }
-                else{
+                } else{
                     numberOfPetNotRejectedCases += 1;
                 }
             }
@@ -65,14 +64,13 @@ public class DraftResponseFactory {
 
             // if only 1 case is not "Rejected" -  Apply the existing resume logic as per DIV-2658 
             if (numberOfPetNotRejectedCases == 1) {
-                for (int i = 0; i < listOfCasesInCCD.size(); i++) {
-                    Map<String, Object> caseDetails = listOfCasesInCCD.get(i);
+                for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                     String caseState = (String) caseDetails.get(CASE_STATE);
 
-                    if (caseState != "Rejected") {
-                        log.info("Multiple cases found - only 1 is not rejected");
+                    if (!caseState.equals("Rejected")) {
 
-                        return draftResponseBuilder(Collections.singletonList(listOfCasesInCCD.get(i)));
+                        log.info("Multiple cases found - only 1 is not rejected");
+                        return draftResponseBuilder(Collections.singletonList(caseDetails));
                     }
                 }
             }
@@ -82,12 +80,10 @@ public class DraftResponseFactory {
                 log.info("Multiple cases found - Multiple are not rejected");
 
                 return draftResponseBuilder(listOfCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
-            }
+            } else if (numberOfPetRejectedCases == listOfCasesInCCD.size()) {
+                //if multiple cases are all "Rejected"  - Start a blank application
 
-            //if multiple cases are all "Rejected"  - Start a blank application
-            if (numberOfPetRejectedCases == listOfCasesInCCD.size()) {
                 log.info("Multiple cases found - all are rejected");
-
                 return DraftsResponse.emptyResponse();
             }
             log.info("No case found to build draft response");

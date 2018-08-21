@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DraftResponseFactoryTest {
@@ -42,13 +44,10 @@ public class DraftResponseFactoryTest {
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromDraft(null);
 
         // then
-        assertEquals(false, draftsResponse.isDraft());
+        assertFalse(draftsResponse.isDraft());
         assertNull(draftsResponse.getData());
         assertNull(draftsResponse.getDraftId());
     }
-
-    // buildDraftResponseFromDraft_return_draft_response_when_input_is_valid() {
-
 
     @Test
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_input_is_null() {
@@ -59,7 +58,7 @@ public class DraftResponseFactoryTest {
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null);
 
         // then
-        assertEquals(false, draftsResponse.isDraft());
+        assertFalse(draftsResponse.isDraft());
         assertNull(draftsResponse.getData());
         assertNull(draftsResponse.getDraftId());
     }
@@ -74,7 +73,7 @@ public class DraftResponseFactoryTest {
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
 
         // then
-        assertEquals(false, draftsResponse.isDraft());
+        assertFalse(draftsResponse.isDraft());
         assertNull(draftsResponse.getData());
         assertNull(draftsResponse.getDraftId());
     }
@@ -97,8 +96,8 @@ public class DraftResponseFactoryTest {
 
         // then
         JsonNode data = draftsResponse.getData();
-        assertEquals(false, draftsResponse.isDraft());
-        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertFalse(draftsResponse.isDraft());
+        assertTrue(data.get("submissionStarted").asBoolean());
         assertEquals(COURTS, data.get("courts").asText());
         assertEquals(CASE_ID, (Long) data.get("caseId").asLong());
         assertEquals(AWAITING_PAYMENT_STATUS, data.get("state").asText());
@@ -118,7 +117,7 @@ public class DraftResponseFactoryTest {
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
 
         // then
-        assertEquals(false, draftsResponse.isDraft());
+        assertFalse(draftsResponse.isDraft());
         assertNull(draftsResponse.getData());
         assertNull(draftsResponse.getDraftId());
     }
@@ -146,8 +145,8 @@ public class DraftResponseFactoryTest {
 
         // then
         JsonNode data = draftsResponse.getData();
-        assertEquals(false, draftsResponse.isDraft());
-        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertFalse(draftsResponse.isDraft());
+        assertTrue(data.get("submissionStarted").asBoolean());
         assertEquals(AWAITING_PAYMENT_STATUS, data.get("state").asText());
     }
 
@@ -174,8 +173,8 @@ public class DraftResponseFactoryTest {
 
         // then
         JsonNode data = draftsResponse.getData();
-        assertEquals(false, draftsResponse.isDraft());
-        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertFalse(draftsResponse.isDraft());
+        assertTrue(data.get("submissionStarted").asBoolean());
         assertEquals(MULTIPLE_REJECTED_CASES_STATE, data.get("state").asText());
     }
 }
