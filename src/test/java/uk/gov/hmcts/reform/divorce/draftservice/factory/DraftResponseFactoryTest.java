@@ -50,7 +50,6 @@ public class DraftResponseFactoryTest {
     // buildDraftResponseFromDraft_return_draft_response_when_input_is_valid() {
 
 
-
     @Test
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_input_is_null() {
 
@@ -106,7 +105,7 @@ public class DraftResponseFactoryTest {
     }
 
     @Test
-    public void buildDraftResponseFromCaseData_should_return_empty_response_when_multiple_cases_are_all_rejected(){
+    public void buildDraftResponseFromCaseData_should_return_empty_response_when_multiple_cases_are_all_rejected() {
 
         // given
         CASE_DATA_1.put(CASE_STATE, REJECTED_STATUS);
