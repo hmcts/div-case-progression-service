@@ -70,10 +70,8 @@ public class CcdSubmissionControllerUpdateTest {
         final String jwt = "Bearer hgsdja87wegqeuf...";
         final Long caseId = 123567L;
         final DivorceSession divorceSession = new DivorceSession();
+
         final DivorceEventSession divorceEventSession = new DivorceEventSession();
-
-        divorceSession.setPetitionerFirstName("Dan");
-
         divorceEventSession.setEventData(divorceSession);
         divorceEventSession.setEventId("paymentMade");
 
@@ -100,10 +98,8 @@ public class CcdSubmissionControllerUpdateTest {
         final String jwt = "Bearer hgsdja87wegqeuf...";
         final Long caseId = 123567L;
         final DivorceSession divorceSession = new DivorceSession();
+
         final DivorceEventSession divorceEventSession = new DivorceEventSession();
-
-        divorceSession.setPetitionerFirstName("Dan");
-
         divorceEventSession.setEventData(divorceSession);
         divorceEventSession.setEventId("paymentMade");
 
@@ -138,10 +134,8 @@ public class CcdSubmissionControllerUpdateTest {
 
         final Long caseId = 123567L;
         final DivorceSession divorceSession = new DivorceSession();
+
         final DivorceEventSession divorceEventSession = new DivorceEventSession();
-
-        divorceSession.setPetitionerFirstName("Dan");
-
         divorceEventSession.setEventData(divorceSession);
         divorceEventSession.setEventId("paymentMade");
 
@@ -174,9 +168,8 @@ public class CcdSubmissionControllerUpdateTest {
 
         final Long caseId = 123567L;
         final DivorceSession divorceSession = new DivorceSession();
-        final DivorceEventSession divorceEventSession = new DivorceEventSession();
-        divorceSession.setPetitionerFirstName("Dan");
 
+        final DivorceEventSession divorceEventSession = new DivorceEventSession();
         divorceEventSession.setEventData(divorceSession);
         divorceEventSession.setEventId("paymentMade");
 
