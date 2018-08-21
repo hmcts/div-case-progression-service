@@ -14,14 +14,14 @@ import java.util.Map;
 @Slf4j
 public class DraftResponseFactory {
 
-    private static final String CASE_ID = "caseId";
-    private static final String COURTS = "courts";
-    private static final String SUBMISSION_STARTED = "submissionStarted";
-    private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
+    private static final String CASE_ID = "caseId";
     private static final String CASE_STATE = "state";
+    private static final String COURTS = "courts";
+    private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String ID = "id";
     private static final String MULTIPLE_REJECTED_CASES_STATE = "MultipleRejectedCases";
+    private static final String SUBMISSION_STARTED = "submissionStarted";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
         if (draft == null) {
@@ -42,13 +42,13 @@ public class DraftResponseFactory {
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
             log.debug("No case found to build draft response");
+
             return DraftsResponse.emptyResponse();
         }
         else if (listOfCasesInCCD.size() == 1) {
 
             return draftResponseBuilder(listOfCasesInCCD);
         }
-
         else if (listOfCasesInCCD.size() > 1){
             for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                 String caseState = (String) caseDetails.get(CASE_STATE);
@@ -65,13 +65,13 @@ public class DraftResponseFactory {
 
             // if only 1 case is not "Rejected" -  Apply the existing resume logic as per DIV-2658 
             if (numberOfPetNotRejectedCases == 1) {
-
                 for (int i = 0; i < listOfCasesInCCD.size(); i++) {
                     Map<String, Object> caseDetails = listOfCasesInCCD.get(i);
                     String caseState = (String) caseDetails.get(CASE_STATE);
 
                     if (caseState != "Rejected") {
                         log.info("Multiple cases found - only 1 is not rejected");
+
                         return draftResponseBuilder(Collections.singletonList(listOfCasesInCCD.get(i)));
                     }
                 }
@@ -79,23 +79,24 @@ public class DraftResponseFactory {
 
             // if multiple cases are not "Rejected"  - Display new page at /contact-divorce-team 
             if (numberOfPetNotRejectedCases > 1) {
-
                 log.info("Multiple cases found - Multiple are not rejected");
+
                 return draftResponseBuilder(listOfCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
             }
 
             //if multiple cases are all "Rejected"  - Start a blank application
             if (numberOfPetRejectedCases == listOfCasesInCCD.size()) {
-
                 log.info("Multiple cases found - all are rejected");
+
                 return DraftsResponse.emptyResponse();
             }
-
             log.info("No case found to build draft response");
+
             return DraftsResponse.emptyResponse();
         }
         else{
-            log.info("Unhandled situation with multiple cases. Building empty draft response");
+            log.info("Unhandled situation retrieving cases. Building empty draft response");
+
             return DraftsResponse.emptyResponse();
         }
     }
