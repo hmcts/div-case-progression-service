@@ -3,9 +3,11 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,24 +37,19 @@ public class DraftResponseFactory {
 
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
 
-            /*
-            - Only 1 case is not "Rejected"
-             Apply the existing resume logic as per DIV-2658 
-            return draftResponseBuilder(listOfCasesInCCD);
-
-            - Multiple cases are not "Rejected" 
-            Display new page at /contact-divorce-team 
-
-            - Multiple cases are all "Rejected" 
-            Start a blank application
-             */
-
         int numberOfPetRejectedCases = 0;
         int numberOfPetNotRejectedCases = 0;
 
-        if (listOfCasesInCCD.size() > 1) {
+        if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
+            log.debug("No case found to build draft response");
+            return DraftsResponse.emptyResponse();
+        }
+        else if (listOfCasesInCCD.size() == 1) {
 
-            // get count for # of rejected & non-rejected cases
+            return draftResponseBuilder(listOfCasesInCCD);
+        }
+
+        else if (listOfCasesInCCD.size() > 1){
             for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                 String caseState = (String) caseDetails.get(CASE_STATE);
 
@@ -73,9 +70,9 @@ public class DraftResponseFactory {
                     Map<String, Object> caseDetails = listOfCasesInCCD.get(i);
                     String caseState = (String) caseDetails.get(CASE_STATE);
 
-                    if (caseState == "Rejected") {
+                    if (caseState != "Rejected") {
                         log.info("Multiple cases found - only 1 is not rejected");
-                        return draftResponseBuilder((List<Map<String, Object>>) listOfCasesInCCD.get(i));
+                        return draftResponseBuilder(Collections.singletonList(listOfCasesInCCD.get(i)));
                     }
                 }
             }
@@ -94,11 +91,13 @@ public class DraftResponseFactory {
                 return DraftsResponse.emptyResponse();
             }
 
+            log.info("No case found to build draft response");
+            return DraftsResponse.emptyResponse();
+        }
+        else{
             log.info("Unhandled situation with multiple cases. Building empty draft response");
             return DraftsResponse.emptyResponse();
         }
-
-        return draftResponseBuilder(listOfCasesInCCD);
     }
 
     private static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState){
