@@ -20,30 +20,36 @@ public class DraftResponseFactoryTest {
 
     private static final String CASE_STATE = "state";
     private static final String AWAITING_PAYMENT_STATUS = "awaitingPayment";
+    private static final String REJECTED_STATUS = "Rejected";
+    private static final String MULTIPLE_REJECTED_CASES_STATE = "MultipleRejectedCases";
+    private static final String CASE_DATA = "case_data";
+    private static final String COURTS = "courtsXYZz";
+    private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
+    private static final String ID = "id";
+    private static final Long CASE_ID = 123L;
+
+    private static Map<String, Object> CASE_DATA_1 = new HashMap<>();
+    private static Map<String, Object> CASE_DATA_2 = new HashMap<>();
+    private static Map<String, Object> CASE_DETAILS = new HashMap<>();
+    private static List<Map<String, Object>> LIST_OF_CASES = new ArrayList<>();
 
     @Test
-    public void buildDraftResponseFromCaseData_should_return_empty_response_when_multiple_cases_in_awaiting_payment() {
+    public void buildDraftResponseFromDraft_should_return_empty_response_when_input_is_null() {
 
         // given
-        List<Map<String, Object>> listOfCases = new ArrayList<>();
-
-        Map<String, Object> caseData1 = new HashMap<>();
-        caseData1.put(CASE_STATE, AWAITING_PAYMENT_STATUS);
-
-        Map<String, Object> caseData2 = new HashMap<>();
-        caseData2.put(CASE_STATE, AWAITING_PAYMENT_STATUS);
-
-        listOfCases.add(caseData1);
-        listOfCases.add(caseData2);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromDraft(null);
 
         // then
         assertEquals(false, draftsResponse.isDraft());
         assertNull(draftsResponse.getData());
         assertNull(draftsResponse.getDraftId());
     }
+
+    // buildDraftResponseFromDraft_return_draft_response_when_input_is_valid() {
+
+
 
     @Test
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_input_is_null() {
@@ -63,10 +69,10 @@ public class DraftResponseFactoryTest {
     public void buildDraftResponseFromCaseData_should_return_empty_response_when_input_is_empty() {
 
         // given
-        List<Map<String, Object>> listOfCases = Collections.emptyList();
+        LIST_OF_CASES = Collections.emptyList();
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -78,31 +84,99 @@ public class DraftResponseFactoryTest {
     public void buildDraftResponseFromCaseData_should_return_draft_response_when_case_exists_with_case_status() {
 
         // given
-        Map<String, Object> caseData = new HashMap<>();
-        String status = "awaitingPayment";
-        caseData.put(CASE_STATE, status);
+        CASE_DATA_1.put(CASE_STATE, AWAITING_PAYMENT_STATUS);
+        CASE_DATA_1.put(ID, CASE_ID);
 
-        Long caseId = 123L;
-        caseData.put("id", caseId);
+        CASE_DETAILS.put(D_8_DIVORCE_UNIT, COURTS);
+        CASE_DATA_1.put(CASE_DATA, CASE_DETAILS);
 
-        Map<String, Object> caseDetails = new HashMap<>();
-        String courts = "courtsXYZz";
-        caseDetails.put("D8DivorceUnit", courts);
-
-        caseData.put("case_data", caseDetails);
-
-        List<Map<String, Object>> listOfCases = new ArrayList<>();
-        listOfCases.add(caseData);
+        LIST_OF_CASES = new ArrayList<>();
+        LIST_OF_CASES.add(CASE_DATA_1);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
 
         // then
         JsonNode data = draftsResponse.getData();
         assertEquals(false, draftsResponse.isDraft());
         assertEquals(true, data.get("submissionStarted").asBoolean());
-        assertEquals(courts, data.get("courts").asText());
-        assertEquals(caseId, (Long) data.get("caseId").asLong());
-        assertEquals(status, data.get(CASE_STATE).asText());
+        assertEquals(COURTS, data.get("courts").asText());
+        assertEquals(CASE_ID, (Long) data.get("caseId").asLong());
+        assertEquals(AWAITING_PAYMENT_STATUS, data.get("state").asText());
+    }
+
+    @Test
+    public void buildDraftResponseFromCaseData_should_return_empty_response_when_multiple_cases_are_all_rejected(){
+
+        // given
+        CASE_DATA_1.put(CASE_STATE, REJECTED_STATUS);
+        CASE_DATA_2.put(CASE_STATE, REJECTED_STATUS);
+
+        LIST_OF_CASES.add(CASE_DATA_1);
+        LIST_OF_CASES.add(CASE_DATA_2);
+
+        // when
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
+
+        // then
+        assertEquals(false, draftsResponse.isDraft());
+        assertNull(draftsResponse.getData());
+        assertNull(draftsResponse.getDraftId());
+    }
+
+    @Test
+    public void buildDraftResponseFromCaseData_shouldReturnSingleCorrectResponse_whenOnlyOneCaseIsNotRejectedInMultipleCases() {
+        // if only 1 case is not "Rejected" only return this non rejected case
+
+        // given
+        CASE_DETAILS.put("D8DivorceUnit", COURTS);
+
+        CASE_DATA_1.put("state", REJECTED_STATUS);
+        CASE_DATA_1.put("id", CASE_ID);
+        CASE_DATA_1.put("case_data", CASE_DETAILS);
+
+        CASE_DATA_2.put("state", AWAITING_PAYMENT_STATUS);
+        CASE_DATA_2.put("id", CASE_ID);
+        CASE_DATA_2.put("case_data", CASE_DETAILS);
+
+        LIST_OF_CASES.add(CASE_DATA_1);
+        LIST_OF_CASES.add(CASE_DATA_2);
+
+        // when
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertEquals(AWAITING_PAYMENT_STATUS, data.get("state").asText());
+    }
+
+    @Test
+    public void buildDraftResponseFromCaseData_shouldReturnCustomResponse_whenMultipleCasesAreNotRejected() {
+        // if multiple cases are not "Rejected"  - Display new page at /contact-divorce-team 
+
+        // given
+        CASE_DETAILS.put("D8DivorceUnit", COURTS);
+
+        CASE_DATA_1.put("state", AWAITING_PAYMENT_STATUS);
+        CASE_DATA_1.put("id", CASE_ID);
+        CASE_DATA_1.put("case_data", CASE_DETAILS);
+
+        CASE_DATA_2.put("state", AWAITING_PAYMENT_STATUS);
+        CASE_DATA_2.put("id", CASE_ID);
+        CASE_DATA_2.put("case_data", CASE_DETAILS);
+
+        LIST_OF_CASES.add(CASE_DATA_1);
+        LIST_OF_CASES.add(CASE_DATA_2);
+
+        // when
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_CASES);
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(true, data.get("submissionStarted").asBoolean());
+        assertEquals(MULTIPLE_REJECTED_CASES_STATE, data.get("state").asText());
     }
 }
