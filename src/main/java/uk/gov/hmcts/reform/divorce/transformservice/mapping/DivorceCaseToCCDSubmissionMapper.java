@@ -23,11 +23,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.join;
-import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@Mapper(componentModel = "spring", uses = DocumentCollectionMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public abstract class DivorceCaseToCCDMapper {
+@Mapper(componentModel = "spring", uses = {DocumentCollectionMapper.class},
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class DivorceCaseToCCDSubmissionMapper {
 
     private static final String BLANK_SPACE = " ";
     private static final String LINE_SEPARATOR = "\n";
@@ -52,14 +52,15 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "countryName", target = "d8CountryName")
     @Mapping(source = "placeOfMarriage", target = "d8MarriagePlaceOfMarriage")
     @Mapping(source = "petitionerContactDetailsConfidential", target = "d8PetitionerContactDetailsConfidential")
-    @Mapping(source = "petitionerHomeAddress.postcode", target = "d8PetitionerHomeAddress.postCode")
-    @Mapping(source = "petitionerCorrespondenceAddress.postcode", target = "d8PetitionerCorrespondenceAddress.postCode")
-    @Mapping(source = "respondentHomeAddress.postcode", target = "d8RespondentHomeAddress.postCode")
-    @Mapping(source = "respondentCorrespondenceAddress.postcode", target = "d8RespondentCorrespondenceAddress.postCode")
+    @Mapping(source = "petitionerHomeAddress.addressBaseUK", target = "d8PetitionerHomeAddress")
+    @Mapping(source = "petitionerCorrespondenceAddress.addressBaseUK", target = "d8PetitionerCorrespondenceAddress")
+    @Mapping(source = "respondentHomeAddress.addressBaseUK", target = "d8RespondentHomeAddress")
+    @Mapping(source = "respondentCorrespondenceAddress.addressBaseUK", target = "d8RespondentCorrespondenceAddress")
     @Mapping(source = "petitionerFirstName", target = "d8PetitionerFirstName")
     @Mapping(source = "petitionerLastName", target = "d8PetitionerLastName")
     @Mapping(source = "respondentFirstName", target = "d8RespondentFirstName")
     @Mapping(source = "respondentLastName", target = "d8RespondentLastName")
+    @Mapping(source = "respondentSolicitorAddress.addressBaseUK", target = "d8RespondentSolicitorAddress")
     @Mapping(source = "petitionerNameChangedHowOtherDetails", target = "d8PetitionerNameChangedHowOtherDetails")
     @Mapping(source = "petitionerEmail", target = "d8PetitionerEmail")
     @Mapping(source = "petitionerPhoneNumber", target = "d8PetitionerPhoneNumber")
@@ -70,7 +71,10 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "reasonForDivorceAdulteryDetails", target = "d8ReasonForDivorceAdulteryDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhenDetails", target = "d8ReasonForDivorceAdulteryWhenDetails")
     @Mapping(source = "reasonForDivorceAdulteryWhereDetails", target = "d8ReasonForDivorceAdulteryWhereDetails")
-    @Mapping(source = "reasonForDivorceAdultery3rdAddress", target = "d8ReasonForDivorceAdultery3rdAddress")
+    @Mapping(source = "reasonForDivorceAdultery3rdAddress.addressBaseUK",
+        target = "d8ReasonForDivorceAdultery3rdAddress")
+    @Mapping(source = "livingArrangementsLastLivedTogetherAddress.addressBaseUK",
+        target = "d8LivingArrangementsLastLivedTogethAddr")
     @Mapping(source = "legalProceedingsDetails", target = "d8LegalProceedingsDetails")
     @Mapping(source = "residualJurisdictionEligible", target = "d8ResidualJurisdictionEligible")
     @Mapping(source = "reasonForDivorceDesertionDetails", target = "d8ReasonForDivorceDesertionDetails")
@@ -91,12 +95,12 @@ public abstract class DivorceCaseToCCDMapper {
     @Mapping(source = "connectionSummary", target = "d8ConnectionSummary")
     @Mapping(source = "courts", target = "d8DivorceUnit")
     @Mapping(source = "marriageCertificateFiles", target = "d8DocumentsUploaded")
-    @Mapping(target = "createdDate",
-        expression =
-            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     @Mapping(source = "d8Documents", target = "d8Documents")
     @Mapping(source = "respondentSolicitorName", target = "d8RespondentSolicitorName")
     @Mapping(source = "respondentSolicitorCompany", target = "d8RespondentSolicitorCompany")
+    @Mapping(target = "createdDate",
+        expression =
+            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
     private String translateToStringYesNo(final String value) {

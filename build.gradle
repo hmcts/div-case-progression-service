@@ -200,6 +200,7 @@ dependencies {
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude(module: 'commons-logging')
     }
+    testCompile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
     testCompile project(':test-support')
 }
