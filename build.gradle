@@ -215,7 +215,8 @@ sonarqube {
     properties {
         property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*, " +
             "**uk/gov/hmcts/reform/divorce/pay/models/**/*, **uk/gov/hmcts/reform/divorce/fees/models/**/*," +
-            "**uk/gov/hmcts/reform/divorce/pay/exceptions/**/*,**uk/gov/hmcts/reform/divorce/support/**/*"
+            "**uk/gov/hmcts/reform/divorce/pay/exceptions/**/*,**uk/gov/hmcts/reform/divorce/support/**/*," +
+            "**uk/gov/hmcts/reform/divorce/transformservice/exception/**/*"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.projectKey", "DivorceCaseProgressionService"
         property "sonar.projectName", "Divorce :: case-progression-service"

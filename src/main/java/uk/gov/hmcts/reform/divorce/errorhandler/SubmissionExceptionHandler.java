@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.controller.DraftsController;
 import uk.gov.hmcts.reform.divorce.draftservice.exception.DraftStoreUnavailableException;
 import uk.gov.hmcts.reform.divorce.transformservice.controller.CcdSubmissionController;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.transformservice.CCDResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.exception.DuplicateCaseException;
 
 import java.text.MessageFormat;
 import java.time.format.DateTimeParseException;
@@ -130,6 +131,11 @@ public class SubmissionExceptionHandler {
     @ExceptionHandler(DraftStoreUnavailableException.class)
     public ResponseEntity<Void> handleDraftStoreUnavailable() {
         return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(DuplicateCaseException.class)
+    public ResponseEntity<Void> handleDuplicateCaseException() {
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     private boolean isDraftsRequest(HttpServletRequest request) {
