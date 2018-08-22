@@ -59,13 +59,14 @@ public class SubmissionServiceTest {
 
         when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         when(ccdClient.createCase(userDetails, jwt, divorceSession)).thenReturn(createEvent);
-        when(transformationService.transform(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
+        when(transformationService
+            .transformSubmission(divorceSession, createEvent, eventSummary)).thenReturn(caseDataContent);
         when(ccdClient.submitCase(userDetails, jwt, caseDataContent)).thenReturn(submitEvent);
 
         assertThat(submissionService.submit(divorceSession, jwt)).isEqualTo(caseId);
 
         verify(ccdClient).createCase(userDetails, jwt, divorceSession);
-        verify(transformationService).transform(divorceSession, createEvent, eventSummary);
+        verify(transformationService).transformSubmission(divorceSession, createEvent, eventSummary);
         verify(ccdClient).submitCase(userDetails, jwt, caseDataContent);
         verifyNoMoreInteractions(ccdClient, transformationService);
     }

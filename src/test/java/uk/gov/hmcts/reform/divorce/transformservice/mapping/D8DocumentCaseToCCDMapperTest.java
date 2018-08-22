@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.samePropertyValuesAs;
 public class D8DocumentCaseToCCDMapperTest {
 
     @Autowired
-    private DivorceCaseToCCDMapper mapper;
+    private DivorceCaseToCCDSubmissionMapper mapper;
 
     @Test
     public void shouldMapAllAndTransformAllFieldsForD8DocumentGenerated() throws URISyntaxException, IOException {
