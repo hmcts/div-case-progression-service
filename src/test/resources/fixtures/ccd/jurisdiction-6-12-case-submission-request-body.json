@@ -21,11 +21,23 @@
     "D8PetitionerNameChangedHow" : [ "marriageCertificate" ],
     "D8PetitionerContactDetailsConfidential" : "share",
     "D8PetitionerHomeAddress" : {
-      "PostCode" : "SW9 9PE"
+    "AddressLine1": "82 Landor Road",
+    "AddressLine2": "",
+    "AddressLine3": "",
+    "PostCode": "SW9 9PE",
+    "PostTown": "London",
+    "County": "",
+    "Country": "UK"
     },
     "D8DerivedPetitionerHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceAddress" : {
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedPetitionerCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8PetitionerCorrespondenceUseHomeAddress" : "YES",
@@ -33,11 +45,23 @@
     "D8RespondentLastName" : "Jamed",
     "D8DerivedRespondentCurrentName" : "Jane Jamed",
     "D8RespondentHomeAddress" : {
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentHomeAddress" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceAddress" : {
-      "PostCode" : "SW9 9PE"
+        "AddressLine1": "82 Landor Road",
+        "AddressLine2": "",
+        "AddressLine3": "",
+        "PostCode": "SW9 9PE",
+        "PostTown": "London",
+        "County": "",
+        "Country": "UK"
     },
     "D8DerivedRespondentCorrespondenceAddr" : "82 Landor Road\nLondon\nSW9 9PE",
     "D8RespondentCorrespondenceUseHomeAddress" : "No",
