@@ -48,18 +48,18 @@ public class DraftResponseFactory {
         } else if (listOfCasesInCCD.size() == 1) {
 
             return draftResponseBuilder(listOfCasesInCCD);
-        } else if (listOfCasesInCCD.size() > 1){
+        } else if (listOfCasesInCCD.size() > 1) {
 
             for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                 String caseState = (String) caseDetails.get(CASE_STATE);
 
                 if (caseState.equals("Rejected")) {
                     numberOfPetRejectedCases += 1;
-                } else{
+                } else {
                     numberOfPetNotRejectedCases += 1;
                 }
             }
-            // replace above with java stream for efficiency
+            // replace above with java stream for efficiency?
 
 
             // if only 1 case is not "Rejected" -  Apply the existing resume logic as per DIV-2658 
@@ -89,15 +89,14 @@ public class DraftResponseFactory {
             log.info("No case found to build draft response");
 
             return DraftsResponse.emptyResponse();
-        }
-        else{
+        } else {
             log.info("Unhandled situation retrieving cases. Building empty draft response");
 
             return DraftsResponse.emptyResponse();
         }
     }
 
-    private static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState){
+    private static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState) {
 
         Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
         log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));

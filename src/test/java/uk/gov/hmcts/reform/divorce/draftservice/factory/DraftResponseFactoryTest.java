@@ -123,7 +123,7 @@ public class DraftResponseFactoryTest {
     }
 
     @Test
-    public void buildDraftResponseFromCaseData_shouldReturnSingleCorrectResponse_whenOnlyOneCaseIsNotRejectedInMultipleCases() {
+    public void buildDraftResponseFromCaseDataShouldReturn1ValidResponseWhenOnly1CaseIsNotRejectedInMultipleCases() {
         // if only 1 case is not "Rejected" only return this non rejected case
 
         // given
