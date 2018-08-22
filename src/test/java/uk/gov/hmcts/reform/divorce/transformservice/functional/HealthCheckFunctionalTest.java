@@ -216,7 +216,7 @@ public class HealthCheckFunctionalTest {
     }
 
     @Test
-    public void shouldReturnStatusUpWhenDraftStoreApiIsDown() throws Exception {
+    public void shouldReturnStatusDownWhenDraftStoreApiIsDown() throws Exception {
         stubAuthHealthUp();
         stubCcdHealthUp();
         stubDraftStoreApiHealthDown();
@@ -227,7 +227,7 @@ public class HealthCheckFunctionalTest {
 
         String body = this.restTemplate.getForObject("/status/health", String.class);
 
-        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("UP");
+        assertThat(JsonPath.read(body, "$.status").toString()).isEqualTo("DOWN");
         assertThat(JsonPath.read(body, "$.caseDataStoreApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.serviceAuthProviderApi.status").toString()).isEqualTo("UP");
         assertThat(JsonPath.read(body, "$.draftStoreApi.status").toString()).isEqualTo("DOWN");
