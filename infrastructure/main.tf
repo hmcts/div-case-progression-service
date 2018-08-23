@@ -12,10 +12,9 @@ locals {
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
     div_validation_service_url = "http://div-vs-${local.local_env}.service.core-compute-${local.local_env}.internal"
 
-    previewVaultName = "${var.product}-${var.reform_service_name}"
-    nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
+    previewVaultName = "${var.reform_team}-aat"
+    nonPreviewVaultName = "${var.reform_team}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-
     vaultUri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
