@@ -16,9 +16,7 @@ locals {
     nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
 
-    nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
-    previewVaultUri = "https://div-${var.reform_service_name}-aat.vault.azure.net/"
-    vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
+    vaultUri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
 module "div-case-progression" {
@@ -72,18 +70,6 @@ module "div-case-progression" {
 
 provider "vault" {
     address = "https://vault.reform.hmcts.net:6200"
-}
-
-module "key-vault" {
-    source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-    name                = "${local.vaultName}"
-    product             = "${var.product}"
-    env                 = "${var.env}"
-    tenant_id           = "${var.tenant_id}"
-    object_id           = "${var.jenkins_AAD_objectId}"
-    resource_group_name = "${module.div-case-progression.resource_group_name}"
-    # dcd_cc-dev group object ID
-    product_group_object_id = "1c4f0704-a29e-403d-b719-b90c34ef14c9"
 }
 
 data "azurerm_key_vault" "div_key_vault" {
