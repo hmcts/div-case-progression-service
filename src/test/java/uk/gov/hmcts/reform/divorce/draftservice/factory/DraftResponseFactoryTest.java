@@ -124,7 +124,6 @@ public class DraftResponseFactoryTest {
 
     @Test
     public void buildDraftResponseFromCaseDataShouldReturn1ValidResponseWhenOnly1CaseIsNotRejectedInMultipleCases() {
-        // if only 1 case is not "Rejected" only return this non rejected case
 
         // given
         CASE_DETAILS.put("D8DivorceUnit", COURTS);

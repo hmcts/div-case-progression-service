@@ -59,10 +59,7 @@ public class DraftResponseFactory {
                     numberOfPetNotRejectedCases += 1;
                 }
             }
-            // replace above with java stream for efficiency?
 
-
-            // if only 1 case is not "Rejected" -  Apply the existing resume logic as per DIV-2658 
             if (numberOfPetNotRejectedCases == 1) {
                 for (Map<String, Object> caseDetails : listOfCasesInCCD) {
                     String caseState = (String) caseDetails.get(CASE_STATE);
@@ -81,7 +78,6 @@ public class DraftResponseFactory {
 
                 return draftResponseBuilder(listOfCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
             } else if (numberOfPetRejectedCases == listOfCasesInCCD.size()) {
-                //if multiple cases are all "Rejected"  - Start a blank application
 
                 log.info("Multiple cases found - all are rejected");
                 return DraftsResponse.emptyResponse();
