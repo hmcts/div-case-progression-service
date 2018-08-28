@@ -40,7 +40,7 @@ class DraftsRetrievalService {
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
         List<Map<String, Object>> nonRejectedCases = getAllNonRejectedCases(caseData);
 
-        if (CollectionUtils.isEmpty(nonRejectedCases) || nonRejectedCases.size() == 0){
+        if (CollectionUtils.isEmpty(nonRejectedCases) || nonRejectedCases.size() == 0) {
 
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
             Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
@@ -55,16 +55,15 @@ class DraftsRetrievalService {
         }
     }
 
-    // return this back to private?
-    // what happens if listOfCasesInCCD is empty?
-     protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD){
+    // what happens if listOfCasesInCCD is empty?   & return this back to private?
+    protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD) {
 
-         List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
-             .filter((Map<String, Object> s) -> s.get("state") != "rejected")
-             .collect(Collectors.toList());
+        List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
+            .filter((Map<String, Object> state) -> state.get("state") != "rejected")
+            .collect(Collectors.toList());
 
-         return listOfNonRejectedCasesInCCD;
-     }
+        return listOfNonRejectedCasesInCCD;
+    }
 
     private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {
         if (draftList != null && !draftList.getData().isEmpty()) {

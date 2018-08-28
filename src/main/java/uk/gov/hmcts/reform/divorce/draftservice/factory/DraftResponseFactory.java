@@ -40,8 +40,7 @@ public class DraftResponseFactory {
         if (listOfNonRejectedCasesInCCD.size() == 1) {
 
             return draftResponseBuilder(listOfNonRejectedCasesInCCD);
-        }else{
-
+        } else {
             log.info("Multiple cases found - Multiple are not rejected");
             return draftResponseBuilder(listOfNonRejectedCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
         }

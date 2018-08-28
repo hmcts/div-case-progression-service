@@ -61,7 +61,8 @@ public class DraftResponseFactoryTest {
         LIST_OF_NON_REJECTED_CASES_IN_CCD.add(CASE_DATA_1);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_NON_REJECTED_CASES_IN_CCD);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(
+            LIST_OF_NON_REJECTED_CASES_IN_CCD);
 
         // then
         JsonNode data = draftsResponse.getData();
@@ -91,7 +92,8 @@ public class DraftResponseFactoryTest {
         LIST_OF_NON_REJECTED_CASES_IN_CCD.add(CASE_DATA_2);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(LIST_OF_NON_REJECTED_CASES_IN_CCD);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(
+            LIST_OF_NON_REJECTED_CASES_IN_CCD);
 
         // then
         JsonNode data = draftsResponse.getData();
