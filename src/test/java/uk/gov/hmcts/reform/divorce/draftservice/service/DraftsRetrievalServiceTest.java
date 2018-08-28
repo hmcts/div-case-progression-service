@@ -173,4 +173,55 @@ public class DraftsRetrievalServiceTest {
         // then
         verify(mockDraftStoreClient).getAll(JWT, SECRET, "10");
     }
+
+    @Test
+    public void getDraftShouldCorrectlyFilterNonRejectedCasesFromRetrievedCasesFromCCD() {
+
+        //given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockDraft.getId()).thenReturn(DRAFT_ID);
+        when(mockDraft.getDocument()).thenReturn(mockData);
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(true);
+
+        Map<String, Object> caseData = new HashMap();
+        String courts = "courtsXYZz";
+        caseData.put("D8DivorceUnit", courts);
+        Long caseId = 123L;
+
+        Map<String, Object> ccdResponseDataSet1 = new HashMap();
+        ccdResponseDataSet1.put("id", caseId);
+        ccdResponseDataSet1.put("state", "awaitingPayment");
+        ccdResponseDataSet1.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet2 = new HashMap();
+        ccdResponseDataSet2.put("id", caseId);
+        ccdResponseDataSet2.put("state", "issued");
+        ccdResponseDataSet2.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet3 = new HashMap();
+        ccdResponseDataSet3.put("id", caseId);
+        ccdResponseDataSet3.put("state", "rejected");
+        ccdResponseDataSet3.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet4 = new HashMap();
+        ccdResponseDataSet4.put("id", caseId);
+        ccdResponseDataSet4.put("state", "rejected");
+        ccdResponseDataSet4.put("case_data", caseData);
+
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
+        listOfCases.add(ccdResponseDataSet1);
+        listOfCases.add(ccdResponseDataSet2);
+        listOfCases.add(ccdResponseDataSet3);
+        listOfCases.add(ccdResponseDataSet4);
+        when(mockRetrieveCcdClient
+            .getCases(USER_ID, JWT))
+            .thenReturn(listOfCases);
+
+        // when
+        List<Map<String, Object>> listOfNonRejectedCasesInCCD = underTest.getAllNonRejectedCases(listOfCases);
+
+        // then
+        assertEquals(2, listOfNonRejectedCasesInCCD.size());
+    }
 }

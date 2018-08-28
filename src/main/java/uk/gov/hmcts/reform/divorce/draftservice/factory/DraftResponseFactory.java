@@ -35,64 +35,19 @@ public class DraftResponseFactory {
         }
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfNonRejectedCasesInCCD) {
 
-        int numberOfPetRejectedCases = 0;
-        int numberOfPetNotRejectedCases = 0;
+        if (listOfNonRejectedCasesInCCD.size() == 1) {
 
-        if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
+            return draftResponseBuilder(listOfNonRejectedCasesInCCD);
+        }else{
 
-            log.debug("No case found to build draft response");
-            return DraftsResponse.emptyResponse();
-
-        } else if (listOfCasesInCCD.size() == 1) {
-
-            return draftResponseBuilder(listOfCasesInCCD);
-        } else if (listOfCasesInCCD.size() > 1) {
-
-            for (Map<String, Object> caseDetails : listOfCasesInCCD) {
-                String caseState = (String) caseDetails.get(CASE_STATE);
-
-                if (caseState.equals("Rejected")) {
-                    numberOfPetRejectedCases += 1;
-                } else {
-                    numberOfPetNotRejectedCases += 1;
-                }
-            }
-
-            if (numberOfPetNotRejectedCases == 1) {
-                for (Map<String, Object> caseDetails : listOfCasesInCCD) {
-                    String caseState = (String) caseDetails.get(CASE_STATE);
-
-                    if (!caseState.equals("Rejected")) {
-
-                        log.info("Multiple cases found - only 1 is not rejected");
-                        return draftResponseBuilder(Collections.singletonList(caseDetails));
-                    }
-                }
-            }
-
-            // if multiple cases are not "Rejected"  - Display new page at /contact-divorce-team 
-            if (numberOfPetNotRejectedCases > 1) {
-                log.info("Multiple cases found - Multiple are not rejected");
-
-                return draftResponseBuilder(listOfCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
-            } else if (numberOfPetRejectedCases == listOfCasesInCCD.size()) {
-
-                log.info("Multiple cases found - all are rejected");
-                return DraftsResponse.emptyResponse();
-            }
-            log.info("No case found to build draft response");
-
-            return DraftsResponse.emptyResponse();
-        } else {
-            log.info("Unhandled situation retrieving cases. Building empty draft response");
-
-            return DraftsResponse.emptyResponse();
+            log.info("Multiple cases found - Multiple are not rejected");
+            return draftResponseBuilder(listOfNonRejectedCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
         }
     }
 
-    private static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState) {
+    public static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState) {
 
         Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
         log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
@@ -112,7 +67,7 @@ public class DraftResponseFactory {
             .build();
     }
 
-    private static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD) {
+    public static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD) {
 
         return draftResponseBuilder(listOfCasesInCCD, null);
     }
