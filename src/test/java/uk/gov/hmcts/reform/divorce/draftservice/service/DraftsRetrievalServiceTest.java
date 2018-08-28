@@ -196,12 +196,12 @@ public class DraftsRetrievalServiceTest {
 
         Map<String, Object> ccdResponseDataSet2 = new HashMap();
         ccdResponseDataSet2.put("id", caseId);
-        ccdResponseDataSet2.put("state", "issued");
+        ccdResponseDataSet2.put("state", "awaitingPayment");
         ccdResponseDataSet2.put("case_data", caseData);
 
         Map<String, Object> ccdResponseDataSet3 = new HashMap();
         ccdResponseDataSet3.put("id", caseId);
-        ccdResponseDataSet3.put("state", "rejected");
+        ccdResponseDataSet3.put("state", "issued");
         ccdResponseDataSet3.put("case_data", caseData);
 
         Map<String, Object> ccdResponseDataSet4 = new HashMap();
@@ -222,6 +222,6 @@ public class DraftsRetrievalServiceTest {
         List<Map<String, Object>> listOfNonRejectedCasesInCCD = underTest.getAllNonRejectedCases(listOfCases);
 
         // then
-        assertEquals(2, listOfNonRejectedCasesInCCD.size());
+        assertEquals(3, listOfNonRejectedCasesInCCD.size());
     }
 }

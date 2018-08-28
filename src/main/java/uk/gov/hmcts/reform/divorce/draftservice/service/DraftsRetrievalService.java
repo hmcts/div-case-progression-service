@@ -55,11 +55,12 @@ class DraftsRetrievalService {
         }
     }
 
-    // what happens if listOfCasesInCCD is empty?   & return this back to private?
     protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD) {
 
+
         List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
-            .filter((Map<String, Object> state) -> state.get("state") != "rejected")
+            .filter(state -> state.get("state") != null)
+            .filter(state -> !state.get("state").equals("rejected"))
             .collect(Collectors.toList());
 
         return listOfNonRejectedCasesInCCD;
