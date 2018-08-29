@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 @Slf4j
 class DraftsRetrievalService {
 
+    private static final String STATE = "state";
+    private static final String REJECTED_STATE = "rejected";
+
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
     private final RetrieveCcdClient retrieveCcdClient;
@@ -40,7 +43,7 @@ class DraftsRetrievalService {
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
         List<Map<String, Object>> nonRejectedCases = getAllNonRejectedCases(caseData);
 
-        if (CollectionUtils.isEmpty(nonRejectedCases) || nonRejectedCases.size() == 0) {
+        if (CollectionUtils.isEmpty(nonRejectedCases)) {
 
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
             Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
@@ -57,10 +60,8 @@ class DraftsRetrievalService {
 
     protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD) {
 
-
         List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
-            .filter(state -> state.get("state") != null)
-            .filter(state -> !state.get("state").equals("rejected"))
+            .filter(state -> !REJECTED_STATE.equals(state.get(STATE)))
             .collect(Collectors.toList());
 
         return listOfNonRejectedCasesInCCD;
