@@ -36,7 +36,7 @@ public class DraftResponseFactoryTest {
     @Test
     public void buildDraftResponseFromDraft_should_returnEmptyResponse_when_inputIsNull() {
 
-        // given
+        // given null
 
         // when
         DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromDraft(null);

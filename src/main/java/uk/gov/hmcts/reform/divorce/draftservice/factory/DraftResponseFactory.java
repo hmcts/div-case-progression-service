@@ -3,11 +3,9 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,18 +35,19 @@ public class DraftResponseFactory {
 
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfNonRejectedCasesInCCD) {
 
+        Map<String, Object> caseDetails = listOfNonRejectedCasesInCCD.get(0);
+
         if (listOfNonRejectedCasesInCCD.size() == 1) {
 
-            return draftResponseBuilder(listOfNonRejectedCasesInCCD);
+            return draftResponseBuilder(caseDetails);
         } else {
             log.info("Multiple cases found - Multiple are not rejected");
-            return draftResponseBuilder(listOfNonRejectedCasesInCCD, MULTIPLE_REJECTED_CASES_STATE);
+            return draftResponseBuilder(caseDetails, MULTIPLE_REJECTED_CASES_STATE);
         }
     }
 
-    public static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD, String customState) {
+    public static DraftsResponse draftResponseBuilder(Map<String, Object> caseDetails, String customState) {
 
-        Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
         log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         String caseState = (customState == null) ? (String) caseDetails.get(CASE_STATE) : customState;
@@ -66,8 +65,8 @@ public class DraftResponseFactory {
             .build();
     }
 
-    public static DraftsResponse draftResponseBuilder(List<Map<String, Object>> listOfCasesInCCD) {
+    public static DraftsResponse draftResponseBuilder(Map<String, Object> caseDetails) {
 
-        return draftResponseBuilder(listOfCasesInCCD, null);
+        return draftResponseBuilder(caseDetails, null);
     }
 }
