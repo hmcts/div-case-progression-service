@@ -39,7 +39,7 @@ class DraftsRetrievalService {
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
 
         if (CollectionUtils.isNotEmpty(caseData)) {
-            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
+            log.info("CCD has a draft for userId {}", userId);
             return DraftResponseFactory.buildDraftResponseFromCaseData(caseData);
         } else {
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
@@ -60,6 +60,8 @@ class DraftsRetrievalService {
                         + "Going to next page");
                     return findDivorceDraft(jwt, secret,
                         draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
+                }else {
+                    log.info("no draft draftList.getPaging().getAfter() is not null");
                 }
             } else {
                 log.info("Divorce session draft found");
