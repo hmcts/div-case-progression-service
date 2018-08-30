@@ -68,7 +68,7 @@ public class DraftsController {
     public ResponseEntity<JsonNode> retrieveDraft(
             @RequestHeader("Authorization") @ApiParam(value = "JWT authorisation token issued by IDAM", required = true)
             final String jwt) {
-        log.debug("Received request to retrieve a divorce session draft");
+        log.info("Received request to retrieve a divorce session draft");
         JsonNode draft = draftsService.getDraft(jwt);
         if (draft != null) {
             return ResponseEntity.ok(draft);

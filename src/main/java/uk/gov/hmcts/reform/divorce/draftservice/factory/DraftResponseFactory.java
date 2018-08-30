@@ -37,7 +37,7 @@ public class DraftResponseFactory {
     public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
-            log.debug("No case found to build draft response");
+            log.info("No case found to build draft response");
             return DraftsResponse.emptyResponse();
         }
 
@@ -48,7 +48,7 @@ public class DraftResponseFactory {
 
         Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
 
-        log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
+        log.info("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
