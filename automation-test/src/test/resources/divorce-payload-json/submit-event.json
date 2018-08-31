@@ -5,7 +5,7 @@
     "summary": "",
     "description": ""
   },
-  "security_classification" : {},
+  "security_classification" : "PUBLIC",
   "event_token": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJianVubzk1bzRnMTJnaG1lZWRsOGQ1Y3E3YiIsInN1YiI6IjEyMTg5IiwiaWF0IjoxNTE5MjE2OTE3LCJjYXNlLWlkIjoyMjAxNSwiZXZlbnQtaWQiOiJwYXltZW50TWFkZSIsImNhc2UtdHlwZS1pZCI6IkRJVk9SQ0UiLCJqdXJpc2RpY3Rpb24taWQiOiJESVZPUkNFIiwiY2FzZS1zdGF0ZSI6IkF3YWl0aW5nUGF5bWVudCIsImNhc2UtdmVyc2lvbiI6IjA5MTJlYzNjMDc3OWY2ZWFlNGMzZTA2NTRlYWM3YWEwYzA5MGYyM2EifQ.e3lly_mkanWcXYX3hHEgMqSgE7xPBaFiYum63mbVY1I",
   "ignore_warning": false
 }
