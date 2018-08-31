@@ -60,7 +60,7 @@ class DraftsRetrievalService {
                         + "Going to next page");
                     return findDivorceDraft(jwt, secret,
                         draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
-                }else {
+                } else {
                     log.info("no draft draftList.getPaging().getAfter() is not null");
                 }
             } else {
