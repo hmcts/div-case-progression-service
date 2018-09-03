@@ -15,10 +15,14 @@ import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 class DraftsRetrievalService {
+
+    private static final String STATE = "state";
+    private static final String REJECTED_STATE = "rejected";
 
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
@@ -37,16 +41,30 @@ class DraftsRetrievalService {
         log.info("Retrieving a divorce session draft for userId {}", userId);
 
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
+        List<Map<String, Object>> nonRejectedCases = getAllNonRejectedCases(caseData);
 
-        if (CollectionUtils.isNotEmpty(caseData)) {
-            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
-            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData);
-        } else {
+        if (CollectionUtils.isEmpty(nonRejectedCases)) {
+
+            log.info("Checking Draftstore for the saved draft for userId {}", userId);
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
             Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
-            log.info("Returning the saved draft data for userId {}", userId);
+
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.orElse(null));
+
+        } else {
+
+            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
+            return DraftResponseFactory.buildDraftResponseFromCaseData(nonRejectedCases);
         }
+    }
+
+    protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD) {
+
+        List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
+            .filter(state -> !REJECTED_STATE.equals(state.get(STATE)))
+            .collect(Collectors.toList());
+
+        return listOfNonRejectedCasesInCCD;
     }
 
     private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {
@@ -56,17 +74,19 @@ class DraftsRetrievalService {
                 .findFirst();
             if (!divorceDraft.isPresent()) {
                 if (draftList.getPaging().getAfter() != null) {
-                    log.debug("Divorce session draft could not be found on the current page with drafts. "
+                    log.info("Divorce session draft could not be found on the current page with drafts. "
                         + "Going to next page");
                     return findDivorceDraft(jwt, secret,
                         draftStoreClient.getAll(jwt, secret, draftList.getPaging().getAfter()));
+                } else {
+                    log.info("Divorce Draft getAfter is null");
                 }
             } else {
-                log.debug("Divorce session draft found");
+                log.info("Divorce session draft found");
                 return divorceDraft;
             }
         }
-        log.debug("Divorce session draft could not be found");
+        log.info("Divorce session draft could not be found");
         return Optional.empty();
     }
 }

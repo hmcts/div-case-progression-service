@@ -78,12 +78,14 @@ public class DraftsService {
 
     public JsonNode getDraft(String jwt) {
         UserDetails userDetails = userService.getUserDetails(jwt);
+        log.debug("Will have draft for {}",userDetails);
         String secret = encryptionKeyFactory.createEncryptionKey(userDetails.getId());
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
 
         if (draftsResponse != null) {
             return draftsResponse.getData();
         }
+        log.debug("Null draft returned");
         return null;
     }
 }
