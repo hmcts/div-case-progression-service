@@ -60,6 +60,7 @@ module "div-case-progression" {
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        AUTH_IDAM_CLIENT_SECRET = "${data.azurerm_key_vault_secret.idam-secret.value}"
         PAYMENT_API_BASEURL = "${local.payment_api_base_url}"
         FEES_AND_PAYMENTS_BASE_URL="${local.fees_and_payments_base_url}"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
@@ -94,5 +95,10 @@ data "azurerm_key_vault_secret" "draft-store-api-encryption-key" {
 
 data "azurerm_key_vault_secret" "uk-gov-notify-api-key" {
     name      = "uk-gov-notify-api-key"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "idam-secret" {
+    name      = "idam-secret"
     vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
