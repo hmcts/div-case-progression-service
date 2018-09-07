@@ -92,7 +92,11 @@ public class IdamUserSupport {
             .password(password)
             .forename("Test")
             .surname("User")
-            .roles(new UserCode[] { UserCode.builder().code("caseworker-divorce-courtadmin").build() })
+            .roles(new UserCode[] {
+                UserCode.builder().code("caseworker").build(),
+                UserCode.builder().code("caseworker-divorce").build(),
+                UserCode.builder().code("caseworker-divorce-courtadmin").build()
+            })
             .userGroup(UserCode.builder().code("caseworker").build())
             .build();
 
