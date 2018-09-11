@@ -82,6 +82,7 @@ public class DraftsService {
         DraftsResponse draftsResponse = draftsRetrievalService.getDraft(jwt, userDetails.getId(), secret);
 
         if (draftsResponse != null) {
+            log.info("no draft retrieved {}", userDetails.getId());
             return draftsResponse.getData();
         }
         return null;
