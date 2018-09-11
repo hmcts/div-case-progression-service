@@ -39,7 +39,7 @@ class DraftsRetrievalService {
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
 
         if (CollectionUtils.isNotEmpty(caseData)) {
-            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
+            log.info("Checking CCD for an existing case for userId {}", userId);
             return DraftResponseFactory.buildDraftResponseFromCaseData(caseData);
         } else {
             DraftList draftList = draftStoreClient.getAll(jwt, secret);

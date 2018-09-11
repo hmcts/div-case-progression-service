@@ -11,10 +11,15 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class RetrieveCcdClient {
+
+    private static final String CASE_STATE_KEY = "state";
+    private static final String REJECTED_STATE = "Rejected";
 
     private final CcdClientConfiguration ccdClientConfiguration;
     private final RestTemplate restTemplate;
@@ -46,7 +51,21 @@ public class RetrieveCcdClient {
             return Collections.emptyList();
         }
 
+        log.info(cases.toString());
         log.info(String.format("Found %s cases for userId %s", cases.size(), userId));
+
+        return cases;
+    }
+
+    public List<Map<String, Object>> getNonRejectedCases(String userId, String jwt) {
+        List<Map<String, Object>> cases = getCases(userId, jwt)
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(ccdCase ->
+                !ccdCase.get(CASE_STATE_KEY).toString().equalsIgnoreCase(REJECTED_STATE)
+            ).collect(Collectors.toList());
+
+        log.info(String.format("Found %s non-rejected cases for userId %s", cases.size(), userId));
 
         return cases;
     }
