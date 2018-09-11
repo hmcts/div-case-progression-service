@@ -19,6 +19,7 @@ public class DraftResponseFactory {
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
     private static final String CASE_STATE = "state";
+    private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
@@ -56,6 +57,17 @@ public class DraftResponseFactory {
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
+
+        log.info("Payment record from CCD {payment}", caseData.get("Payments"));
+        log.info("Payment record from CCD {payment} class", caseData.get("Payments").getClass().getName());
+
+
+        if (caseData.get("Payments") != null) {
+            List<Map<String, Object>> listOfPayments = (List<Map<String, Object>>) caseData.get("Payments");
+            log.debug("Payment record from CCD {payment}", listOfPayments.toString());
+            jsonNode.put(PAYMENT_REFERENCE, caseData.get("Payments").toString());
+
+        }
 
         return DraftsResponse.builder()
                 .isDraft(false)

@@ -37,6 +37,7 @@ class DraftsRetrievalService {
         log.info("Retrieving a divorce session draft for userId {}", userId);
 
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
+        log.info("CaseDate Loaded {}", caseData);
 
         if (CollectionUtils.isNotEmpty(caseData)) {
             log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
