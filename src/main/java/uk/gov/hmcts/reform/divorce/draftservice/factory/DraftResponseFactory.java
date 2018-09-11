@@ -58,13 +58,13 @@ public class DraftResponseFactory {
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
 
-        log.info("Payment record from CCD {payment}", caseData.get("Payments"));
-        log.info("Payment record from CCD {payment} class", caseData.get("Payments").getClass().getName());
+        log.info("Payment record from CCD {}", caseData.get("Payments"));
+        log.info("Payment record from CCD {} class", caseData.get("Payments").getClass().getName());
 
 
         if (caseData.get("Payments") != null) {
             List<Map<String, Object>> listOfPayments = (List<Map<String, Object>>) caseData.get("Payments");
-            log.debug("Payment record from CCD {payment}", listOfPayments.toString());
+            log.info("Payment record from CCD {}", listOfPayments.toString());
             jsonNode.put(PAYMENT_REFERENCE, caseData.get("Payments").toString());
 
         }
