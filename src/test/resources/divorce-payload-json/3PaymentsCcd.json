@@ -1,0 +1,37 @@
+[
+    {
+        "id": "4372171a-a3bf-4b09-9fdd-213f6a57f714",
+        "value": {
+            "PaymentDate": "2018-09-10",
+            "PaymentFeeId": "FEE0002",
+            "PaymentAmount": "55000",
+            "PaymentSiteId": "AA01",
+            "PaymentStatus": "Success",
+            "PaymentChannel": "online",
+            "PaymentReference": "RC-1536-5783-3942-9827",
+            "PaymentTransactionId": "ctfacha94ac2dci8iq6i7r89kf"
+        }
+    },
+    {
+        "id": "18432021-3eb6-4707-b59f-5be6054234cd",
+        "value": {
+            "PaymentDate": "2018-09-11",
+            "PaymentFeeId": "FEE0002",
+            "PaymentSiteId": "AA01",
+            "PaymentStatus": "Initiated",
+            "PaymentChannel": "online",
+            "PaymentReference": "RC-1536-6687-4933-8989"
+        }
+    },
+    {
+        "id": "3b76ceb8-face-42fa-bf0f-a7f9945838bc",
+        "value": {
+            "PaymentDate": "2018-09-11",
+            "PaymentFeeId": "FEE0002",
+            "PaymentSiteId": "AA01",
+            "PaymentStatus": "Initiated",
+            "PaymentChannel": "online",
+            "PaymentReference": "RC-1536-6824-9190-1944"
+        }
+    }
+]
