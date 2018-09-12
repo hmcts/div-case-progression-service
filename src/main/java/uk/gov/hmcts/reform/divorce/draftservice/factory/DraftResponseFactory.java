@@ -64,7 +64,11 @@ public class DraftResponseFactory {
 
         if (caseData.get("Payments") != null && !((List<Map<String, Object>>) caseData.get("Payments")).isEmpty()) {
             List<Map<String, Object>> listOfPayments = (List<Map<String, Object>>) caseData.get("Payments");
-            log.info("Payment record from CCD {}", listOfPayments.toString());
+
+            log.info("Payment record from CCD listOfPayments {}", listOfPayments.toString());
+            log.info("Payment record from CCD listOfPayments size {}", listOfPayments.size());
+            log.info("Payment record from CCD listOfPayments get0 {}", listOfPayments.get(0));
+            log.info("Payment record from CCD listOfPayments get PaymentReference{}", listOfPayments.get(0).get("PaymentReference"));
             jsonNode.put(PAYMENT_REFERENCE, listOfPayments.get(0).get("PaymentReference").toString());
 
         }
