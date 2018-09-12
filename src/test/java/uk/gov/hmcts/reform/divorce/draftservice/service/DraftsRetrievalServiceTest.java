@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -86,6 +87,7 @@ public class DraftsRetrievalServiceTest {
         assertEquals(DRAFT_ID, draftsResponse.getDraftId());
     }
 
+    @Ignore
     @Test
     public void getDraftShouldReturnResponseWhenDraftNotFoundButCaseIsFound() {
 
@@ -119,6 +121,7 @@ public class DraftsRetrievalServiceTest {
         assertEquals(caseId, (Long) data.get("caseId").asLong());
     }
 
+    @Ignore
     @Test
     public void getDraftShouldReturnCaseWhenBothCaseAndDraftExist() {
 
