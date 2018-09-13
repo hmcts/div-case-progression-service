@@ -37,7 +37,8 @@ public class DraftResponseFactory {
         }
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD, CcdToPaymentMapper paymentMapper) {
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD,
+                                                                CcdToPaymentMapper paymentMapper) {
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
             log.debug("No case found to build draft response");
