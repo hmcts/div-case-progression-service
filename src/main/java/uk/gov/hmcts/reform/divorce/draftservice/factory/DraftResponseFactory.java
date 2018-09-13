@@ -55,7 +55,7 @@ public class DraftResponseFactory {
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
-        Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);git
+        Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
