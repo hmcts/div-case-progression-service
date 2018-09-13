@@ -1,12 +1,14 @@
 package uk.gov.hmcts.reform.divorce.draftservice.factory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -110,4 +112,39 @@ public class DraftResponseFactoryTest {
         assertEquals(caseId, (Long) data.get("caseId").asLong());
         assertEquals(status, data.get(CASE_STATE).asText());
     }
+
+    @Test
+    public void buildDraftResponseFromCaseData_should_return_draft_response_with_Payment_Reference_WhenPayment_Success()
+        throws IOException {
+
+        // given
+        Map<String, Object> caseData = new HashMap<>();
+        String status = "awaitingPayment";
+        caseData.put(CASE_STATE, status);
+
+        Long caseId = 123L;
+        caseData.put("id", caseId);
+
+        Map<String, Object> caseDetails = new HashMap<>();
+        caseData.put("case_data", caseDetails);
+        caseDetails.put(
+            "Payments",
+            new ObjectMapper().readTree(
+                "[{\"value\":{\"PaymentStatus\":\"Success\",\"PaymentReference\":\"ABCD-PRef\"}}]"
+            ));
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
+        listOfCases.add(caseData);
+
+        // when
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(caseId, (Long) data.get("caseId").asLong());
+        assertEquals("ABCD-PRef", draftsResponse.getData().get("payment_reference").asText());
+        assertEquals(status, data.get(CASE_STATE).asText());
+    }
+
 }
