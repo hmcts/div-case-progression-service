@@ -22,11 +22,10 @@ public class CcdToPaymentMapper {
             log.info("Payment record from CCD getPayments class {}",
                 caseData.get("Payments").getClass().getCanonicalName());
         }
-        List<Payment> paymentList = Collections.emptyList();
 
         if (caseData.get("Payments") != null) {
             ArrayNode payments = (ArrayNode) caseData.get("Payments");
-            paymentList = new ArrayList<>();
+            List<Payment> paymentList = new ArrayList<>();
             for (JsonNode node : payments) {
                 JsonNode value = node.get("value");
                 Payment payment = new Payment();
@@ -34,8 +33,9 @@ public class CcdToPaymentMapper {
                 payment.setPaymentStatus(value.get("PaymentStatus").textValue());
                 paymentList.add(payment);
             }
+            return paymentList;
         }
 
-        return paymentList;
+        return Collections.emptyList();
     }
 }
