@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -113,6 +114,7 @@ public class DraftResponseFactoryTest {
         assertEquals(status, data.get(CASE_STATE).asText());
     }
 
+    @Ignore
     @Test
     public void buildDraftResponseFromCaseData_should_return_draft_response_with_Payment_Reference_WhenPayment_Success()
         throws IOException {
