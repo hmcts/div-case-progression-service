@@ -1,16 +1,12 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.gov.hmcts.reform.divorce.support.util.ResourceLoader;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.Payment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +19,6 @@ public class CcdToPaymentMapperTest {
     @InjectMocks
     private CcdToPaymentMapper mapper;
 
-    @Ignore
     @Test
     public void mapperMapFromAList() throws Exception {
 
@@ -31,17 +26,26 @@ public class CcdToPaymentMapperTest {
 
         final List<Payment> paymentList = mapper.ccdToPaymentRef(ccdPayments);
 
-        assertThat(paymentList.size()).isEqualTo(3);
+        assertThat(paymentList.size()).isEqualTo(2);
         assertThat(paymentList.get(0).getPaymentReference()).isEqualTo("RC-1536-5783-3942-9827");
-        assertThat(paymentList.get(0).getPaymentStatus()).isEqualTo("Success");
-        assertThat(paymentList.get(1).getPaymentStatus()).isEqualTo("Initiated");
+        assertThat(paymentList.get(0).getPaymentStatus()).isEqualTo("success");
+        assertThat(paymentList.get(1).getPaymentStatus()).isEqualTo("initiated");
     }
 
     private Map<String, Object> getPaymentsAsCaseDataMap() throws Exception {
-        String paymentsAsString = ResourceLoader.loadAsText("divorce-payload-json/3PaymentsCcd.json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<HashMap<String, JsonNode>> typeRef = new TypeReference<HashMap<String, JsonNode>>() {
-        };
-        return objectMapper.readValue(paymentsAsString, typeRef);
+        Map<String, Object> paymentMap1 = new HashMap<>();
+        paymentMap1.put("PaymentStatus", "success");
+        paymentMap1.put("PaymentReference", "RC-1536-5783-3942-9827");
+
+        Map<String, Object> paymentMap2 = new HashMap<>();
+        paymentMap2.put("PaymentStatus", "initiated");
+
+        List<Map<String, Object>> payments = new ArrayList<>();
+        payments.add(paymentMap1);
+        payments.add(paymentMap2);
+
+        Map<String, Object> caseDataMap = new HashMap<>();
+        caseDataMap.put("Payments", payments);
+        return caseDataMap;
     }
 }
