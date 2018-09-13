@@ -25,35 +25,20 @@ public class CcdToPaymentMapper {
 
         if (caseData.get("Payments") != null) {
 
-
-
             List<Map<String, Object>> payments = (ArrayList) caseData.get("Payments");
             log.info("Payment record from CCD getPayments payments.get(0) {}",
                 payments.get(0));
 
-
-
             List<Payment> paymentList = new ArrayList<>();
             for (Map<String, Object> node : payments) {
-
                 log.info("Payment record from CCD getPayments node.get(PaymentStatus) {}",
                     node.get("PaymentStatus").toString());
-
                 Payment payment = new Payment();
                 payment.setPaymentReference(node.get("PaymentReference").toString());
                 payment.setPaymentStatus(node.get("PaymentStatus").toString());
                 paymentList.add(payment);
             }
 
-
-       /*     List<Payment> paymentList = new ArrayList<>();
-            for (JsonNode node : payments) {
-                JsonNode value = node.get("value");
-                Payment payment = new Payment();
-                payment.setPaymentReference(value.get("PaymentReference").textValue());
-                payment.setPaymentStatus(value.get("PaymentStatus").textValue());
-                paymentList.add(payment);
-            }*/
             return paymentList;
         }
 
