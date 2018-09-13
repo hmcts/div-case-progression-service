@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.Payment;
@@ -34,8 +32,14 @@ public class CcdToPaymentMapper {
                 log.info("Payment record from CCD getPayments node.get(PaymentStatus) {}",
                     node.get("PaymentStatus").toString());
                 Payment payment = new Payment();
-                payment.setPaymentReference(node.get("PaymentReference").toString());
-                payment.setPaymentStatus(node.get("PaymentStatus").toString());
+
+                if (node.get("PaymentReference") != null) {
+                    payment.setPaymentReference(node.get("PaymentReference").toString());
+                }
+                if (node.get("PaymentStatus") != null) {
+                    payment.setPaymentStatus(node.get("PaymentStatus").toString());
+                }
+
                 paymentList.add(payment);
             }
 

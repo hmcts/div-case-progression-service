@@ -22,7 +22,7 @@ public class DraftResponseFactory {
     private static final String CASE_STATE = "state";
     private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
-    public static final String SUCCESS = "Success";
+    public static final String SUCCESS = "success";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
         //check if draft is null
@@ -62,7 +62,7 @@ public class DraftResponseFactory {
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
         paymentMapper.ccdToPaymentRef(caseData)
             .stream()
-            .filter(p -> p.getPaymentStatus().equals(SUCCESS))
+            .filter(p -> p.getPaymentStatus().equalsIgnoreCase(SUCCESS))
             .findFirst()
             .ifPresent(r -> jsonNode.put(PAYMENT_REFERENCE, r.getPaymentReference()));
 
