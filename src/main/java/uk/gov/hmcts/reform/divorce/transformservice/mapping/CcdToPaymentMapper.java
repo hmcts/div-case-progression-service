@@ -14,6 +14,7 @@ public class CcdToPaymentMapper {
     public List<Payment> ccdToPaymentRef(Map<String, Object> caseData) {
         log.info("Payment record from CCD getPayments {}", caseData.get("Payments"));
         List<Payment> paymentList = Collections.emptyList();
+
         if (caseData.get("Payments") != null) {
             JsonNode payments = (JsonNode) caseData.get("Payments");
             if (payments.isArray()) {
@@ -27,6 +28,7 @@ public class CcdToPaymentMapper {
                 }
             }
         }
+
         return paymentList;
     }
 }

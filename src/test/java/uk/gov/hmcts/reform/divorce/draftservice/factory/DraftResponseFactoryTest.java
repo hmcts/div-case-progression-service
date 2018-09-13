@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData2);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -51,7 +52,7 @@ public class DraftResponseFactoryTest {
         // given
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null, new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -66,7 +67,7 @@ public class DraftResponseFactoryTest {
         List<Map<String, Object>> listOfCases = Collections.emptyList();
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -95,7 +96,7 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
 
         // then
         JsonNode data = draftsResponse.getData();

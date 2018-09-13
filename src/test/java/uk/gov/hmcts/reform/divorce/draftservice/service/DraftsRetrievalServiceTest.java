@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.UpdateDraft;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,8 @@ public class DraftsRetrievalServiceTest {
     @Mock
     private RetrieveCcdClient mockRetrieveCcdClient;
     @Mock
+    private CcdToPaymentMapper ccdToPaymentMapper;
+    @Mock
     private DraftList draftList;
     @Mock
     private CreateDraft createDraft;
@@ -58,8 +61,9 @@ public class DraftsRetrievalServiceTest {
     public void setUp() {
 
         underTest = new DraftsRetrievalService(mockModelFactory,
-            mockDraftStoreClient,
-            mockRetrieveCcdClient);
+                mockDraftStoreClient,
+                mockRetrieveCcdClient,
+                ccdToPaymentMapper);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,9 @@ public class DraftResponseFactory {
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
     private static final String CASE_STATE = "state";
+    private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
+    public static final String SUCCESS = "Success";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
         //check if draft is null
@@ -34,7 +37,7 @@ public class DraftResponseFactory {
         }
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD, CcdToPaymentMapper paymentMapper) {
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
             log.debug("No case found to build draft response");
@@ -48,7 +51,7 @@ public class DraftResponseFactory {
 
         Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
 
-        log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
+        log.info("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
@@ -56,10 +59,16 @@ public class DraftResponseFactory {
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
+        paymentMapper.ccdToPaymentRef(caseData)
+            .stream()
+            .filter(p -> p.getPaymentStatus().equals(SUCCESS))
+            .findFirst()
+            .ifPresent(r -> jsonNode.put(PAYMENT_REFERENCE, r.getPaymentReference()));
+
 
         return DraftsResponse.builder()
-                .isDraft(false)
-                .data(jsonNode)
-                .build();
+            .isDraft(false)
+            .data(jsonNode)
+            .build();
     }
 }
