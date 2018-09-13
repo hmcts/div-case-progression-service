@@ -1,22 +1,29 @@
 package uk.gov.hmcts.reform.divorce.support.auth;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.divorce.support.auth.model.CreateUserRequest;
+import uk.gov.hmcts.reform.divorce.support.auth.model.UserCode;
+import uk.gov.hmcts.reform.divorce.support.util.ResourceLoader;
 
 import java.util.Base64;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
 public class IdamUserSupport {
 
-    private static final String idamCaseworkerUser = "CaseWorkerTest";
-
-    private static final String idamCaseworkerPw = "password";
-
     @Value("${auth.idam.client.baseUrl}")
     private String idamUserBaseUrl;
+
+    @Value("${auth.idam.client.redirectUri}")
+    private String idamRedirectUri;
+
+    @Value("${auth.idam.client.secret}")
+    private String idamSecret;
 
     private String idamUsername;
 
@@ -28,7 +35,7 @@ public class IdamUserSupport {
 
     public String generateNewUserAndReturnToken() {
         String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
-        String password = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString().toUpperCase(Locale.UK);
         createUserInIdam(username, password);
         return generateUserTokenWithNoRoles(username, password);
     }
@@ -47,18 +54,28 @@ public class IdamUserSupport {
 
     public synchronized String getIdamTestCaseWorkerUser() {
         if (StringUtils.isBlank(testCaseworkerJwtToken)) {
-            createCaseworkerUserInIdam();
-            testCaseworkerJwtToken = generateUserTokenWithNoRoles(idamCaseworkerUser, idamCaseworkerPw);
+            String username = "simulate-delivered" + UUID.randomUUID() + "@notifications.service.gov.uk";
+            String password = UUID.randomUUID().toString().toUpperCase(Locale.UK);
+            createCaseworkerUserInIdam(username, password);
+            testCaseworkerJwtToken = generateUserTokenWithNoRoles(username, password);
         }
 
         return testCaseworkerJwtToken;
     }
 
     private void createUserInIdam(String username, String password) {
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .email(username)
+            .password(password)
+            .forename("Test")
+            .surname("User")
+            .roles(new UserCode[] { UserCode.builder().code("citizen").build() })
+            .userGroup(UserCode.builder().code("divorce-private-beta").build())
+            .build();
+
         RestAssured.given()
             .header("Content-Type", "application/json")
-            .body("{\"email\":\"" + username + "\", \"forename\":\"Test\",\"surname\":\"User\",\"password\":\""
-                + password + "\"}")
+            .body(ResourceLoader.objectToJson(userRequest))
             .post(idamCreateUrl());
     }
 
@@ -69,14 +86,24 @@ public class IdamUserSupport {
         createUserInIdam(idamUsername, idamPassword);
     }
 
-    private void createCaseworkerUserInIdam() {
+    private void createCaseworkerUserInIdam(String username, String password) {
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .email(username)
+            .password(password)
+            .forename("Test")
+            .surname("User")
+            .roles(new UserCode[] {
+                UserCode.builder().code("caseworker").build(),
+                UserCode.builder().code("caseworker-divorce").build(),
+                UserCode.builder().code("caseworker-divorce-courtadmin").build()
+            })
+            .userGroup(UserCode.builder().code("caseworker").build())
+            .build();
+
         RestAssured.given()
-                .header("Content-Type", "application/json")
-                .body("{\"email\":\"" + idamCaseworkerUser + "\", "
-                        + "\"forename\":\"CaseWorkerTest\",\"surname\":\"User\",\"password\":\""
-                    + idamCaseworkerPw + "\", " + "\"roles\":[\"caseworker-divorce-courtadmin\"],"
-                    + " \"userGroup\":{\"code\":\"caseworker\"}}")
-                .post(idamCreateUrl());
+            .header("Content-Type", "application/json")
+            .body(ResourceLoader.objectToJson(userRequest))
+            .post(idamCreateUrl());
     }
 
     private String idamCreateUrl() {
@@ -84,14 +111,40 @@ public class IdamUserSupport {
     }
 
     private String generateUserTokenWithNoRoles(String username, String password) {
-        final String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-        final String token = RestAssured.given().baseUri(idamUserBaseUrl)
-            .header("Authorization", "Basic " + encoded)
-            .post("/oauth2/authorize?response_type=token&client_id=divorce.support&redirect_uri="
-                + "https://www.preprod.ccd.reform.hmcts.net/oauth2redirect")
-            .body()
-            .path("access-token");
+        String userLoginDetails = String.join(":", username, password);
+        final String authHeader = "Basic " + new String(Base64.getEncoder().encode(userLoginDetails.getBytes()));
 
+        Response response = RestAssured.given()
+            .header("Authorization", authHeader)
+            .relaxedHTTPSValidation()
+            .post(idamCodeUrl());
+
+        if (response.getStatusCode() >= 300) {
+            throw new IllegalStateException("Token generation failed with code: " + response.getStatusCode()
+                + " body: " + response.getBody().prettyPrint());
+        }
+
+        response = RestAssured.given()
+            .relaxedHTTPSValidation()
+            .post(idamTokenUrl(response.getBody().path("code")));
+
+        String token = response.getBody().path("access_token");
         return "Bearer " + token;
+    }
+
+    private String idamCodeUrl() {
+        return idamUserBaseUrl + "/oauth2/authorize"
+            + "?response_type=code"
+            + "&client_id=divorce"
+            + "&redirect_uri=" + idamRedirectUri;
+    }
+
+    private String idamTokenUrl(String code) {
+        return idamUserBaseUrl + "/oauth2/token"
+            + "?code=" + code
+            + "&client_id=divorce"
+            + "&client_secret=" + idamSecret
+            + "&redirect_uri=" + idamRedirectUri
+            + "&grant_type=authorization_code";
     }
 }
