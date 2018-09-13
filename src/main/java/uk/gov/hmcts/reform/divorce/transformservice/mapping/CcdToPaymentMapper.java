@@ -30,7 +30,7 @@ public class CcdToPaymentMapper {
             List<Payment> paymentList = new ArrayList<>();
             for (Map<String, Object> node : payments) {
                 log.info("Payment record from CCD getPayments node.get(PaymentStatus) {}",
-                    node.get("PaymentStatus").toString());
+                    node.get("PaymentStatus"));
                 Payment payment = new Payment();
 
                 if (node.get("PaymentReference") != null) {

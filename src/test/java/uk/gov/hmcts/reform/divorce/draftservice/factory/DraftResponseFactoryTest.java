@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.Authenticator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,10 +115,8 @@ public class DraftResponseFactoryTest {
         assertEquals(status, data.get(CASE_STATE).asText());
     }
 
-    @Ignore
     @Test
-    public void buildDraftResponseFromCaseData_should_return_draft_response_with_Payment_Reference_WhenPayment_Success()
-        throws IOException {
+    public void buildDraftResponseFromCaseData_return_draft_response_with_Payment_Reference_WhenPayment_Success() {
 
         // given
         Map<String, Object> caseData = new HashMap<>();
@@ -129,11 +128,13 @@ public class DraftResponseFactoryTest {
 
         Map<String, Object> caseDetails = new HashMap<>();
         caseData.put("case_data", caseDetails);
-        caseDetails.put(
-            "Payments",
-            new ObjectMapper().readTree(
-                "[{\"value\":{\"PaymentStatus\":\"Success\",\"PaymentReference\":\"ABCD-PRef\"}}]"
-            ));
+
+        List<Map<String, Object>> payments = new ArrayList<>();
+        Map<String, Object> paymentMap = new HashMap<>();
+        paymentMap.put("PaymentStatus", "success");
+        paymentMap.put("PaymentReference", "ABCD-PRef");
+        payments.add(paymentMap);
+        caseDetails.put("Payments", payments);
         List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(caseData);
 
