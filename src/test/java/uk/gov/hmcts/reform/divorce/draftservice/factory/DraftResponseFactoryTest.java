@@ -38,7 +38,8 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData2);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -52,7 +53,8 @@ public class DraftResponseFactoryTest {
         // given
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null, new CcdToPaymentMapper());
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -67,7 +69,8 @@ public class DraftResponseFactoryTest {
         List<Map<String, Object>> listOfCases = Collections.emptyList();
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -96,7 +99,8 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases, new CcdToPaymentMapper());
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         JsonNode data = draftsResponse.getData();

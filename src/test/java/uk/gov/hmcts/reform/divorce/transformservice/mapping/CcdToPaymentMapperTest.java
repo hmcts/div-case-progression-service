@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,6 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicat
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,7 +38,8 @@ public class CcdToPaymentMapperTest {
     private Map<String, Object> getPaymentsAsCaseDataMap() throws Exception {
         String paymentsAsString = ResourceLoader.loadAsText("divorce-payload-json/3PaymentsCcd.json");
         ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<HashMap<String, JsonNode>> typeRef = new TypeReference<HashMap<String, JsonNode>>() {};
+        TypeReference<HashMap<String, JsonNode>> typeRef = new TypeReference<HashMap<String, JsonNode>>() {
+        };
         return objectMapper.readValue(paymentsAsString, typeRef);
     }
 }
