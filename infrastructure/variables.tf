@@ -38,7 +38,7 @@ variable "idam_s2s_url_prefix" {
     default = "rpe-service-auth-provider"
 }
 
-variable "auth_provider_service_client_microservice_div_ccd_submission" {  
+variable "auth_provider_service_client_microservice_div_ccd_submission" {
     default = "divorce_ccd_submission"
 }
 
@@ -98,7 +98,7 @@ variable "idam_api_baseurl" {
 }
 
 variable "draft_check_ccd_enabled" {
-    default = false
+    default = true
 }
 
 variable "common_tags" {
