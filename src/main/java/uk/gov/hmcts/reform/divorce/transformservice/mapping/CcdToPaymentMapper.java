@@ -17,7 +17,10 @@ public class CcdToPaymentMapper {
 
     public List<Payment> ccdToPaymentRef(Map<String, Object> caseData) {
         log.info("Payment record from CCD getPayments {}", caseData.get("Payments"));
-        log.info("Payment record from CCD getPayments class {}", caseData.get("Payments").getClass().getCanonicalName());
+        if (caseData.get("Payments") !=null) {
+            log.info("Payment record from CCD getPayments class {}",
+                caseData.get("Payments").getClass().getCanonicalName());
+        }
         List<Payment> paymentList = Collections.emptyList();
 
         if (caseData.get("Payments") != null) {
