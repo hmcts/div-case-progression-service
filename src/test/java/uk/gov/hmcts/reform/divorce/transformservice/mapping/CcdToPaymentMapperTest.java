@@ -20,7 +20,7 @@ public class CcdToPaymentMapperTest {
     private CcdToPaymentMapper mapper;
 
     @Test
-    public void mapperMapFromAList() throws Exception {
+    public void mapperMapFromAList() {
 
         Map<String, Object> ccdPayments = getPaymentsAsCaseDataMap();
 
@@ -33,16 +33,20 @@ public class CcdToPaymentMapperTest {
     }
 
     private Map<String, Object> getPaymentsAsCaseDataMap() {
+        Map<String, Object> valueMap1 = new HashMap<>();
         Map<String, Object> paymentMap1 = new HashMap<>();
         paymentMap1.put("PaymentStatus", "success");
         paymentMap1.put("PaymentReference", "RC-1536-5783-3942-9827");
+        valueMap1.put("value",paymentMap1);
 
         Map<String, Object> paymentMap2 = new HashMap<>();
+        Map<String, Object> valueMap2 = new HashMap<>();
         paymentMap2.put("PaymentStatus", "initiated");
+        valueMap2.put("value",paymentMap2);
 
         List<Map<String, Object>> payments = new ArrayList<>();
-        payments.add(paymentMap1);
-        payments.add(paymentMap2);
+        payments.add(valueMap1);
+        payments.add(valueMap2);
 
         Map<String, Object> caseDataMap = new HashMap<>();
         caseDataMap.put("Payments", payments);

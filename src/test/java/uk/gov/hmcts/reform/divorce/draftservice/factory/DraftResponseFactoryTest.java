@@ -125,11 +125,14 @@ public class DraftResponseFactoryTest {
         Map<String, Object> caseDetails = new HashMap<>();
         caseData.put("case_data", caseDetails);
 
-        List<Map<String, Object>> payments = new ArrayList<>();
+
         Map<String, Object> paymentMap = new HashMap<>();
         paymentMap.put("PaymentStatus", "success");
         paymentMap.put("PaymentReference", "ABCD-PRef");
-        payments.add(paymentMap);
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put("value", paymentMap);
+        List<Map<String, Object>> payments = new ArrayList<>();
+        payments.add(valueMap);
         caseDetails.put("Payments", payments);
         List<Map<String, Object>> listOfCases = new ArrayList<>();
         listOfCases.add(caseData);
