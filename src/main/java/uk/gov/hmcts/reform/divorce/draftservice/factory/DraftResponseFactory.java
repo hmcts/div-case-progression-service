@@ -23,7 +23,7 @@ public class DraftResponseFactory {
     private static final String CASE_STATE = "state";
     private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
-    public static final String SUCCESS = "success";
+    private static final String SUCCESS = "success";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
         //check if draft is null
@@ -53,7 +53,7 @@ public class DraftResponseFactory {
 
         Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
 
-        log.info("Building draft response from existing case {} in CCD", caseDetails.get(ID));
+        log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
@@ -61,14 +61,11 @@ public class DraftResponseFactory {
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
-
-        log.info("Building draft response from existing caseData {} in CCD", caseData);
         paymentMapper.ccdToPaymentRef(caseData)
             .stream()
             .filter(p -> Optional.ofNullable(p.getPaymentStatus()).orElse("").equalsIgnoreCase(SUCCESS))
             .findFirst()
             .ifPresent(r -> jsonNode.put(PAYMENT_REFERENCE, r.getPaymentReference()));
-
 
         return DraftsResponse.builder()
             .isDraft(false)
