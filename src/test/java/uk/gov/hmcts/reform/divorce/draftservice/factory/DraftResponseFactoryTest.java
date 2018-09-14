@@ -125,7 +125,6 @@ public class DraftResponseFactoryTest {
         Map<String, Object> caseDetails = new HashMap<>();
         caseData.put("case_data", caseDetails);
 
-
         Map<String, Object> paymentMap = new HashMap<>();
         paymentMap.put("PaymentStatus", "success");
         paymentMap.put("PaymentReference", "ABCD-PRef");
