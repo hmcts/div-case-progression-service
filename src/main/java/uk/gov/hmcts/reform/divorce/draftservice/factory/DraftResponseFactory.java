@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class DraftResponseFactory {
@@ -60,9 +61,11 @@ public class DraftResponseFactory {
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
+
+        log.info("Building draft response from existing caseData {} in CCD", caseData);
         paymentMapper.ccdToPaymentRef(caseData)
             .stream()
-            .filter(p -> p.getPaymentStatus().equalsIgnoreCase(SUCCESS))
+            .filter(p -> Optional.ofNullable(p.getPaymentStatus()).orElse("").equalsIgnoreCase(SUCCESS))
             .findFirst()
             .ifPresent(r -> jsonNode.put(PAYMENT_REFERENCE, r.getPaymentReference()));
 

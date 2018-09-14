@@ -29,6 +29,7 @@ public class CcdToPaymentMapper {
 
             List<Payment> paymentList = new ArrayList<>();
             for (Map<String, Object> node : payments) {
+                log.info("Payment record from CCD PaymentMap {}", node);
                 log.info("Payment record from CCD getPayments node.get(PaymentStatus) {}",
                     node.get("PaymentStatus"));
                 Payment payment = new Payment();

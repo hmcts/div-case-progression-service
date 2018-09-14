@@ -32,7 +32,7 @@ public class CcdToPaymentMapperTest {
         assertThat(paymentList.get(1).getPaymentStatus()).isEqualTo("initiated");
     }
 
-    private Map<String, Object> getPaymentsAsCaseDataMap() throws Exception {
+    private Map<String, Object> getPaymentsAsCaseDataMap() {
         Map<String, Object> paymentMap1 = new HashMap<>();
         paymentMap1.put("PaymentStatus", "success");
         paymentMap1.put("PaymentReference", "RC-1536-5783-3942-9827");
