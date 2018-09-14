@@ -39,9 +39,9 @@ public class CcdToPaymentMapper {
 
     private Payment toPayment(Map<String, Object> mapPayment) {
         Payment payment = new Payment();
-        Optional.ofNullable((mapPayment).get(PAYMENT_REFERENCE))
+        Optional.ofNullable(mapPayment.get(PAYMENT_REFERENCE))
             .ifPresent(pr -> payment.setPaymentReference((String) pr));
-        Optional.ofNullable((mapPayment).get(PAYMENT_STATUS))
+        Optional.ofNullable(mapPayment.get(PAYMENT_STATUS))
             .ifPresent(ps -> payment.setPaymentStatus((String) ps));
         return payment;
     }
