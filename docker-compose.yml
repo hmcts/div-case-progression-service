@@ -133,6 +133,8 @@ services:
       - NOTIFY_API_KEY=AAAAAAAAAAAAAAAA
       - NOTIFY_CMC_ACTIVATE_USER_TEMPLATE=76aa8695-64e8-4afd-ae13-bc8385302b1f
       - IDAM_SECRET=idam_test_secret
+      - IDAM_API_OAUTH2_CLIENT_CLIENT_SECRETS_DIVORCE=idam_test_secret
+      - IDAM_DIVORCE_WHITELIST=https://localhost:4003/authenticated
       - NOTIFY=false
       - NOTIFY_CMC_WELCOME_USER_TEMPLATE=fake
       - NOTIFY_DIVORCE_WELCOME_USER_TEMPLATE=fake
@@ -145,7 +147,7 @@ services:
       - IDAM_AUTHENTICATION_WEB_HOST=https://authentication-web:8000
       - IDAM_REGISTRATION_WEB_HOST=https://www-local.registration.reform.hmcts.net:9000
       - IDAM_DIVORCE_URL=https://www-local.registration.reform.hmcts.net:9000/poc/divorce
-      - REFORM_ENVIRONMENT=local
+      - REFORM_ENVIRONMENT=dev
       - http_proxy
       - https_proxy
       - no_proxy
