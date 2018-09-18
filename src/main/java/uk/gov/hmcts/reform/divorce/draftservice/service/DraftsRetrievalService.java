@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -23,14 +24,16 @@ class DraftsRetrievalService {
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
     private final RetrieveCcdClient retrieveCcdClient;
+    private final CcdToPaymentMapper paymentMapper;
 
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  RetrieveCcdClient retrieveCcdClient) {
+                                  RetrieveCcdClient retrieveCcdClient, CcdToPaymentMapper paymentMapper) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
         this.retrieveCcdClient = retrieveCcdClient;
+        this.paymentMapper = paymentMapper;
     }
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
@@ -40,7 +43,7 @@ class DraftsRetrievalService {
 
         if (CollectionUtils.isNotEmpty(caseData)) {
             log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
-            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData);
+            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData, paymentMapper);
         } else {
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
             Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
