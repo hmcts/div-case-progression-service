@@ -35,6 +35,9 @@ List<LinkedHashMap<String, Object>> secrets = [
 ]
 
 withPipeline(type , product, component) {
+
+    enableDockerBuild()
+    
     loadVaultSecrets(secrets)
 
     before('functionalTest:aat') {
