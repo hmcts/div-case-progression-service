@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,8 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData2);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -51,7 +53,8 @@ public class DraftResponseFactoryTest {
         // given
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(null,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -66,7 +69,8 @@ public class DraftResponseFactoryTest {
         List<Map<String, Object>> listOfCases = Collections.emptyList();
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         assertEquals(false, draftsResponse.isDraft());
@@ -95,7 +99,8 @@ public class DraftResponseFactoryTest {
         listOfCases.add(caseData);
 
         // when
-        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases);
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
 
         // then
         JsonNode data = draftsResponse.getData();
@@ -105,4 +110,42 @@ public class DraftResponseFactoryTest {
         assertEquals(caseId, (Long) data.get("caseId").asLong());
         assertEquals(status, data.get(CASE_STATE).asText());
     }
+
+    @Test
+    public void buildDraftResponseFromCaseData_return_draft_response_with_Payment_Reference_WhenPayment_Success() {
+
+        // given
+        Map<String, Object> caseData = new HashMap<>();
+        String status = "awaitingPayment";
+        caseData.put(CASE_STATE, status);
+
+        Long caseId = 123L;
+        caseData.put("id", caseId);
+
+        Map<String, Object> caseDetails = new HashMap<>();
+        caseData.put("case_data", caseDetails);
+
+        Map<String, Object> paymentMap = new HashMap<>();
+        paymentMap.put("PaymentStatus", "success");
+        paymentMap.put("PaymentReference", "ABCD-PRef");
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put("value", paymentMap);
+        List<Map<String, Object>> payments = new ArrayList<>();
+        payments.add(valueMap);
+        caseDetails.put("Payments", payments);
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
+        listOfCases.add(caseData);
+
+        // when
+        DraftsResponse draftsResponse = DraftResponseFactory.buildDraftResponseFromCaseData(listOfCases,
+            new CcdToPaymentMapper());
+
+        // then
+        JsonNode data = draftsResponse.getData();
+        assertEquals(false, draftsResponse.isDraft());
+        assertEquals(caseId, (Long) data.get("caseId").asLong());
+        assertEquals("ABCD-PRef", draftsResponse.getData().get("payment_reference").asText());
+        assertEquals(status, data.get(CASE_STATE).asText());
+    }
+
 }

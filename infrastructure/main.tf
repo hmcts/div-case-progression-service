@@ -4,19 +4,18 @@ locals {
     local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
 
     pdf_generator_base_url = "http://div-dgs-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    fees_and_payments_base_url= "http://div-fps-${local.local_env}.service.core-compute-${local.local_env}.internal"
+    payment_api_base_url= "http://payment-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     ccd_casedatastore_baseurl = "http://ccd-data-store-api-${local.local_env}.service.core-compute-${local.local_env}.internal"
     draft_store_api_baseurl = "http://draft-store-service-${local.local_env}.service.core-compute-${local.local_env}.internal"
     dm_store_url = "http://dm-store-${local.local_env}.service.core-compute-${local.local_env}.internal"
     idam_s2s_url = "http://${var.idam_s2s_url_prefix}-${local.local_env}.service.core-compute-${local.local_env}.internal"
     div_validation_service_url = "http://div-vs-${local.local_env}.service.core-compute-${local.local_env}.internal"
 
-    previewVaultName = "${var.product}-${var.reform_service_name}"
-    nonPreviewVaultName = "${var.reform_team}-${var.reform_service_name}-${var.env}"
+    previewVaultName = "${var.reform_team}-aat"
+    nonPreviewVaultName = "${var.reform_team}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
-
-    nonPreviewVaultUri = "${module.key-vault.key_vault_uri}"
-    previewVaultUri = "https://div-${var.reform_service_name}-aat.vault.azure.net/"
-    vaultUri = "${var.env == "preview"? local.previewVaultUri : local.nonPreviewVaultUri}"
+    vaultUri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
 module "div-case-progression" {
@@ -37,8 +36,10 @@ module "div-case-progression" {
         REFORM_TEAM = "${var.reform_team}"
         REFORM_ENVIRONMENT = "${var.env}"
         AUTH_PROVIDER_SERVICE_CLIENT_BASEURL = "${local.idam_s2s_url}"
-        AUTH_PROVIDER_SERVICE_CLIENT_MICROSERVICE = "${var.auth_provider_service_client_microservice}"
-        AUTH_PROVIDER_SERVICE_CLIENT_KEY = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
+        AUTH_SERVICE_CLIENT_DIVORCE_CCD_SUBMISSION_NAME = "${var.auth_provider_service_client_microservice_div_ccd_submission}"
+        AUTH_SERVICE_CLIENT_DIVORCE_FRONTEND_NAME = "${var.auth_provider_service_client_microservice_div_frontend}"
+        AUTH_SERVICE_DIVORCE_CCD_SUBMISSION_KEY = "${data.azurerm_key_vault_secret.ccd-submission-s2s-auth-secret.value}"
+        AUTH_SERVICE_DIVORCE_FRONTEND_KEY = "${data.azurerm_key_vault_secret.frontend_secret.value}"
         AUTH_PROVIDER_SERVICE_CLIENT_TOKENTIMETOLIVEINSECONDS = "${var.auth_provider_service_client_tokentimetoliveinseconds}"
         AUTH_PROVIDER_HEALTH_URI = "${local.idam_s2s_url}/health"
         CCD_CASEDATASTORE_BASEURL = "${local.ccd_casedatastore_baseurl}"
@@ -50,66 +51,54 @@ module "div-case-progression" {
         LOGGING_LEVEL_UK_GOV_HMCTS_CCD = "${var.logging_level_uk_gov_hmcts_ccd}"
         PDF_GENERATOR_BASE_URL = "${local.pdf_generator_base_url}"
         PDF_GENERATOR_HEALTHURL = "${local.pdf_generator_base_url}/health"
-        DRAFT_STORE_API_ENCRYPTION_KEY = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
+        DRAFT_STORE_API_ENCRYPTION_KEY = "${data.azurerm_key_vault_secret.draft-store-api-encryption-key.value}"
         DRAFT_STORE_API_BASEURL = "${local.draft_store_api_baseurl}"
         DRAFT_STORE_API_HEALTH_URI = "${local.draft_store_api_baseurl}/health"
-        UK_GOV_NOTIFY_API_KEY = "${data.vault_generic_secret.uk-gov-notify-api-key.data["value"]}"
+        UK_GOV_NOTIFY_API_KEY = "${data.azurerm_key_vault_secret.uk-gov-notify-api-key.value}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATES = "${var.uk_gov_notify_email_templates}"
         UK_GOV_NOTIFY_EMAIL_TEMPLATE_VARS = "${var.uk_gov_notify_email_template_vars}"
         DOCUMENT_MANAGEMENT_STORE_URL = "${local.dm_store_url}"
         IDAM_API_BASEURL = "${var.idam_api_baseurl}"
         IDAM_API_HEALTH_URI = "${var.idam_api_baseurl}/health"
+        AUTH_IDAM_CLIENT_SECRET = "${data.azurerm_key_vault_secret.idam-secret.value}"
+        PAYMENT_API_BASEURL = "${local.payment_api_base_url}"
+        FEES_AND_PAYMENTS_BASE_URL="${local.fees_and_payments_base_url}"
         DRAFT_CCD_CHECK_ENABLED = "${var.draft_check_ccd_enabled}"
         DIV_VALIDATION_SERVICE_URL = "${local.div_validation_service_url}"
     }
 }
 
-provider "vault" {
-    address = "https://vault.reform.hmcts.net:6200"
-}
-
-module "key-vault" {
-    source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
+data "azurerm_key_vault" "div_key_vault" {
     name                = "${local.vaultName}"
-    product             = "${var.product}"
-    env                 = "${var.env}"
-    tenant_id           = "${var.tenant_id}"
-    object_id           = "${var.jenkins_AAD_objectId}"
-    resource_group_name = "${module.div-case-progression.resource_group_name}"
-    # dcd_cc-dev group object ID
-    product_group_object_id = "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+    resource_group_name = "${local.vaultName}"
 }
 
-data "vault_generic_secret" "ccd-submission-s2s-auth-secret" {
-    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceCcdSubmission"
+data "azurerm_key_vault_secret" "frontend_secret" {
+    name      = "frontend-secret"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
-data "vault_generic_secret" "div-doc-s2s-auth-secret" {
-    path = "secret/${var.vault_env}/ccidam/service-auth-provider/api/microservice-keys/divorceDocumentGenerator"
-}
-
-data "vault_generic_secret" "draft-store-api-encryption-key" {
-    path = "secret/${var.vault_env}/divorce/draft/encryption_key"
-}
-
-data "vault_generic_secret" "uk-gov-notify-api-key" {
-    path = "secret/${var.vault_env}/divorce/notify/api_key"
-}
-
-resource "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
+data "azurerm_key_vault_secret" "ccd-submission-s2s-auth-secret" {
     name      = "ccd-submission-s2s-auth-secret"
-    value     = "${data.vault_generic_secret.ccd-submission-s2s-auth-secret.data["value"]}"
-    vault_uri = "${module.key-vault.key_vault_uri}"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
-resource "azurerm_key_vault_secret" "div-doc-s2s-auth-secret" {
+data "azurerm_key_vault_secret" "div-doc-s2s-auth-secret" {
     name      = "div-doc-s2s-auth-secret"
-    value     = "${data.vault_generic_secret.div-doc-s2s-auth-secret.data["value"]}"
-    vault_uri = "${module.key-vault.key_vault_uri}"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }
 
-resource "azurerm_key_vault_secret" "draft-store-api-encryption-key" {
+data "azurerm_key_vault_secret" "draft-store-api-encryption-key" {
     name      = "draft-store-api-encryption-key"
-    value     = "${data.vault_generic_secret.draft-store-api-encryption-key.data["value"]}"
-    vault_uri = "${module.key-vault.key_vault_uri}"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "uk-gov-notify-api-key" {
+    name      = "uk-gov-notify-api-key"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
+}
+
+data "azurerm_key_vault_secret" "idam-secret" {
+    name      = "idam-secret"
+    vault_uri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
 }

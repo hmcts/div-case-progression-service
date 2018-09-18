@@ -31,10 +31,8 @@ public class ValidationClientImpl implements ValidationClient {
 
         String validateUrl = validationServiceUrl.concat(VALIDATE_ENDPOINT);
 
-        ValidationResponse response = restTemplate.exchange(
+        return restTemplate.exchange(
             validateUrl, HttpMethod.POST, requestEntity, ValidationResponse.class
         ).getBody();
-
-        return response;
     }
 }

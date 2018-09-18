@@ -17,3 +17,7 @@ output "draft_store_service_url" {
 output "draft_check_ccd_enabled" {
     value = "${var.draft_check_ccd_enabled}"
 }
+
+output "auth_idam_client_secret" {
+    value = "${data.azurerm_key_vault_secret.idam-secret.value}"
+}

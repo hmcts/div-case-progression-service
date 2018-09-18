@@ -79,14 +79,14 @@ public class UpdateServiceTest {
         caseEvent.setCaseId(caseId);
 
         when(ccdEventClient.startEvent(userDetails, jwt, caseId, eventId)).thenReturn(createEvent);
-        when(transformationService.transform(divorceEventSession.getEventData(), createEvent, eventSummary))
+        when(transformationService.transformUpdate(divorceEventSession.getEventData(), createEvent, eventSummary))
             .thenReturn(caseDataContent);
         when(ccdEventClient.createCaseEvent(userDetails, jwt, caseId, caseDataContent)).thenReturn(caseEvent);
 
         assertThat(updateService.update(caseId, divorceEventSession, jwt)).isEqualTo(caseId);
 
         verify(ccdEventClient).startEvent(userDetails, jwt, caseId, eventId);
-        verify(transformationService).transform(divorceEventSession.getEventData(), createEvent, eventSummary);
+        verify(transformationService).transformUpdate(divorceEventSession.getEventData(), createEvent, eventSummary);
         verify(ccdEventClient).createCaseEvent(userDetails, jwt, caseId, caseDataContent);
         verifyNoMoreInteractions(ccdEventClient, transformationService);
     }
@@ -132,6 +132,8 @@ public class UpdateServiceTest {
         DivorceEventSession divorceEventSession = new DivorceEventSession();
         String jwt = "_jwt";
 
+        UserDetails userDetails = UserDetails.builder().id("1").build();
+        when(userService.getUserDetails(jwt)).thenReturn(userDetails);
         CaseEvent caseEvent = new CaseEvent();
         caseEvent.setCaseId(1L);
         when(ccdEventClient.createCaseEvent(any(), anyString(), anyLong(), any()))

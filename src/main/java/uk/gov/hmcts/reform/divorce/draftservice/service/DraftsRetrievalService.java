@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.draftservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.divorce.draftservice.client.DraftStoreClient;
@@ -10,7 +11,10 @@ import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftModelFactory;
 import uk.gov.hmcts.reform.divorce.draftservice.factory.DraftResponseFactory;
 import uk.gov.hmcts.reform.divorce.transformservice.client.RetrieveCcdClient;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,29 +24,31 @@ class DraftsRetrievalService {
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
     private final RetrieveCcdClient retrieveCcdClient;
+    private final CcdToPaymentMapper paymentMapper;
 
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  RetrieveCcdClient retrieveCcdClient) {
+                                  RetrieveCcdClient retrieveCcdClient, CcdToPaymentMapper paymentMapper) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
         this.retrieveCcdClient = retrieveCcdClient;
+        this.paymentMapper = paymentMapper;
     }
 
     protected DraftsResponse getDraft(String jwt, String userId, String secret) {
-        log.info("Retrieving a divorce session draft");
-        DraftList draftList = draftStoreClient.getAll(jwt, secret);
+        log.info("Retrieving a divorce session draft for userId {}", userId);
 
-        Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
+        List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
 
-        if (divorceDraft.isPresent()) {
-            log.info("Returning the saved draft data");
-            return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.get());
+        if (CollectionUtils.isNotEmpty(caseData)) {
+            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
+            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData, paymentMapper);
         } else {
-            log.info("Checking CCD for an existing case as draft not found");
-            return DraftResponseFactory.buildDraftResponseFromCaseData(
-                retrieveCcdClient.getCases(userId, jwt));
+            DraftList draftList = draftStoreClient.getAll(jwt, secret);
+            Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
+            log.info("Returning the saved draft data for userId {}", userId);
+            return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.orElse(null));
         }
     }
 

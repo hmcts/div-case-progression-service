@@ -82,7 +82,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
             regenerateIdamTestUser();
             Long caseId = TestUtil.extractCaseId(submitCase("addresses.json"));
             String updateUrl = getTransformationApiUrl() + getTransformationApiUpdateEndpoint() + "/" + caseId;
-            postToRestService(loadJSON("payment-made.json"), updateUrl);
+            postToRestService(loadJson("payment-made.json"), updateUrl);
 
             // when
             Response draftResponse = getDivorceDraft();

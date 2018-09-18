@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.samePropertyValuesAs;
 public class HowNameChangedCaseToCCDMapperTest {
 
     @Autowired
-    private DivorceCaseToCCDMapper mapper;
+    private DivorceCaseToCCDSubmissionMapper mapper;
 
     @Test
     public void shouldMapAllAndTransformAllFieldsForHowNameChangedMappingScenario()

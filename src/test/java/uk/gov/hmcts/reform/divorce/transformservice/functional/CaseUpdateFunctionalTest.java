@@ -452,7 +452,6 @@ public class CaseUpdateFunctionalTest {
     private void caseUpdateStub(final String filePath) throws Exception {
         String requestBody = FileUtils.readFileToString(new File(getClass().getResource(filePath).toURI()),
             Charset.defaultCharset());
-        JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
 
         String responseBody = FileUtils.readFileToString(
             new File(getClass().getResource("/fixtures/ccd/case-event-creation-201-response.json").toURI()),
@@ -462,7 +461,7 @@ public class CaseUpdateFunctionalTest {
         String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "cases", CASE_ID, "events?ignore-warning=true");
 
-        ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
+        ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBody.toString()))
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
             .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
@@ -489,13 +488,11 @@ public class CaseUpdateFunctionalTest {
         String requestBody = FileUtils.readFileToString(
             new File(getClass().getResource(filePath).toURI()), Charset.defaultCharset());
 
-        JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
-
         String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "cases", CASE_ID, "events?ignore-warning=true");
 
         ccdServer.verify(postRequestedFor(urlEqualTo(url))
-            .withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
+            .withRequestBody(equalToJson(requestBody.toString()))
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
             .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
@@ -565,12 +562,10 @@ public class CaseUpdateFunctionalTest {
             Charset.defaultCharset()
         );
 
-        JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
-
         String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "cases", CASE_ID, "events?ignore-warning=true");
 
-        ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
+        ccdServer.stubFor(post(url).withRequestBody(equalToJson(requestBody.toString()))
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
             .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8"))
@@ -584,22 +579,13 @@ public class CaseUpdateFunctionalTest {
             Charset.defaultCharset()
         );
 
-        JSONObject requestBodyWithCreatedDate = populateCreatedDate(requestBody);
-
         String url = String.join("/", CCD_CITIZENS_ENDPOINT, USER_ID, "jurisdictions", JURISDICTION,
             "case-types", CASE_TYPE_ID, "cases", CASE_ID, "events?ignore-warning=true");
 
         ccdServer.verify(postRequestedFor(urlEqualTo(url))
-            .withRequestBody(equalToJson(requestBodyWithCreatedDate.toString()))
+            .withRequestBody(equalToJson(requestBody.toString()))
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
             .withHeader(SERVICE_AUTHORIZATION_HEADER_KEY, equalTo(SERVICE_TOKEN))
             .withHeader("Content-type", equalTo("application/json;charset=UTF-8")));
-    }
-
-    private JSONObject populateCreatedDate(String requestBody) throws JSONException {
-        JSONObject requestBodyJson = new JSONObject(requestBody);
-        JSONObject data = (JSONObject) requestBodyJson.get("data");
-        data.put("createdDate", LocalDate.now().format(ofPattern("yyyy-MM-dd")));
-        return requestBodyJson;
     }
 }

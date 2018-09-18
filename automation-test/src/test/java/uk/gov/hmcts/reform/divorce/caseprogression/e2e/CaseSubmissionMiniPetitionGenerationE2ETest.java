@@ -82,4 +82,29 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
         return response;
     }
+
+    //Clashes
+    private Response submitEventMaster(long caseId, String eventId) throws Exception {
+        String eventToken = createEventAsCaseWorker(caseId, eventId);
+
+        JSONObject jsonObject = new JSONObject(loadJson("submit-event.json"));
+        JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
+        jsonObject.put("event", eventObject);
+        jsonObject.put("event_token", eventToken);
+
+        String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
+                caseId);
+
+        return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
+    }
+
+    //Clashes
+    private String createEventAsCaseWorkerMaster(long caseId, String event) {
+        String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
+                caseId, event);
+        Response fromRestService = getFromRestService(createEventUrl);
+
+        return fromRestService.getBody().path("token");
+    }
+
 }
