@@ -37,11 +37,11 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.endpoint.validate}")
     private String transformationApiValidateEndpoint;
 
-    @Value("${ccd.submit.event}")
-    private String submitEventUrl;
-
     @Value("${ccd.create.event}")
     private String createEventUrl;
+
+    @Value("${ccd.submit.event}")
+    private String submitEventUrl;
 
     private JSONArray fileUploadResponse = null;
 
@@ -121,7 +121,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         return ServiceAuthTokenFor.CASE_PROGRESSION;
     }
 
-    public Response submitEvent(long caseId, String eventId) throws Exception {
+     public Response submitEvent(long caseId, String eventId) throws Exception {
         String eventToken = createEventAsCaseWorker(caseId, eventId);
 
         JSONObject jsonObject = new JSONObject(loadJson("submit-event.json"));
@@ -135,7 +135,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
         return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
     }
 
-    public String createEventAsCaseWorker(long caseId, String event) {
+    private String createEventAsCaseWorker(long caseId, String event) {
         String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
             caseId, event);
         Response fromRestService = getFromRestService(createEventUrl);

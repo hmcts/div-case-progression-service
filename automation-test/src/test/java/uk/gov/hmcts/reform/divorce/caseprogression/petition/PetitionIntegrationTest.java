@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -31,6 +32,7 @@ public class PetitionIntegrationTest extends BaseIntegrationTest {
         regenerateIdamTestUser();
     }
 
+    @Ignore
     @Test
     public void getPetitionShouldReturnDivorceSessionFromCaseInAwaitingDecreeNisi() throws Exception {
 

@@ -29,12 +29,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
     private static final String PETITION = "petition";
     private static final String D8_MINI_PETITION_FILE_NAME_FORMAT = "d8petition%d.pdf";
 
-    @Value("${ccd.create.event}")
-    private String createEventUrl;
-
-    @Value("${ccd.submit.event}")
-    private String submitEventUrl;
-
     @Value("${document.management.store.baseUrl}")
     private String documentManagementURL;
 
@@ -81,30 +75,6 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
         assertNotNull(response.getBody().path("id"));
 
         return response;
-    }
-
-    //Clashes
-    private Response submitEventMaster(long caseId, String eventId) throws Exception {
-        String eventToken = createEventAsCaseWorker(caseId, eventId);
-
-        JSONObject jsonObject = new JSONObject(loadJson("submit-event.json"));
-        JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
-        jsonObject.put("event", eventObject);
-        jsonObject.put("event_token", eventToken);
-
-        String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
-                caseId);
-
-        return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
-    }
-
-    //Clashes
-    private String createEventAsCaseWorkerMaster(long caseId, String event) {
-        String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
-                caseId, event);
-        Response fromRestService = getFromRestService(createEventUrl);
-
-        return fromRestService.getBody().path("token");
     }
 
 }
