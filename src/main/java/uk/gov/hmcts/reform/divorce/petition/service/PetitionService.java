@@ -4,6 +4,8 @@ import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.divorce.petition.api.CfsApiClient;
+import uk.gov.hmcts.reform.divorce.petition.api.CmsApiClient;
 import uk.gov.hmcts.reform.divorce.petition.domain.Petition;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
