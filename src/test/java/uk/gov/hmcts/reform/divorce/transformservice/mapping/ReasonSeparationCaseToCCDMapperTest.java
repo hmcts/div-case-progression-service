@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.samePropertyValuesAs;
 public class ReasonSeparationCaseToCCDMapperTest {
 
     @Autowired
-    private DivorceCaseToCCDMapper mapper;
+    private DivorceCaseToCCDSubmissionMapper mapper;
 
     @Test
     public void shouldMapAllAndTransformAllFieldsForReasonSeparationScenario() throws URISyntaxException, IOException {

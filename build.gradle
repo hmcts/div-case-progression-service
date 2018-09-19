@@ -200,6 +200,7 @@ dependencies {
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude(module: 'commons-logging')
     }
+    testCompile group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: versions.mapstruct
     testCompile project(':test-support')
 }
@@ -212,7 +213,9 @@ task printVersion {
 
 sonarqube {
     properties {
-        property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*,**uk/gov/hmcts/reform/divorce/support/**"
+        property "sonar.exclusions", "**uk/gov/hmcts/reform/divorce/**/domain/**/*, " +
+            "**uk/gov/hmcts/reform/divorce/pay/models/**/*, **uk/gov/hmcts/reform/divorce/fees/models/**/*," +
+            "**uk/gov/hmcts/reform/divorce/pay/exceptions/**/*,**uk/gov/hmcts/reform/divorce/support/**/*"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco.exec"
         property "sonar.projectKey", "DivorceCaseProgressionService"
         property "sonar.projectName", "Divorce :: case-progression-service"

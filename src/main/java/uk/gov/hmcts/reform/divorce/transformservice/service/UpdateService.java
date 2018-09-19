@@ -48,13 +48,14 @@ public class UpdateService {
             divorceEventSessionData.getEventId());
 
         CaseEvent caseEvent = updateCcdEventClient.createCaseEvent(userDetails, jwt, caseId,
-            transformationService.transform(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
+            transformationService.transformUpdate(divorceEventSessionData.getEventData(), createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);
         } catch (Exception e) {
             // we do not want to send an error response to the front end if deleting the draft fails
-            log.warn("Could not delete the draft for case id {}", caseEvent.getCaseId());
+            log.warn("Could not delete the draft for userId {} with case id {}",
+                    userDetails.getId(), caseEvent.getCaseId());
         }
 
         log.info("Update case Id: {} ", caseEvent.getCaseId());

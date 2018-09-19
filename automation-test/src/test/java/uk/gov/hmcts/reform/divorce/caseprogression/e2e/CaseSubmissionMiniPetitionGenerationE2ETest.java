@@ -82,4 +82,5 @@ public class CaseSubmissionMiniPetitionGenerationE2ETest extends BaseIntegration
 
         return response;
     }
+
 }

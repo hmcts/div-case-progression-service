@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
+import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class DraftResponseFactory {
@@ -19,17 +21,25 @@ public class DraftResponseFactory {
     private static final String D_8_DIVORCE_UNIT = "D8DivorceUnit";
     private static final String CASE_DATA = "case_data";
     private static final String CASE_STATE = "state";
+    private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
+    private static final String SUCCESS = "success";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
-        return DraftsResponse.builder()
+        //check if draft is null
+        if (draft == null) {
+            return DraftsResponse.emptyResponse();
+        } else {
+            return DraftsResponse.builder()
                 .isDraft(true)
                 .data(draft.getDocument())
                 .draftId(draft.getId())
                 .build();
+        }
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD) {
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD,
+                                                                CcdToPaymentMapper paymentMapper) {
 
         if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
             log.debug("No case found to build draft response");
@@ -41,19 +51,25 @@ public class DraftResponseFactory {
             return DraftsResponse.emptyResponse();
         }
 
-        log.debug("Building draft response from existing case in CCD");
+        Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
+
+        log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
-        Map caseDetails = listOfCasesInCCD.get(0);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
         Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
         jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
+        paymentMapper.ccdToPaymentRef(caseData)
+            .stream()
+            .filter(p -> Optional.ofNullable(p.getPaymentStatus()).orElse("").equalsIgnoreCase(SUCCESS))
+            .findFirst()
+            .ifPresent(r -> jsonNode.put(PAYMENT_REFERENCE, r.getPaymentReference()));
 
         return DraftsResponse.builder()
-                .isDraft(false)
-                .data(jsonNode)
-                .build();
+            .isDraft(false)
+            .data(jsonNode)
+            .build();
     }
 }

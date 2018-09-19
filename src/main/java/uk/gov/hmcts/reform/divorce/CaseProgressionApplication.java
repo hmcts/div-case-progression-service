@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.divorce;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.health.HealthAggregator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +11,12 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.authorisation.healthcheck.ServiceAuthHealthIndicator;
-import uk.gov.hmcts.reform.divorce.health.CustomHealthAggregator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.divorce.idam.api"})
+@EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.divorce.idam.api", "uk.gov.hmcts.reform.divorce.fees.api",
+    "uk.gov.hmcts.reform.divorce.pay.api"})
 @SpringBootApplication(exclude = {ServiceAuthHealthIndicator.class})
 public class CaseProgressionApplication {
 
@@ -52,11 +51,6 @@ public class CaseProgressionApplication {
         restTemplate.setRequestFactory(requestFactory());
 
         return restTemplate;
-    }
-
-    @Bean
-    public HealthAggregator healthAggregator() {
-        return new CustomHealthAggregator();
     }
 
 }

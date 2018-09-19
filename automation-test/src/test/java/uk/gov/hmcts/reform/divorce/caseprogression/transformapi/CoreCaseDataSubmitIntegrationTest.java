@@ -175,7 +175,7 @@ public class CoreCaseDataSubmitIntegrationTest extends BaseIntegrationTest {
         Response ccdResponse = given()
                 .header("Authorization", getInvalidToken())
                 .contentType("application/json")
-                .body(loadJSON("reason-adultery.json"))
+                .body(loadJson("reason-adultery.json"))
                 .when()
                 .post(getTransformationApiSubmitUrl())
                 .andReturn();

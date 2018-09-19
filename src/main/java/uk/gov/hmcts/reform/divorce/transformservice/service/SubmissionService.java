@@ -33,13 +33,14 @@ public class SubmissionService {
         CreateEvent createEvent = ccdClient.createCase(userDetails, jwt, divorceSessionData);
 
         SubmitEvent submitEvent = ccdClient.submitCase(userDetails, jwt,
-            transformationService.transform(divorceSessionData, createEvent, EVENT_SUMMARY));
+            transformationService.transformSubmission(divorceSessionData, createEvent, EVENT_SUMMARY));
 
         try {
             draftsService.deleteDraft(jwt);
         } catch (Exception e) {
             // we do not want to send an error response to the front end if deleting the draft fails
-            log.warn("Could not delete the draft for case id {}", submitEvent.getCaseId());
+            log.warn("Could not delete the draft for userId {} with case id {}",
+                    userDetails.getId(), submitEvent.getCaseId());
         }
 
         log.info("Case Id: {} ", submitEvent.getCaseId());
