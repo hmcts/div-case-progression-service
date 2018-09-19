@@ -33,8 +33,7 @@ public class PetitionController {
     @ApiOperation(value = "Retrieves a divorce case draft")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A Petition exists. The petition is in the response body"),
-        @ApiResponse(code = 404, message = "No petition found with the expected case state")
-    })
+        @ApiResponse(code = 404, message = "No petition found with the expected case state")})
     public ResponseEntity<Petition> retrievePetition(
         @RequestHeader("Authorization")
         @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String jwtToken) {

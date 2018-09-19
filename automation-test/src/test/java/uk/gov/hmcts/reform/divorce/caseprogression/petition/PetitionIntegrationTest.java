@@ -45,7 +45,7 @@ public class PetitionIntegrationTest extends BaseIntegrationTest {
         assertEquals(200, petitionResponse.getStatusCode());
         ResponseBody petitionResponseBody = petitionResponse.getBody();
         assertEquals(String.valueOf(caseId), petitionResponseBody.path("caseId"));
-        JSONAssert.assertEquals(loadJSON("divorce-session-converted-expected.json"),
+        JSONAssert.assertEquals(loadJson("divorce-session-converted-expected.json"),
             new ObjectMapper().writeValueAsString(petitionResponseBody.path("divorceCase")), false);
     }
 
