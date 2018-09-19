@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.divorce.petition.domain.Petition;
 import uk.gov.hmcts.reform.divorce.petition.service.PetitionService;
-import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 
 import javax.ws.rs.core.MediaType;
 
@@ -22,12 +21,8 @@ import javax.ws.rs.core.MediaType;
 @Api(value = "DN Petition Service", consumes = "application/json", produces = "application/json")
 public class PetitionController {
 
-    private final PetitionService petitionService;
-
     @Autowired
-    public PetitionController(PetitionService petitionService) {
-        this.petitionService = petitionService;
-    }
+    private PetitionService petitionService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieves a divorce case draft")

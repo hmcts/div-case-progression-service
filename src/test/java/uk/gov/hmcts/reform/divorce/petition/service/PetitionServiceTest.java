@@ -4,6 +4,7 @@ import feign.FeignException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.petition.domain.Petition;
@@ -23,17 +24,14 @@ public class PetitionServiceTest {
 
     private static final String JWT_TOKEN = "Bearer Something";
     private static final String CASE_ID = "CaseId";
-    private PetitionService underTest;
 
     @Mock
     private CmsApiClient mockCmsClient;
     @Mock
     private CfsApiClient mockCfsClient;
 
-    @Before
-    public void setUp() throws Exception {
-        underTest = new PetitionService(mockCmsClient, mockCfsClient);
-    }
+    @InjectMocks
+    private PetitionService underTest;
 
     @Test
     public void retrievePetitionShouldReturnNullWhenNoCaseDetailsFound() {
