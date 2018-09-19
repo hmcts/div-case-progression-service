@@ -124,7 +124,7 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     public Response submitEvent(long caseId, String eventId) throws Exception {
         String eventToken = createEventAsCaseWorker(caseId, eventId);
 
-        JSONObject jsonObject = new JSONObject(loadJSON("submit-event.json"));
+        JSONObject jsonObject = new JSONObject(loadJson("submit-event.json"));
         JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
         jsonObject.put("event", eventObject);
         jsonObject.put("event_token", eventToken);
