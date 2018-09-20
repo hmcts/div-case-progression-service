@@ -41,7 +41,7 @@ public class UpdateService {
     private UserService userService;
 
     public long update(final Long caseId, final DivorceEventSession divorceEventSessionData, final String jwt) {
-
+        log.info("jwt token update {}", jwt);
         UserDetails userDetails = userService.getUserDetails(jwt);
 
         CreateEvent createEvent = updateCcdEventClient.startEvent(userDetails, jwt, caseId,
