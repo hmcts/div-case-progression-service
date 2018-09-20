@@ -55,6 +55,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertDraftIsSaved(token, draft);
     }
 
+    @Ignore
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
 
@@ -65,6 +66,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());
     }
 
+    @Ignore
     @Test
     public void shouldReturnOKWhenDeletingADraft() {
         String draft = "{\"message\": \"Hello World!\"}";
