@@ -16,10 +16,14 @@ import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 class DraftsRetrievalService {
+
+    private static final String STATE = "state";
+    private static final String REJECTED_STATE = "rejected";
 
     private final DraftModelFactory modelFactory;
     private final DraftStoreClient draftStoreClient;
@@ -29,7 +33,8 @@ class DraftsRetrievalService {
     @Autowired
     public DraftsRetrievalService(DraftModelFactory modelFactory,
                                   DraftStoreClient draftStoreClient,
-                                  RetrieveCcdClient retrieveCcdClient, CcdToPaymentMapper paymentMapper) {
+                                  RetrieveCcdClient retrieveCcdClient,
+                                  CcdToPaymentMapper paymentMapper) {
         this.modelFactory = modelFactory;
         this.draftStoreClient = draftStoreClient;
         this.retrieveCcdClient = retrieveCcdClient;
@@ -40,16 +45,30 @@ class DraftsRetrievalService {
         log.info("Retrieving a divorce session draft for userId {}", userId);
 
         List<Map<String, Object>> caseData = retrieveCcdClient.getCases(userId, jwt);
+        List<Map<String, Object>> nonRejectedCases = getAllNonRejectedCases(caseData);
 
-        if (CollectionUtils.isNotEmpty(caseData)) {
-            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
-            return DraftResponseFactory.buildDraftResponseFromCaseData(caseData, paymentMapper);
-        } else {
+        if (CollectionUtils.isEmpty(nonRejectedCases)) {
+
             DraftList draftList = draftStoreClient.getAll(jwt, secret);
             Optional<Draft> divorceDraft = findDivorceDraft(jwt, secret, draftList);
-            log.info("Returning the saved draft data for userId {}", userId);
+            log.info("Checking Draftstore for the saved draft for userId {}", userId);
+
             return DraftResponseFactory.buildDraftResponseFromDraft(divorceDraft.orElse(null));
+
+        } else {
+
+            log.info("Checking CCD for an existing case as draft not found for userId {}", userId);
+            return DraftResponseFactory.buildDraftResponseFromCaseData(nonRejectedCases, paymentMapper);
         }
+    }
+
+    protected List<Map<String, Object>> getAllNonRejectedCases(List<Map<String, Object>> listOfCasesInCCD) {
+
+        List<Map<String, Object>> listOfNonRejectedCasesInCCD = listOfCasesInCCD.stream()
+            .filter(state -> !REJECTED_STATE.equals(state.get(STATE)))
+            .collect(Collectors.toList());
+
+        return listOfNonRejectedCasesInCCD;
     }
 
     private Optional<Draft> findDivorceDraft(String jwt, String secret, DraftList draftList) {

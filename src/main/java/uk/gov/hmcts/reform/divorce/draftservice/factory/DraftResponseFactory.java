@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.divorce.draftservice.factory;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.Draft;
 import uk.gov.hmcts.reform.divorce.draftservice.domain.DraftsResponse;
 import uk.gov.hmcts.reform.divorce.transformservice.mapping.CcdToPaymentMapper;
@@ -24,9 +23,9 @@ public class DraftResponseFactory {
     private static final String PAYMENT_REFERENCE = "payment_reference";
     private static final String ID = "id";
     private static final String SUCCESS = "success";
+    private static final String MULTIPLE_REJECTED_CASES_STATE = "MultipleRejectedCases";
 
     public static DraftsResponse buildDraftResponseFromDraft(Draft draft) {
-        //check if draft is null
         if (draft == null) {
             return DraftsResponse.emptyResponse();
         } else {
@@ -38,29 +37,34 @@ public class DraftResponseFactory {
         }
     }
 
-    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfCasesInCCD,
+    public static DraftsResponse buildDraftResponseFromCaseData(List<Map<String, Object>> listOfNonRejectedCasesInCCD,
                                                                 CcdToPaymentMapper paymentMapper) {
 
-        if (CollectionUtils.isEmpty(listOfCasesInCCD)) {
-            log.debug("No case found to build draft response");
-            return DraftsResponse.emptyResponse();
-        }
+        Map<String, Object> caseDetails = listOfNonRejectedCasesInCCD.get(0);
 
-        if (listOfCasesInCCD.size() > 1) {
-            log.info("Multiple cases found. Building empty draft response");
-            return DraftsResponse.emptyResponse();
-        }
+        if (listOfNonRejectedCasesInCCD.size() == 1) {
 
-        Map<String, Object> caseDetails = listOfCasesInCCD.get(0);
+            return draftResponseBuilder(caseDetails, paymentMapper);
+        } else {
+            log.info("Multiple cases found - Multiple are not rejected");
+            return draftResponseBuilder(caseDetails, MULTIPLE_REJECTED_CASES_STATE, paymentMapper);
+        }
+    }
+
+    public static DraftsResponse draftResponseBuilder(Map<String, Object> caseDetails,
+                                                      String customState,
+                                                      CcdToPaymentMapper paymentMapper) {
 
         log.debug("Building draft response from existing case {} in CCD", caseDetails.get(ID));
+
+        String caseState = (customState == null) ? (String) caseDetails.get(CASE_STATE) : customState;
 
         ObjectNode jsonNode = new ObjectNode(JsonNodeFactory.instance);
         jsonNode.put(CASE_ID, (Long) caseDetails.get(ID));
         Map<String, Object> caseData = (Map<String, Object>) caseDetails.get(CASE_DATA);
         jsonNode.put(COURTS, (String) caseData.get(D_8_DIVORCE_UNIT));
         jsonNode.put(SUBMISSION_STARTED, true);
-        jsonNode.put(CASE_STATE, (String) caseDetails.get(CASE_STATE));
+        jsonNode.put(CASE_STATE, caseState);
         paymentMapper.ccdToPaymentRef(caseData)
             .stream()
             .filter(p -> Optional.ofNullable(p.getPaymentStatus()).orElse("").equalsIgnoreCase(SUCCESS))
@@ -71,5 +75,11 @@ public class DraftResponseFactory {
             .isDraft(false)
             .data(jsonNode)
             .build();
+    }
+
+    public static DraftsResponse draftResponseBuilder(Map<String, Object> caseDetails,
+                                                      CcdToPaymentMapper paymentMapper) {
+
+        return draftResponseBuilder(caseDetails, null, paymentMapper);
     }
 }
