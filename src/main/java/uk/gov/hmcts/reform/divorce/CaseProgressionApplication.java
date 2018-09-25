@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EnableFeignClients(basePackages = {"uk.gov.hmcts.reform.divorce.idam.api", "uk.gov.hmcts.reform.divorce.fees.api",
-    "uk.gov.hmcts.reform.divorce.pay.api"})
+    "uk.gov.hmcts.reform.divorce.pay.api", "uk.gov.hmcts.reform.divorce.petition.api"})
 @SpringBootApplication(exclude = {ServiceAuthHealthIndicator.class})
 public class CaseProgressionApplication {
 

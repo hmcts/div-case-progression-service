@@ -37,6 +37,12 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Value("${transformation.api.endpoint.validate}")
     private String transformationApiValidateEndpoint;
 
+    @Value("${ccd.submit.event}")
+    private String submitEventUrl;
+
+    @Value("${ccd.create.event}")
+    private String createEventUrl;
+
     private JSONArray fileUploadResponse = null;
 
     public String loadJson(final String fileName) throws Exception {
@@ -65,14 +71,18 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     }
 
     public Response getFromRestService(String url) {
+        return getFromRestService(url, headers(getIdamTestCaseWorkerUser(), true));
+    }
+
+    public Response getFromRestService(String url, Map<String, Object> headers) {
         return SerenityRest.given()
-                .config(RestAssuredConfig.config()
-                        .sslConfig(new SSLConfig().allowAllHostnames()))
-                .headers(headers(getIdamTestCaseWorkerUser(), true)).get(url).andReturn();
+            .config(RestAssuredConfig.config()
+                .sslConfig(new SSLConfig().allowAllHostnames()))
+            .headers(headers).get(url).andReturn();
     }
 
 
-    private Map<String, Object> headers() {
+    public Map<String, Object> headers() {
         return headers(getIdamTestUser());
     }
 
@@ -109,5 +119,27 @@ public abstract class BaseIntegrationTest extends BaseIntegrationTestWithIdamSup
     @Override
     protected ServiceAuthTokenFor getServiceAuthTokenFor() {
         return ServiceAuthTokenFor.CASE_PROGRESSION;
+    }
+
+    public Response submitEvent(long caseId, String eventId) throws Exception {
+        String eventToken = createEventAsCaseWorker(caseId, eventId);
+
+        JSONObject jsonObject = new JSONObject(loadJson("submit-event.json"));
+        JSONObject eventObject = jsonObject.getJSONObject("event").put("id", eventId);
+        jsonObject.put("event", eventObject);
+        jsonObject.put("event_token", eventToken);
+
+        String submitEventUrl = String.format(this.submitEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
+            caseId);
+
+        return postToRestService(jsonObject.toString(), submitEventUrl, getIdamTestCaseWorkerUser());
+    }
+
+    public String createEventAsCaseWorker(long caseId, String event) {
+        String createEventUrl = String.format(this.createEventUrl, Long.parseLong(getUserId(getIdamTestCaseWorkerUser())),
+            caseId, event);
+        Response fromRestService = getFromRestService(createEventUrl);
+
+        return fromRestService.getBody().path("token");
     }
 }
