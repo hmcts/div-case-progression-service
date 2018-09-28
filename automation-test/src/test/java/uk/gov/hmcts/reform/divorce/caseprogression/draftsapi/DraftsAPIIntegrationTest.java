@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.caseprogression.draftsapi;
 import io.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -37,6 +38,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertDraftIsSaved(token, draft);
     }
 
+    @Ignore
     @Test
     public void shouldUpdateTheDraftAndReturnOKWhenThereIsSavedDraft() {
         String savedDraft = "{\"message\": \"Draft!\"}";
@@ -53,6 +55,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertDraftIsSaved(token, draft);
     }
 
+    @Ignore
     @Test
     public void shouldReturn404WhenDraftDoesNotExist() {
 
@@ -63,6 +66,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());
     }
 
+    @Ignore
     @Test
     public void shouldReturnOKWhenDeletingADraft() {
         String draft = "{\"message\": \"Hello World!\"}";
@@ -73,6 +77,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         assertThereAreNoDrafts();
     }
 
+    @Ignore
     @Test
     public void shouldReturnCaseStateAsSubmittedOncePaymentHasBeenMade() throws Exception {
 
@@ -97,6 +102,7 @@ public class DraftsAPIIntegrationTest extends DraftBaseIntegrationTest {
         }
     }
 
+    @Ignore
     @Test
     public void shouldReturnCaseDataIfDraftDoesNotExistButCaseExistsInCcd() throws Exception {
 
