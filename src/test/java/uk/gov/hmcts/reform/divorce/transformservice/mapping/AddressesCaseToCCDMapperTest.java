@@ -41,4 +41,21 @@ public class AddressesCaseToCCDMapperTest {
         assertThat(actualCoreCaseData, samePropertyValuesAs(expectedCoreCaseData));
     }
 
+    @Test
+    public void shouldMapAllAndTransformAllFieldsForAdulteryWithEmptyRespondentAddressMappingScenario()
+        throws Exception {
+
+        CoreCaseData expectedCoreCaseData = (CoreCaseData) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("fixtures/ccdmapping/addresscase-with-empty-respondent-homeaddress.json",
+                AddressesCaseToCCDMapperTest.class,
+                CoreCaseData.class);
+        expectedCoreCaseData.setCreatedDate(LocalDate.now().format(ofPattern("yyyy-MM-dd")));
+        DivorceSession divorceSession = (DivorceSession) DivorceCaseToCCDMapperTestUtil
+            .jsonToObject("divorce-payload-json/addresses-unknow-respondent.json",
+                AddressesCaseToCCDMapperTest.class,
+                DivorceSession.class);
+
+        CoreCaseData actualCoreCaseData = mapper.divorceCaseDataToCourtCaseData(divorceSession);
+        assertThat(actualCoreCaseData, samePropertyValuesAs(expectedCoreCaseData));
+    }
 }
