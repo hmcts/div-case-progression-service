@@ -34,6 +34,11 @@ public class DraftsRetrievalServiceTest {
     private static final String SECRET = "secret";
     private static final String DRAFT_ID = "1";
     private static final String USER_ID = "60";
+    private static final String COURTS_ID = "courtsXYZz";
+    private static final String AWAITING_PAYMENT_STATUS = "awaitingPayment";
+    private static final String ISSUED_STATUS = "issued";
+    private static final String REJECTED_STATUS = "rejected";
+    private static final Long CASE_ID = 123L;
 
     @Mock
     private DraftModelFactory mockModelFactory;
@@ -61,9 +66,9 @@ public class DraftsRetrievalServiceTest {
     public void setUp() {
 
         underTest = new DraftsRetrievalService(mockModelFactory,
-                mockDraftStoreClient,
-                mockRetrieveCcdClient,
-                ccdToPaymentMapper);
+            mockDraftStoreClient,
+            mockRetrieveCcdClient,
+            ccdToPaymentMapper);
 
         when(draftList.getPaging()).thenReturn(new DraftList.PagingCursors(null));
 
@@ -97,13 +102,11 @@ public class DraftsRetrievalServiceTest {
         when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(null);
 
         Map<String, Object> caseData = new HashMap();
-        String courts = "courtsXYZz";
-        caseData.put("D8DivorceUnit", courts);
+        caseData.put("D8DivorceUnit", COURTS_ID);
 
         Map<String, Object> ccdResponseData = new HashMap();
-        Long caseId = 123L;
-        ccdResponseData.put("id", caseId);
-        ccdResponseData.put("state", "awaitingPayment");
+        ccdResponseData.put("id", CASE_ID);
+        ccdResponseData.put("state", AWAITING_PAYMENT_STATUS);
         ccdResponseData.put("case_data", caseData);
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
@@ -119,8 +122,8 @@ public class DraftsRetrievalServiceTest {
         JsonNode data = draftsResponse.getData();
         assertEquals(false, draftsResponse.isDraft());
         assertEquals(true, data.get("submissionStarted").asBoolean());
-        assertEquals(courts, data.get("courts").asText());
-        assertEquals(caseId, (Long) data.get("caseId").asLong());
+        assertEquals(COURTS_ID, data.get("courts").asText());
+        assertEquals(CASE_ID, (Long) data.get("caseId").asLong());
     }
 
     @Test
@@ -134,13 +137,11 @@ public class DraftsRetrievalServiceTest {
         when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(true);
 
         Map<String, Object> caseData = new HashMap();
-        String courts = "courtsXYZz";
-        caseData.put("D8DivorceUnit", courts);
+        caseData.put("D8DivorceUnit", COURTS_ID);
 
         Map<String, Object> ccdResponseData = new HashMap();
-        Long caseId = 123L;
-        ccdResponseData.put("id", caseId);
-        ccdResponseData.put("state", "awaitingPayment");
+        ccdResponseData.put("id", CASE_ID);
+        ccdResponseData.put("state", AWAITING_PAYMENT_STATUS);
         ccdResponseData.put("case_data", caseData);
 
         List<Map<String, Object>> listOfCases = new ArrayList<>();
@@ -156,8 +157,8 @@ public class DraftsRetrievalServiceTest {
         JsonNode data = draftsResponse.getData();
         assertEquals(false, draftsResponse.isDraft());
         assertEquals(true, data.get("submissionStarted").asBoolean());
-        assertEquals(courts, data.get("courts").asText());
-        assertEquals(caseId, (Long) data.get("caseId").asLong());
+        assertEquals(COURTS_ID, data.get("courts").asText());
+        assertEquals(CASE_ID, (Long) data.get("caseId").asLong());
         //should not call draft at all since case has been found
         verify(mockDraftStoreClient, never()).getAll(JWT, SECRET);
     }
@@ -176,5 +177,54 @@ public class DraftsRetrievalServiceTest {
 
         // then
         verify(mockDraftStoreClient).getAll(JWT, SECRET, "10");
+    }
+
+    @Test
+    public void getDraftShouldCorrectlyFilterNonRejectedCasesFromRetrievedCasesFromCCD() {
+
+        //given
+        when(mockDraftStoreClient.getAll(JWT, SECRET)).thenReturn(draftList);
+        when(draftList.getData()).thenReturn(Collections.singletonList(mockDraft));
+        when(mockDraft.getId()).thenReturn(DRAFT_ID);
+        when(mockDraft.getDocument()).thenReturn(mockData);
+        when(mockModelFactory.isDivorceDraft(mockDraft)).thenReturn(true);
+
+        Map<String, Object> caseData = new HashMap();
+        caseData.put("D8DivorceUnit", COURTS_ID);
+
+        Map<String, Object> ccdResponseDataSet1 = new HashMap();
+        ccdResponseDataSet1.put("id", CASE_ID);
+        ccdResponseDataSet1.put("state", AWAITING_PAYMENT_STATUS);
+        ccdResponseDataSet1.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet2 = new HashMap();
+        ccdResponseDataSet2.put("id", CASE_ID);
+        ccdResponseDataSet2.put("state", AWAITING_PAYMENT_STATUS);
+        ccdResponseDataSet2.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet3 = new HashMap();
+        ccdResponseDataSet3.put("id", CASE_ID);
+        ccdResponseDataSet3.put("state", ISSUED_STATUS);
+        ccdResponseDataSet3.put("case_data", caseData);
+
+        Map<String, Object> ccdResponseDataSet4 = new HashMap();
+        ccdResponseDataSet4.put("id", CASE_ID);
+        ccdResponseDataSet4.put("state", REJECTED_STATUS);
+        ccdResponseDataSet4.put("case_data", caseData);
+
+        List<Map<String, Object>> listOfCases = new ArrayList<>();
+        listOfCases.add(ccdResponseDataSet1);
+        listOfCases.add(ccdResponseDataSet2);
+        listOfCases.add(ccdResponseDataSet3);
+        listOfCases.add(ccdResponseDataSet4);
+        when(mockRetrieveCcdClient
+            .getCases(USER_ID, JWT))
+            .thenReturn(listOfCases);
+
+        // when
+        List<Map<String, Object>> listOfNonRejectedCasesInCCD = underTest.getAllNonRejectedCases(listOfCases);
+
+        // then
+        assertEquals(3, listOfNonRejectedCasesInCCD.size());
     }
 }
