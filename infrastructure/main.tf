@@ -16,9 +16,9 @@ locals {
     nonPreviewVaultName = "${var.reform_team}-${var.env}"
     vaultName = "${var.env == "preview" ? local.previewVaultName : local.nonPreviewVaultName}"
     vaultUri = "${data.azurerm_key_vault.div_key_vault.vault_uri}"
-    
-    asp_name = "${var.env == "prod" ? "div-cps-prod" : "${var.product}-${var.env}"}"
-    asp_rg = "${var.env == "prod" ? "div-cps-prod" : "${var.product}-${var.env}"}"
+
+    asp_name = "${var.env == "prod" ? "div-cps-prod" : "${var.raw_product}-${var.env}"}"
+    asp_rg = "${var.env == "prod" ? "div-cps-prod" : "${var.raw_product}-${var.env}"}"
 }
 
 module "div-case-progression" {
