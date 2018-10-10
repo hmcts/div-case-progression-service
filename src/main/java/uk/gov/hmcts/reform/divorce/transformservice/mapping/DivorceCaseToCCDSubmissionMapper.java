@@ -456,7 +456,8 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
 
     @AfterMapping
     protected void mapRespondentHomeAddress(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
-        if (Objects.nonNull(divorceSession.getRespondentHomeAddress())) {
+        if (Objects.nonNull(divorceSession.getRespondentHomeAddress())
+            && Objects.nonNull(divorceSession.getRespondentHomeAddress().getAddressField())) {
             result.setD8DerivedRespondentHomeAddress(
                 join(LINE_SEPARATOR, divorceSession.getRespondentHomeAddress().getAddressField()));
         }
