@@ -100,6 +100,15 @@ Create the citizen and caseworker-divorce roles in CCD
 ./scripts/ccd-add-role.sh caseworker-divorce RESTRICTED
 ```
 
+### Mutation tests
+
+To run all mutation tests execute the following command:
+
+```
+./gradlew pitest
+
+```
+
 Upload a mapping spreadsheet
 ```
 ./scripts/ccd-import-definition.sh /path/to/spreadsheet
