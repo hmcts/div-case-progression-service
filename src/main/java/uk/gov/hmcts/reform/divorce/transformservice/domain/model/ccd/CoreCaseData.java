@@ -481,5 +481,8 @@ public class CoreCaseData {
 
     @JsonProperty("SeparationLivedTogetherAsCoupleAgainDetails")
     private String separationLivedTogetherAsCoupleAgainDetails;
+
+    @JsonProperty("D8ReasonForDivorce2YearSepConsentGiven")
+    private String reasonForDivorceRespondentConsent;
 }
 

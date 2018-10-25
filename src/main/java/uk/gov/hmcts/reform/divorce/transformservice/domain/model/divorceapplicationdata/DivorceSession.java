@@ -294,6 +294,9 @@ public class DivorceSession {
     @JsonProperty("d8")
     @Setter(AccessLevel.NONE)
     private List<UploadedFile> d8Documents;
+    @ApiModelProperty(value = "Petitioner has obtained a written consent from the respondent?",
+        allowableValues = "Yes, No")
+    private String reasonForDivorceRespondentConsent;
 
     public void setD8Documents(List<UploadedFile> d8Documents) {
         d8Documents.forEach(doc -> doc.setFileType("petition"));

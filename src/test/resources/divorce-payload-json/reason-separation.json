@@ -261,5 +261,6 @@
   "claimsCostsAppliedForFees": true,
   "reasonForDivorceClaiming5YearSeparation": false,
   "reasonForDivorceClaimingAdultery": false,
+  "reasonForDivorceRespondentConsent" : "Yes",
   "sessionKey": "744e590518fd5a8114fe6c280df7ef9488b9b29c839ea08eef567cda752369b3:f0e0d0b7c03d6d0ffaf0e302f1c385d0:1f29a3d9dd276937ebdc06fff8fa8424c9bac0a15ab881feb518fb5e31d6fc09a37615ba5f728e99676810c40510ab80e9719aa1d595bb45a18709f47e9d9102"
 }
