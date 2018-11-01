@@ -38,14 +38,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
     testCompile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '5.1'
-    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.3'
 
-    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.8.1'
     testCompile group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
-    testCompile group: 'net.serenity-bdd', name: 'serenity-cucumber', version: versions.serenity
 
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: versions.commonsLang3
     testCompile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.8'
