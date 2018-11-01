@@ -31,7 +31,7 @@ sourceCompatibility = 1.8
 def versions = [
     commonsLang3: '3.0',
     lombok: '1.16.16',
-    serenity: '2.0.11'
+    serenity: '1.9.20'
 ]
 
 dependencies {
