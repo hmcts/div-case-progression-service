@@ -138,7 +138,9 @@
     "D8Cohort" : "onlineSubmissionPrivateBeta",
     "D8InferredPetitionerGender" : "female",
     "D8InferredRespondentGender" : "male",
-    "D8ReasonForDivorce2YearSepConsentGiven" : "Yes"
+    "D8ReasonForDivorce2YearSepConsentGiven" : "Yes",
+    "D8MentalSeparationDate": "2015-03-01",
+    "D8PhysicalSeparationDate": "2015-02-01"
   },
   "security_classification" : null,
   "event_token" : "abcde",
