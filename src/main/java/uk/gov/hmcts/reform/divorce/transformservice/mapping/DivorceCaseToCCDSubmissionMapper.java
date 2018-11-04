@@ -43,7 +43,7 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
 
     @Mapping(source = "helpWithFeesReferenceNumber", target = "d8HelpWithFeesReferenceNumber")
     @Mapping(source = "divorceWho", target = "d8DivorceWho")
-    @Mapping(source = "marriageDate", dateFormat = "yyyy-MM-dd", target = "d8MarriageDate")
+    @Mapping(source = "marriageDate", dateFormat = SIMPLE_DATE_FORMAT, target = "d8MarriageDate")
     @Mapping(source = "reasonForDivorceDesertionDay", target = "d8ReasonForDivorceDesertionDay")
     @Mapping(source = "reasonForDivorceDesertionMonth", target = "d8ReasonForDivorceDesertionMonth")
     @Mapping(source = "reasonForDivorceDesertionYear", target = "d8ReasonForDivorceDesertionYear")
@@ -586,7 +586,7 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
             if (Objects.nonNull(divorceSession.getPayment().getPaymentDate())) {
                 divorceSession.getPayment().setPaymentDate(LocalDate.parse(
                     divorceSession.getPayment().getPaymentDate(), DateTimeFormatter.ofPattern("ddMMyyyy"))
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    .format(DateTimeFormatter.ofPattern(SIMPLE_DATE_FORMAT)));
             }
 
             result.setPayments(paymentContext.getListOfPayments(divorceSession));
