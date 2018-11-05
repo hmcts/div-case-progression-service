@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.YesNoAnswer;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService;
+import uk.gov.hmcts.reform.divorce.transformservice.service.SeparationDateService;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.payments.PaymentContext;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce.ReasonForDivorceContext;
 
@@ -40,6 +42,9 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
 
     @Autowired
     private InferredGenderService inferredGenderService;
+
+    @Autowired
+    private SeparationDateService separationDateService;
 
     @Mapping(source = "helpWithFeesReferenceNumber", target = "d8HelpWithFeesReferenceNumber")
     @Mapping(source = "divorceWho", target = "d8DivorceWho")
@@ -113,6 +118,11 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
             return null;
         }
         return BooleanUtils.toStringYesNo(BooleanUtils.toBoolean(value)).toUpperCase();
+    }
+
+    @BeforeMapping
+    protected void updateSeparationDate(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
+        separationDateService.updateSeparationDate(divorceSession);
     }
 
     @AfterMapping

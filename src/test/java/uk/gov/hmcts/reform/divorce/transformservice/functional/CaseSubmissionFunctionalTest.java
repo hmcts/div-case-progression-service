@@ -542,7 +542,6 @@ public class CaseSubmissionFunctionalTest {
         authTokenServer.verify(postRequestedFor(urlPathMatching("/lease.*")));
     }
 
-
     private void caseCreationStub(String eventTypeId) throws Exception {
         String caseCreationResponseBody = FileUtils.readFileToString(new File(getClass()
             .getResource("/fixtures/ccd/case-creation-200-response.json").toURI()), Charset.defaultCharset());
@@ -622,10 +621,8 @@ public class CaseSubmissionFunctionalTest {
     }
 
     private void caseCreationProcessCouldNotBeStartedStub() {
-        String eventTypeId = CREATE;
-
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
-            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+            "case-types", CASE_TYPE_ID, "event-triggers", CREATE, "token");
 
         ccdServer.stubFor(get(Strings.concat("/").concat(url).concat("?ignore-warning=true"))
             .withHeader(AUTHORIZATION_HEADER_KEY, equalTo("Bearer " + JWT))
@@ -637,10 +634,8 @@ public class CaseSubmissionFunctionalTest {
     }
 
     private void verifyCaseCreationProcessCouldNotBeStartedStub() {
-        String eventTypeId = CREATE;
-
         String url = String.join("/", "citizens", USER_ID, "jurisdictions", JURISDICTION,
-            "case-types", CASE_TYPE_ID, "event-triggers", eventTypeId, "token");
+            "case-types", CASE_TYPE_ID, "event-triggers", CREATE, "token");
 
         ccdServer.verify(getRequestedFor(urlEqualTo(Strings.concat("/")
             .concat(url)
