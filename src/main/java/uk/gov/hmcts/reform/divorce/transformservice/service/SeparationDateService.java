@@ -17,6 +17,7 @@ public class SeparationDateService {
             separationDate = divorceSession.getReasonForDivorceLivingApartDate();
         }
 
+        //if both living apart and decision date are null then use the separation date
         if (separationDate == null) {
             separationDate = divorceSession.getReasonForDivorceSeperationDate();
         }
