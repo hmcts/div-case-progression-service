@@ -195,6 +195,7 @@ public class CoreCaseData {
     @JsonProperty("D8ReasonForDivorceDesertionDetails")
     private String d8ReasonForDivorceDesertionDetails;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("D8ReasonForDivorceSeperationDate")
     private String d8ReasonForDivorceSeperationDate;
 
@@ -483,8 +484,16 @@ public class CoreCaseData {
     @JsonProperty("SeparationLivedTogetherAsCoupleAgainDetails")
     private String separationLivedTogetherAsCoupleAgainDetails;
 
-    @JsonProperty("D8ReasonForDivorce2YearSepConsentGiven")
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("D8ReasonForDivorce2YearSepConsentGiven")
     private String reasonForDivorceRespondentConsent;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("D8MentalSeparationDate")
+    private String reasonForDivorceDecisionDate;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("D8PhysicalSeparationDate")
+    private String reasonForDivorceLivingApartDate;
 }
 

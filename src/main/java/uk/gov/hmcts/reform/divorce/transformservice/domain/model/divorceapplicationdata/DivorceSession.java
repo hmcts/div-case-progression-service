@@ -218,6 +218,7 @@ public class DivorceSession {
         value = "The separation date in one of the following formats (\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", "
             + "\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", \"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", "
             + "\"yyyy-MM-dd\").")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Date reasonForDivorceSeperationDate;
     @ApiModelProperty(value = "Is separation date same as or after limit date?", allowableValues = "Yes, No")
     private String reasonForDivorceSeperationDateIsSameOrAfterLimitDate;
@@ -299,6 +300,20 @@ public class DivorceSession {
         allowableValues = "Yes, No")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String reasonForDivorceRespondentConsent;
+    @ApiModelProperty(
+        value = "Date the petitioner decided the marriage was over, in one of the following formats "
+            + "(\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", "
+            + "\"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", \"yyyy-MM-dd\").")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Date reasonForDivorceDecisionDate;
+
+    @ApiModelProperty(
+        value = "Date the petitioner and respondent started living apart, in one of the following formats "
+            + "(\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\", "
+            + "\"yyyy-MM-dd'T'HH:mm:ss.SSS\", \"EEE, dd MMM yyyy HH:mm:ss zzz\", \"yyyy-MM-dd\").")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Date reasonForDivorceLivingApartDate;
+
 
     public void setD8Documents(List<UploadedFile> d8Documents) {
         d8Documents.forEach(doc -> doc.setFileType("petition"));

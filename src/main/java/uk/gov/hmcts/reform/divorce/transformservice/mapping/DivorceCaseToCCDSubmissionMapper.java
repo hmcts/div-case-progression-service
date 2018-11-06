@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.transformservice.mapping;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,6 +14,7 @@ import uk.gov.hmcts.reform.divorce.transformservice.domain.model.ccd.CoreCaseDat
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.DivorceSession;
 import uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata.YesNoAnswer;
 import uk.gov.hmcts.reform.divorce.transformservice.service.InferredGenderService;
+import uk.gov.hmcts.reform.divorce.transformservice.service.SeparationDateService;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.payments.PaymentContext;
 import uk.gov.hmcts.reform.divorce.transformservice.strategy.reasonfordivorce.ReasonForDivorceContext;
 
@@ -20,7 +22,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -31,6 +32,7 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
 
     private static final String BLANK_SPACE = " ";
     private static final String LINE_SEPARATOR = "\n";
+    private static final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd";
 
     private ReasonForDivorceContext reasonForDivorceContext = new ReasonForDivorceContext();
     private PaymentContext paymentContext = new PaymentContext();
@@ -41,13 +43,16 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
     @Autowired
     private InferredGenderService inferredGenderService;
 
+    @Autowired
+    private SeparationDateService separationDateService;
+
     @Mapping(source = "helpWithFeesReferenceNumber", target = "d8HelpWithFeesReferenceNumber")
     @Mapping(source = "divorceWho", target = "d8DivorceWho")
-    @Mapping(source = "marriageDate", dateFormat = "yyyy-MM-dd", target = "d8MarriageDate")
+    @Mapping(source = "marriageDate", dateFormat = SIMPLE_DATE_FORMAT, target = "d8MarriageDate")
     @Mapping(source = "reasonForDivorceDesertionDay", target = "d8ReasonForDivorceDesertionDay")
     @Mapping(source = "reasonForDivorceDesertionMonth", target = "d8ReasonForDivorceDesertionMonth")
     @Mapping(source = "reasonForDivorceDesertionYear", target = "d8ReasonForDivorceDesertionYear")
-    @Mapping(source = "reasonForDivorceDesertionDate", dateFormat = "yyyy-MM-dd",
+    @Mapping(source = "reasonForDivorceDesertionDate", dateFormat = SIMPLE_DATE_FORMAT,
         target = "d8ReasonForDivorceDesertionDate")
     @Mapping(source = "countryName", target = "d8CountryName")
     @Mapping(source = "placeOfMarriage", target = "d8MarriagePlaceOfMarriage")
@@ -88,7 +93,7 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
     @Mapping(source = "reasonForDivorceSeperationDay", target = "d8ReasonForDivorceSeperationDay")
     @Mapping(source = "reasonForDivorceSeperationMonth", target = "d8ReasonForDivorceSeperationMonth")
     @Mapping(source = "reasonForDivorceSeperationYear", target = "d8ReasonForDivorceSeperationYear")
-    @Mapping(source = "reasonForDivorceSeperationDate", dateFormat = "yyyy-MM-dd",
+    @Mapping(source = "reasonForDivorceSeperationDate", dateFormat = SIMPLE_DATE_FORMAT,
         target = "d8ReasonForDivorceSeperationDate")
     @Mapping(source = "respondentCorrespondenceUseHomeAddress", target = "d8RespondentCorrespondenceUseHomeAddress")
     @Mapping(source = "connections", target = "d8Connections")
@@ -100,7 +105,12 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
     @Mapping(source = "respondentSolicitorCompany", target = "d8RespondentSolicitorCompany")
     @Mapping(target = "createdDate",
         expression =
-            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\"yyyy-MM-dd\")))")
+            "java(java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern(\""
+                + SIMPLE_DATE_FORMAT + "\")))")
+    @Mapping(source = "reasonForDivorceDecisionDate", dateFormat = SIMPLE_DATE_FORMAT,
+        target = "reasonForDivorceDecisionDate")
+    @Mapping(source = "reasonForDivorceLivingApartDate", dateFormat = SIMPLE_DATE_FORMAT,
+        target = "reasonForDivorceLivingApartDate")
     public abstract CoreCaseData divorceCaseDataToCourtCaseData(DivorceSession divorceSession);
 
     private String translateToStringYesNo(final String value) {
@@ -110,13 +120,17 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
         return BooleanUtils.toStringYesNo(BooleanUtils.toBoolean(value)).toUpperCase();
     }
 
+    @BeforeMapping
+    protected void updateSeparationDate(DivorceSession divorceSession, @MappingTarget CoreCaseData result) {
+        separationDateService.updateSeparationDate(divorceSession);
+    }
+
     @AfterMapping
     protected void mapReasonForDivorceBehaviourDetails(DivorceSession divorceSession,
                                                        @MappingTarget CoreCaseData result) {
         if (Objects.nonNull(divorceSession.getReasonForDivorceBehaviourDetails())) {
             result.setD8ReasonForDivorceBehaviourDetails(
-                divorceSession.getReasonForDivorceBehaviourDetails()
-                    .stream().collect(Collectors.joining("\n")));
+                join(LINE_SEPARATOR, divorceSession.getReasonForDivorceBehaviourDetails()));
         }
     }
 
@@ -582,7 +596,7 @@ public abstract class DivorceCaseToCCDSubmissionMapper {
             if (Objects.nonNull(divorceSession.getPayment().getPaymentDate())) {
                 divorceSession.getPayment().setPaymentDate(LocalDate.parse(
                     divorceSession.getPayment().getPaymentDate(), DateTimeFormatter.ofPattern("ddMMyyyy"))
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    .format(DateTimeFormatter.ofPattern(SIMPLE_DATE_FORMAT)));
             }
 
             result.setPayments(paymentContext.getListOfPayments(divorceSession));
