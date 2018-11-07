@@ -137,7 +137,8 @@
     "D8ReasonForDivorceClaiming5YearSeparatio" : "NO",
     "D8Cohort" : "onlineSubmissionPrivateBeta",
     "D8InferredPetitionerGender" : "female",
-    "D8InferredRespondentGender" : "male"
+    "D8InferredRespondentGender" : "male",
+    "D8ReasonForDivorce2YearSepConsentGiven" : "Yes"
   },
   "security_classification" : null,
   "event_token" : "abcde",

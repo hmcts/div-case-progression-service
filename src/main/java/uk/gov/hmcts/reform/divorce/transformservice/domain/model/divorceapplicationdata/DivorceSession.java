@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.transformservice.domain.model.divorceapplicationdata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -294,6 +295,10 @@ public class DivorceSession {
     @JsonProperty("d8")
     @Setter(AccessLevel.NONE)
     private List<UploadedFile> d8Documents;
+    @ApiModelProperty(value = "Petitioner has obtained a written consent from the respondent?",
+        allowableValues = "Yes, No")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String reasonForDivorceRespondentConsent;
 
     public void setD8Documents(List<UploadedFile> d8Documents) {
         d8Documents.forEach(doc -> doc.setFileType("petition"));
